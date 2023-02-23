@@ -20,6 +20,7 @@ int main(int argc, char const *argv[])
 
         int dest_row, dest_col, action_res;
         do {
+            action_res = false;
             printChessBoard(board);
             scanf("%s", dest);
             if (strcmp(dest, "cancel") == 0) {

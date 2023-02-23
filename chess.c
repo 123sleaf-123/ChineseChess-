@@ -42,14 +42,14 @@ struct ChessBoard* initChessBoard() {
     board->block[9][8] = initChess(CHARIOT, PLAYER_1, true);
 
     
-    // board->block[7][1] = initChess(ARTILLERY, PLAYER_1, true);
-    // board->block[7][7] = initChess(ARTILLERY, PLAYER_1, true);
+    board->block[7][1] = initChess(ARTILLERY, PLAYER_1, true);
+    board->block[7][7] = initChess(ARTILLERY, PLAYER_1, true);
 
-    // board->block[6][0] = initChess(SOLIDER, PLAYER_1, true);
-    // board->block[6][2] = initChess(SOLIDER, PLAYER_1, true);
-    // board->block[6][4] = initChess(SOLIDER, PLAYER_1, true);
-    // board->block[6][6] = initChess(SOLIDER, PLAYER_1, true);
-    // board->block[6][8] = initChess(SOLIDER, PLAYER_1, true);
+    board->block[6][0] = initChess(SOLDIER, PLAYER_1, true);
+    board->block[6][2] = initChess(SOLDIER, PLAYER_1, true);
+    board->block[6][4] = initChess(SOLDIER, PLAYER_1, true);
+    board->block[6][6] = initChess(SOLDIER, PLAYER_1, true);
+    board->block[6][8] = initChess(SOLDIER, PLAYER_1, true);
 
     // 玩家二初始化
     board->block[0][4] = initChess(GENERAL, PLAYER_2, true);
@@ -73,11 +73,11 @@ struct ChessBoard* initChessBoard() {
     board->block[2][1] = initChess(ARTILLERY, PLAYER_2, true);
     board->block[2][7] = initChess(ARTILLERY, PLAYER_2, true);
 
-    board->block[3][0] = initChess(SOLIDER, PLAYER_2, true);
-    board->block[3][2] = initChess(SOLIDER, PLAYER_2, true);
-    board->block[3][4] = initChess(SOLIDER, PLAYER_2, true);
-    board->block[3][6] = initChess(SOLIDER, PLAYER_2, true);
-    board->block[3][8] = initChess(SOLIDER, PLAYER_2, true);
+    board->block[3][0] = initChess(SOLDIER, PLAYER_2, true);
+    board->block[3][2] = initChess(SOLDIER, PLAYER_2, true);
+    board->block[3][4] = initChess(SOLDIER, PLAYER_2, true);
+    board->block[3][6] = initChess(SOLDIER, PLAYER_2, true);
+    board->block[3][8] = initChess(SOLDIER, PLAYER_2, true);
     
     // 可移动区域初始化
     for (int i = 0; i < 10; i++)
@@ -140,7 +140,7 @@ char *chessName(struct Chess* chess) {
                 case ARTILLERY: return "炮";
                 case ELEPHANT: return "相";
                 case WARRIOR: return "仕";
-                case SOLIDER: return "兵";
+                case SOLDIER: return "兵";
             }
             break;
         }
@@ -154,7 +154,7 @@ char *chessName(struct Chess* chess) {
                 case ARTILLERY: return "砲";
                 case ELEPHANT: return "象";
                 case WARRIOR: return "士";
-                case SOLIDER: return "卒";
+                case SOLDIER: return "卒";
             }
             break;
         }
@@ -243,9 +243,16 @@ int friendlyFireDetect(struct ChessBoard* board, int row, int col) {
  */
 int isBeyond(struct ChessBoard* board, int row, int col) {
     if (board->user == PLAYER_1) 
-        return (5 <= row && row <= 9) && (0 <= col && col <= 8);
+        return !((5 <= row && row <= 9) && (0 <= col && col <= 8));
     if (board->user == PLAYER_2) 
-        return (0 <= row && row <= 4) && (0 <= col && col <= 8);
+        return !((0 <= row && row <= 4) && (0 <= col && col <= 8));
+}
+
+int isInsidePalace(struct ChessBoard* board, int row, int col) {
+    if (board->user == PLAYER_1) 
+        return (7 <= row) && (row <= 9) && (3 <= col) && (col <= 5);
+    if (board->user == PLAYER_2) 
+        return (0 <= row) && (row <= 2) && (3 <= col) && (col <= 5);
 }
 
 /**
@@ -289,9 +296,8 @@ void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
             dest_col[3] = src_col - 1;
             for (int i = 0; i < 4; i++)
             {
-                if (board->user == PLAYER_1) inside = (dest_row[i] >= 7) && (dest_row[i] < 10) && (dest_col[i] > 2) && (dest_col[i] < 6);
-                if (board->user == PLAYER_2) inside = (dest_row[i] >= 0) && (dest_row[i] < 3) && (dest_col[i] > 2) && (dest_col[i] < 6);
-                if (inside == true) board->moveablePos[dest_row[i]][dest_col[i]] = true;
+                if (isInsidePalace(board, dest_row[i], dest_col[i]) == true) 
+                    board->moveablePos[dest_row[i]][dest_col[i]] = true;
             }
             break;
         }
@@ -393,44 +399,57 @@ void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
             }
             break;
         }
-        case ELEPHANT: {
+        case ELEPHANT: 
+        {
             // 在内部且路径上没有敌人
             char stop[4] = {false, false, false, false};
-            for (int i = 1; true; i++)
+            for (int i = 1; i <= 2; i++)
             {
                 // 右下角，左下角，左上角，右上角
                 int 
-                rows[4] = { src_row + i, src_row + i, src_row - i, src_row - i }, 
-                cols[4] = { src_col + i, src_col - i, src_col - i, src_col + i }; 
+                dest_row[4] = { src_row + i, src_row + i, src_row - i, src_row - i }, 
+                dest_col[4] = { src_col + i, src_col - i, src_col - i, src_col + i }; 
                 for (int j = 0; j < 4; j++)
                 {
-                    if (stop[j] == true) continue;
-
-                    // 如果位置不在棋盘内或者越界，则停止前进预测
-                    if (!isInside(rows[j], cols[j]) || !isBeyond(board, rows[j], cols[j])) stop[j] = true;
-                    else {
-                        // 否则就认为可前进
-                        setChessBoardMoveablePos(board, rows[j], cols[j], true);
-                        if(!isNull(board, rows[j], cols[j])) {
-                            // 如果有棋子阻挡象眼，则象不可以前进到下一位置
-                            stop[j] = true;
-                        }
+                    // 如果位置不在棋盘内、越界或者有棋子阻挡象眼，则停止前进预测
+                    // 否则就认为可前进
+                    if (i == 1 && (isBeyond(board, dest_row[j], dest_col[j]) || !isNull(board, dest_row[j], dest_col[j]))) 
+                        stop[j] = true;
+                    if (i == 2 && stop[j] == false) {
+                        setChessBoardMoveablePos(board, dest_row[j], dest_col[j], true);
                     }
                 }
-
-                // 如果四个方向都探测完成，结束
-                int end = true;
-                for (int j = 0; j < 4; j++)
-                {
-                    end &= stop[j];
-                }
-                if (end == true) break;
             }
             break;
         }
         case WARRIOR:
+        {
+            // 右下角，左下角，左上角，右上角
+            int 
+            dest_row[4] = { src_row + 1, src_row + 1, src_row - 1, src_row - 1 }, 
+            dest_col[4] = { src_col + 1, src_col - 1, src_col - 1, src_col + 1 }; 
+            for (int i = 0; i < 4; i++)
+            {
+                if (isInsidePalace(board, dest_row[i], dest_col[i])) {
+                    setChessBoardMoveablePos(board, dest_row[i], dest_col[i], true);
+                }
+            }
             break;
-        // case
+        }
+        case SOLDIER:
+        {
+            if (isInside(src_row, src_col) && isBeyond(board, src_row, src_col)) {
+                // 越过领地（楚河汉界），可以向右左走
+                setChessBoardMoveablePos(board, src_row, src_col + 1, true);
+                setChessBoardMoveablePos(board, src_row, src_col - 1, true);
+            }
+            // 无论何时都可以向前走（当前也没法向后走了
+            if (board->user == PLAYER_1) 
+                setChessBoardMoveablePos(board, src_row - 1, src_col, true);
+            if (board->user == PLAYER_2) 
+                setChessBoardMoveablePos(board, src_row + 1, src_col, true);
+            break;
+        }
     }
 }
 

@@ -25,7 +25,7 @@ typedef struct Chess
 #define ARTILLERY 4 // 炮
 #define ELEPHANT 5 // 象/相
 #define WARRIOR 6 // 士/仕
-#define SOLIDER 7 // 卒
+#define SOLDIER 7 // 卒
 
 // owner
 #define PLAYER_1 0
@@ -60,7 +60,7 @@ struct Position
 Chess initChess(int type, int owner, int isAlive);
 struct chessStack* initChessStack();
 struct ChessBoard* initChessBoard();
-int setChessBoardMovablePos(struct ChessBoard *board, int row, int col, int val);
+int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val);
 struct Position* initPosition(int x, int y);
 void color(int x);
 char *c2tUser(struct ChessBoard* board, int code);
