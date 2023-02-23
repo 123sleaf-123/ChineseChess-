@@ -1,38 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <memory.h>
-#define true 1
-#define false 0
-#define BOARD_ROW 10
-#define BOARD_COL 9
+#include "chess.h"
 
-typedef struct Chess
-{
-    int type;
-    int owner; // 
-    int isAlive;
-} *Chess;
-
-// block type
-#define EMPTY 0
-#define GENERAL 1 // 将/帅
-#define CHARIOT 2 // 车
-#define HORSE 3 // 马
-#define ARTILLERY 4 // 炮
-#define ELEPHANT 5 // 象/相
-#define WARRIOR 6 // 士/仕
-#define SOLIDER 7 // 卒
-
-// owner
-#define PLAYER_1 0
-#define PLAYER_2 1
-#define SPARE 3
-
-// isAlive
-#define DEAD false
-#define ALIVE true
-
-Chess initChess(int type, int owner, int isAlive);
 Chess initChess(int type, int owner, int isAlive) {
     struct Chess* ch = (Chess) malloc(sizeof(struct Chess));
     ch->type = type;
@@ -41,27 +8,12 @@ Chess initChess(int type, int owner, int isAlive) {
     return ch;
 }
 
-struct chessStack
-{
-    struct Chess *stack[16];
-    int top;
-};
-
 struct chessStack* initChessStack() {
     struct chessStack* stk = (struct chessStack*) malloc(sizeof(struct chessStack));
     stk->top = 0;
 }
 
-typedef struct ChessBoard
-{
-    struct Chess *block[10][9];
-    int user;
-    struct chessStack *dead_player1;
-    struct chessStack *dead_player2;
-} *Board;
-
-struct ChessBoard* init();
-struct ChessBoard* init() {
+struct ChessBoard* initChessBoard() {
     struct ChessBoard* board = (struct ChessBoard*) malloc(sizeof(struct ChessBoard));
     for (int i = 0; i < 10; i++)
     {
@@ -90,14 +42,14 @@ struct ChessBoard* init() {
     board->block[9][8] = initChess(CHARIOT, PLAYER_1, true);
 
     
-    board->block[7][1] = initChess(ARTILLERY, PLAYER_1, true);
-    board->block[7][7] = initChess(ARTILLERY, PLAYER_1, true);
+    // board->block[7][1] = initChess(ARTILLERY, PLAYER_1, true);
+    // board->block[7][7] = initChess(ARTILLERY, PLAYER_1, true);
 
-    board->block[6][0] = initChess(SOLIDER, PLAYER_1, true);
-    board->block[6][2] = initChess(SOLIDER, PLAYER_1, true);
-    board->block[6][4] = initChess(SOLIDER, PLAYER_1, true);
-    board->block[6][6] = initChess(SOLIDER, PLAYER_1, true);
-    board->block[6][8] = initChess(SOLIDER, PLAYER_1, true);
+    // board->block[6][0] = initChess(SOLIDER, PLAYER_1, true);
+    // board->block[6][2] = initChess(SOLIDER, PLAYER_1, true);
+    // board->block[6][4] = initChess(SOLIDER, PLAYER_1, true);
+    // board->block[6][6] = initChess(SOLIDER, PLAYER_1, true);
+    // board->block[6][8] = initChess(SOLIDER, PLAYER_1, true);
 
     // 玩家二初始化
     board->block[0][4] = initChess(GENERAL, PLAYER_2, true);
@@ -127,9 +79,98 @@ struct ChessBoard* init() {
     board->block[3][6] = initChess(SOLIDER, PLAYER_2, true);
     board->block[3][8] = initChess(SOLIDER, PLAYER_2, true);
     
-    board->user = PLAYER_1;
+    // 可移动区域初始化
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            board->moveablePos[i][j] = false;
+        } 
+    }
+    
+    board->user = PLAYER_1; // 开局玩家初始化
     board->dead_player1 = initChessStack();
     board->dead_player2 = initChessStack();
+}
+
+int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val) {
+    if ((0 <= row && row <= 9) && (0 <= col && col <= 8)) {
+        board->moveablePos[row][col] = val;
+        return true;
+    }
+    else return false;
+}
+
+struct Position* initPosition(int x, int y) {
+    struct Position* pos = (struct Position*) malloc(sizeof(struct Position));
+    pos->x = x;
+    pos->y = y;
+    return pos;
+}
+
+/**
+ * @brief 设置文字颜色
+ * 
+ * @param x 颜色代码
+ */
+void color(int x) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), x);
+}
+
+char *c2tUser(struct ChessBoard* board, int code) {
+    if (code == PLAYER_1) return "玩家一";
+    if (code == PLAYER_2) return "玩家二";
+    return "";
+}
+
+/**
+ * @brief 输入棋子，输出棋子中文名字，区分玩家
+ * 
+ * @param chess 玩家棋子
+ * @return char* 棋子中文名字
+ */
+char *chessName(struct Chess* chess) {
+    switch(chess->owner) {
+        // 玩家一是红色
+        case PLAYER_1: {
+            switch(chess->type) {
+                case GENERAL: return "帥";
+                case CHARIOT: return "俥";
+                case HORSE: return "傌";
+                case ARTILLERY: return "炮";
+                case ELEPHANT: return "相";
+                case WARRIOR: return "仕";
+                case SOLIDER: return "兵";
+            }
+            break;
+        }
+
+        // 玩家二是绿色
+        case PLAYER_2: {
+            switch(chess->type) {
+                case GENERAL: return "将";
+                case CHARIOT: return "車";
+                case HORSE: return "馬";
+                case ARTILLERY: return "砲";
+                case ELEPHANT: return "象";
+                case WARRIOR: return "士";
+                case SOLIDER: return "卒";
+            }
+            break;
+        }
+    }
+
+    return " ";
+}
+
+void actionFinished(struct ChessBoard *board) {
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            board->moveablePos[i][j] = false;
+        } 
+    }
 }
 
 /*
@@ -139,18 +180,43 @@ struct ChessBoard* init() {
         1.3. 目标位置存在己方棋子
         1.4. 不符合棋子移动规则
     2. 可移动：操纵了己方棋子，未超出棋盘范围，且符合移动规则，且目标位置不存在己方棋子
+        2.1. 击杀
+        2.2. 无击杀
 */
 
-// 原位置是否存在棋子，且棋子为己方棋子
-int isControllable(struct ChessBoard* board, int row, int col);
-int isControllable(struct ChessBoard* board, int row, int col) {
-    return board->block[row][col] != NULL && board->block[row][col]->owner == board->user;
+/**
+ * @brief 是否超出棋盘范围
+ * 
+ * @param row 目标行
+ * @param col 目标列
+ * @return int 返回false，若目标位置超出棋盘；否则，返回true
+ */
+int isInside(int row, int col) {
+    return (row < BOARD_ROW) && (col < BOARD_COL) && (row >= 0) && (col >= 0);
 }
 
-// 是否超出棋盘范围
-int isInside(int row, int col); 
-int isInside(int row, int col) {
-    return row < BOARD_ROW && col < BOARD_COL;
+/**
+ * @brief 当前坐标位置是否存在棋子
+ * 
+ * @param board 棋盘
+ * @param row 行
+ * @param col 列
+ * @return int 返回true，若不存在棋子；返回false，若存在棋子
+ */
+int isNull(struct ChessBoard* board, int row, int col) {
+    return board->block[row][col] == NULL;
+}
+
+/**
+ * @brief 原位置是否存在己方棋子
+ * 
+ * @param board 棋盘
+ * @param row 原行
+ * @param col 原列
+ * @return int 返回true，若存在己方棋子；返回false，若不存在棋子或存在敌方棋子
+ */
+int isControllable(struct ChessBoard* board, int row, int col) {
+    return !isNull(board, row, col) && (board->block[row][col]->owner == board->user);
 }
 
 /**
@@ -161,132 +227,288 @@ int isInside(int row, int col) {
  * @param col 目标列
  * @return int 返回true，若目标位置为我方棋子；返回false，若目标位置为空或敌方棋子
  */
-int friendlyFireDetect(struct ChessBoard* board, int row, int col);
 int friendlyFireDetect(struct ChessBoard* board, int row, int col) {
-    return board->block[row][col]->owner == board->user;
+    return !isNull(board, row, col) 
+    && (board->block[row][col]->owner == board->user);
 }
 
-// 是否符合棋子移动规则
-int isMoveable(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col);
-int isMoveable(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col) {
-    struct Chess* chess = board->block[src_row][src_col];
-    int distance_square 
-    = (dest_row - src_row) * (dest_row - src_row) 
-    + (dest_col - src_col) * (dest_col - src_col);
-    if (distance_square == 0) return false;
+/**
+ * @brief 位置是否在玩家领地内；玩家一的领地是5-9行，玩家二的领地是0-4行
+ * 使用前最好先使用isInside()
+ * 
+ * @param board 棋盘
+ * @param row 
+ * @param col 
+ * @return int 返回true，若玩家不在自己的领地内；否则返回false
+ */
+int isBeyond(struct ChessBoard* board, int row, int col) {
+    if (board->user == PLAYER_1) 
+        return (5 <= row && row <= 9) && (0 <= col && col <= 8);
+    if (board->user == PLAYER_2) 
+        return (0 <= row && row <= 4) && (0 <= col && col <= 8);
+}
 
+/**
+ * @brief 选择棋子，若可以操纵，则计算出可移动路径图层
+ * 
+ * @param board 棋盘
+ * @param src_row 
+ * @param src_col 
+ * @return int 返回true，若棋子可以操纵；否则，返回false
+ */
+int choose(struct ChessBoard* board, int src_row, int src_col) {
+    if (isControllable(board, src_row, src_col) == false) 
+        return false;
+    else {
+        moveablePosition(board, src_row, src_col); 
+        return true;
+    }
+}
+
+void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
+    struct Chess* chess = board->block[src_row][src_col];
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            board->moveablePos[i][j] = false;
+        } 
+    }
+    
     switch (chess->type) {
         case GENERAL: // 是否在九宫格内且移动了一格
         {
-            int inside = (dest_row >= 0) && (dest_row < 3) && (dest_col > 2) && (dest_col < 6);
-            return inside && distance_square <= 2;
+            int dest_row[4], dest_col[4], inside;
+            dest_row[0] = src_row + 1;
+            dest_row[1] = src_row;
+            dest_row[2] = src_row - 1;
+            dest_row[3] = src_row;
+            dest_col[0] = src_col;
+            dest_col[1] = src_col + 1;
+            dest_col[2] = src_col;
+            dest_col[3] = src_col - 1;
+            for (int i = 0; i < 4; i++)
+            {
+                if (board->user == PLAYER_1) inside = (dest_row[i] >= 7) && (dest_row[i] < 10) && (dest_col[i] > 2) && (dest_col[i] < 6);
+                if (board->user == PLAYER_2) inside = (dest_row[i] >= 0) && (dest_row[i] < 3) && (dest_col[i] > 2) && (dest_col[i] < 6);
+                if (inside == true) board->moveablePos[dest_row[i]][dest_col[i]] = true;
+            }
+            break;
         }
-        case CHARIOT: // 目标位置与源位置是否在同一行或同一列
-            return dest_row == src_row || dest_col == src_col;
-        case HORSE: // 是否移动了三格
-            return distance_square <= 5;
+        case CHARIOT: // 车，目标位置与源位置是否在同一行或同一列
+        {
+            for (int i = src_row+1, j = src_col; isInside(i, j) && isNull(board, i, j); ++i) {
+                board->moveablePos[i][j] = true;
+            }
+            for (int i = src_row-1, j = src_col; isInside(i, j) && isNull(board, i, j); --i) {
+                board->moveablePos[i][j] = true;
+            }
+            for (int i = src_row, j = src_col+1; isInside(i, j) && isNull(board, i, j); ++j) {
+                board->moveablePos[i][j] = true;
+            }
+            for (int i = src_row, j = src_col-1; isInside(i, j) && isNull(board, i, j); --j) {
+                board->moveablePos[i][j] = true;
+            }
+            break;
+        }
+        case HORSE: // 马
+        {
+            int dest_row[4], dest_col[4];
+            dest_row[0] = src_row + 1;
+            dest_row[1] = src_row;
+            dest_row[2] = src_row - 1;
+            dest_row[3] = src_row;
+            dest_col[0] = src_col;
+            dest_col[1] = src_col + 1;
+            dest_col[2] = src_col;
+            dest_col[3] = src_col - 1;
+            for (int i = 0; i < 4; i++)
+            {
+                if (isInside(dest_row[i], dest_col[i]) && isNull(board, dest_row[i], dest_col[i])) {
+                    if (i == 0) {
+                        // 下
+                        setChessBoardMoveablePos(board, dest_row[i] + 1, dest_col[i] - 1, true);
+                        setChessBoardMoveablePos(board, dest_row[i] + 1, dest_col[i] + 1, true);
+                    }
+                    if (i == 1) {
+                        // 右
+                        setChessBoardMoveablePos(board, dest_row[i] + 1, dest_col[i] + 1, true);
+                        setChessBoardMoveablePos(board, dest_row[i] - 1, dest_col[i] + 1, true);
+                    }
+                    if (i == 2) {
+                        // 上
+                        setChessBoardMoveablePos(board, dest_row[i] - 1, dest_col[i] + 1, true);
+                        setChessBoardMoveablePos(board, dest_row[i] - 1, dest_col[i] - 1, true);
+                    }
+                    if (i == 3) {
+                        // 左
+                        setChessBoardMoveablePos(board, dest_row[i] + 1, dest_col[i] - 1, true);
+                        setChessBoardMoveablePos(board, dest_row[i] - 1, dest_col[i] - 1, true);
+                    }
+                }
+            }
+            
+            break;
+        }
         case ARTILLERY: 
             // 目标位置与源位置是否在同一行或同一列
             // 且目标位置有敌人，目标位置与源位置之间是否有棋子
-            if (dest_row == src_row || dest_col == src_col) {
-                if (board->block[dest_row][dest_col]->owner != board->user) {
-                    if (dest_row == src_row) {
-                        int begin = (src_col < dest_col ? src_col : dest_col) + 1;
-                        int end = src_col < dest_col ? dest_col : src_col;
-                        for (int i = begin; i < end; i++)
-                        {
-                            if (board->block[dest_row][i] != NULL) return true;
-                        }
-                        return false;
-                    }
-                    if (dest_col == src_col) {
-                        int begin = (src_row < dest_row ? src_row : dest_row) + 1;
-                        int end = src_row < dest_row ? dest_row : src_row;
-                        for (int i = begin; i < end; i++)
-                        {
-                            if (board->block[i][dest_col] != NULL) return true;
-                        }
-                        return false;
-                    }
-                    return true;
+        {
+            int i, j;
+            for (i = src_row+1, j = src_col; isInside(i, j) && isNull(board, i, j); ++i) {
+                board->moveablePos[i][j] = true;
+            }
+            for (++i; isInside(i, j); ++i) {
+                if (!isNull(board, i, j)) {
+                    if (!friendlyFireDetect(board, i, j)) board->moveablePos[i][j] = true;
+                    break;
                 }
             }
-            else return false;
-        // case
-        // case
+            for (i = src_row-1, j = src_col; isInside(i, j) && isNull(board, i, j); --i) {
+                board->moveablePos[i][j] = true;
+            }
+            for (--i; isInside(i, j); --i) {
+                if (!isNull(board, i, j)) {
+                    if (!friendlyFireDetect(board, i, j)) board->moveablePos[i][j] = true;
+                    break;
+                }
+            }
+            for (i = src_row, j = src_col+1; isInside(i, j) && isNull(board, i, j); ++j) {
+                board->moveablePos[i][j] = true;
+            }
+            for (++j; isInside(i, j); ++j) {
+                if (!isNull(board, i, j)) {
+                    if (!friendlyFireDetect(board, i, j)) board->moveablePos[i][j] = true;
+                    break;
+                }
+            }
+            for (i = src_row, j = src_col-1; isInside(i, j) && isNull(board, i, j); --j) {
+                board->moveablePos[i][j] = true;
+            }
+            for (--j; isInside(i, j); --j) {
+                if (!isNull(board, i, j)) {
+                    if (!friendlyFireDetect(board, i, j)) board->moveablePos[i][j] = true;
+                    break;
+                }
+            }
+            break;
+        }
+        case ELEPHANT: {
+            // 在内部且路径上没有敌人
+            char stop[4] = {false, false, false, false};
+            for (int i = 1; true; i++)
+            {
+                // 右下角，左下角，左上角，右上角
+                int 
+                rows[4] = { src_row + i, src_row + i, src_row - i, src_row - i }, 
+                cols[4] = { src_col + i, src_col - i, src_col - i, src_col + i }; 
+                for (int j = 0; j < 4; j++)
+                {
+                    if (stop[j] == true) continue;
+
+                    // 如果位置不在棋盘内或者越界，则停止前进预测
+                    if (!isInside(rows[j], cols[j]) || !isBeyond(board, rows[j], cols[j])) stop[j] = true;
+                    else {
+                        // 否则就认为可前进
+                        setChessBoardMoveablePos(board, rows[j], cols[j], true);
+                        if(!isNull(board, rows[j], cols[j])) {
+                            // 如果有棋子阻挡象眼，则象不可以前进到下一位置
+                            stop[j] = true;
+                        }
+                    }
+                }
+
+                // 如果四个方向都探测完成，结束
+                int end = true;
+                for (int j = 0; j < 4; j++)
+                {
+                    end &= stop[j];
+                }
+                if (end == true) break;
+            }
+            break;
+        }
+        case WARRIOR:
+            break;
         // case
     }
-    // if (chess->type == GENERAL) {
-    //     inside = dest_row >= 0 && dest_row < 3 && dest_col > 2 && dest_col < 6;
-    // }
 }
 
-void action(struct ChessBoard* board);
-void action(struct ChessBoard* board) {
-    char src[3], dest[3];
-    scanf("%s %s", src, dest);
-    int 
-    src_row = src[0] - '0', 
-    src_col = src[1] - '0', 
-    dest_row = dest[0] - '0', 
-    dest_col = dest[1] - '0';
+// 是否符合棋子移动规则
+int isMoveable(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col) {
+    return board->moveablePos[dest_row][dest_col] == true;
+}
 
-    if (src_row < BOARD_ROW && src_col < BOARD_COL 
-    && board->block[src_row][src_col] != NULL 
-    && dest_row < BOARD_ROW && src_col < BOARD_COL) {
-        if (board->block[dest_row][dest_col] != NULL) {
-            if (board->block[dest_row][dest_col]->owner == board->block[src_row][src_col]->owner) {
-                system("cls");
-                printf("不可移动到这里");
-                getchar();
-                getchar();
-                return;
-            }
-            else {
-                struct chessStack *cstk;
-                struct Chess *dead = board->block[dest_row][dest_col];
-                if (board->block[dest_row][dest_col]->owner == PLAYER_1) {
-                    cstk = board->dead_player1;
-                    printf("玩家一的%d已经被击败了", dead->type);
+int action(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col) {
+    // if (isControllable(board, src_row, src_col)) {
+    if (isInside(dest_row, dest_col)) {
+        if (!friendlyFireDetect(board, dest_row, dest_col)) {
+            if (isMoveable(board, src_row, src_col, dest_row, dest_col)) {
+                if (!isNull(board, dest_row, dest_col) 
+                && board->block[dest_row][dest_col]->owner != board->user) {
+                    struct chessStack *cstk;
+                    struct Chess *dead = board->block[dest_row][dest_col];
+                    if (board->block[dest_row][dest_col]->owner == PLAYER_1) {
+                        cstk = board->dead_player1;
+                        // printf("玩家一的%d已经被击败了", dead->type);
+                    }
+                    else {
+                        cstk = board->dead_player2;
+                    }
+                    printf("%s的%s已经被击败了", c2tUser(board, dead->owner), chessName(dead));
+                    cstk->stack[cstk->top++] = dead;
+                    getchar();
+                    getchar();
                 }
-                else {
-                    cstk = board->dead_player2;
-                    printf("玩家二的%d已经被击败了", dead->type);
-                }
-                cstk->stack[cstk->top++] = dead;
-                getchar();
-                getchar();
+                board->block[dest_row][dest_col] = board->block[src_row][src_col];
+                board->block[src_row][src_col] = NULL;
+                return true;
             }
         }
-        board->block[dest_row][dest_col] = board->block[src_row][src_col];
-        board->block[src_row][src_col] = NULL;
     }
-    // while (getchar() != '\n'); // 消除不必要的字符
+    // }
+    system("cls");
+    printf("不可移动到这里");
+    getchar();
+    getchar();
+    return false;
 }
 
-void printChessBoard(struct ChessBoard* board);
+
 void printChessBoard(struct ChessBoard* board) {
+    system("cls"); // 更新界面，windows为"cls"，linux为""
     printf("  ");
     for (int i = 0; i < 9; i++)
     {
-        printf("%d", i);
+        printf("%d  ", i);
     }
-    putchar('\n');  putchar('\n');
+    putchar('\n');  
+    // putchar('\n');
     
     for (int i = 0; i < 10; i++)
     {
         printf("%d ", i);
         for (int j = 0; j < 9; j++)
         {
-            if(board->block[i][j] == NULL) printf("*");
-            else {
-                // if (board->block[i][j]->type == GENERAL 
-                // && board->block[i][j]->owner == PLAYER_1 
-                // && board->block[i][j]->isAlive == true) printf("帥");
-                // else 
-                printf("%d", board->block[i][j]->type);
+            if(board->block[i][j] == NULL) {
+                if (board->moveablePos != NULL && board->moveablePos[i][j] == true) {
+                    color(WHITE_TEXT);
+                    printf("++");
+                }
+                else {
+                    color(WHITE_TEXT);
+                    printf("**");
+                }
             }
+            else {
+                if (board->block[i][j]->owner == PLAYER_1) color(RED_TEXT);
+                if (board->block[i][j]->owner == PLAYER_2) color(GREEN_TEXT);
+                // printf("%d", board->block[i][j]->type);
+                printf("%s", chessName(board->block[i][j]));
+            }
+            putchar(' ');
         }
+        color(WHITE_TEXT);
         putchar('\n');
     }
 
@@ -304,21 +526,11 @@ void printChessBoard(struct ChessBoard* board) {
         printf("%d ", board->dead_player1->stack[i]->type);
     }
     putchar('\n');
-}
 
-int main(int argc, char const *argv[])
-{   
-    // 初始化棋盘
-    Board board;
-    board = init();
-    while(true) {
-        printChessBoard(board);
-        action(board);
-        board->user = !board->user;
-        system("cls"); // 更新界面，windows为"cls"，linux为""
-    // printChessBoard(board);
-    }
-    // while(true) ;
-    getchar();
-    return 0;
+    // 提示当前操作玩家及其颜色
+    printf("当前操作玩家：");
+    if (board->user == PLAYER_1) color(RED_TEXT);
+    if (board->user == PLAYER_2) color(GREEN_TEXT);
+    printf("%s\n", c2tUser(board, board->user));
+    color(WHITE_TEXT);
 }
