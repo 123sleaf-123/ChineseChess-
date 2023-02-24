@@ -3,26 +3,30 @@
 
 int main(int argc, char const *argv[])
 {   
-    // åˆå§‹åŒ–æ£‹ç›˜
+    // ³õÊ¼»¯ÆåÅÌ
     Board board;
     board = initChessBoard();
     while(true) {
         printChessBoard(board);
         char src[10], dest[10];
 
+        Sleep(2000);
         scanf("%s", src);
+        Sleep(1000);
         int 
         src_row = src[0] - '0', 
         src_col = src[1] - '0';
 
         if (choose(board, src_row, src_col) == false) 
-            continue; // ä¸€æ—¦æ‰§è¡Œäº†è¯¥å‡½æ•°ï¼Œå¿…é¡»åœ¨ä¸‹ä¸€å¾ªç¯å‰ä½¿ç”¨actionFinishedå‡½æ•°
+            continue; // Ò»µ©Ö´ĞĞÁË¸Ãº¯Êı£¬±ØĞëÔÚÏÂÒ»Ñ­»·Ç°Ê¹ÓÃactionFinishedº¯Êı
 
         int dest_row, dest_col, action_res;
         do {
             action_res = false;
             printChessBoard(board);
+            Sleep(2000);
             scanf("%s", dest);
+            Sleep(2000);
             if (strcmp(dest, "cancel") == 0) {
                 actionFinished(board);
                 break;
@@ -31,8 +35,17 @@ int main(int argc, char const *argv[])
             dest_col = dest[1] - '0';
             action_res = action(board, src_row, src_col, dest_row, dest_col);
         } while (action_res == false);
-        if (action_res == true) board->user = !board->user;
         actionFinished(board);
+        if (action_res == true) {
+            // Èç¹ûÍæ¼ÒÒÑ¾­ĞĞ¶¯
+            if (isGameEnd(board) == true) {
+                printChessBoard(board);
+                putchar('\n');
+                printf("ÓÎÏ·½áÊø");
+                break;
+            }
+            else board->user = !board->user;
+        }
     }
     getchar();
     return 0;

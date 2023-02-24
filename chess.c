@@ -1,9 +1,10 @@
 #include "chess.h"
+#include <stdarg.h>
 
 struct ChessStack* initChessStack(int maxSize) {
     struct ChessStack* stack = (struct ChessStack*) malloc(sizeof(struct ChessStack));
     stack->stack = (struct Chess**) malloc(sizeof(struct Chess*) * maxSize);
-    stack->top = 0;
+    stack->top = -1;
     stack->maxSize = maxSize;
     return stack;
 }
@@ -12,13 +13,28 @@ struct ChessStack* initChessStack_default() {
     return initChessStack(16);
 }
 
+/**
+ * @brief 判断栈是否为空
+ * 
+ * @param stack 棋子的栈
+ * @return int 返回true，如果栈为空；返回false，若果栈非空
+ */
+int isChessStackEmpty(struct ChessStack *chess_stk) {
+    if (chess_stk->top == -1) return true;
+    else return false;
+}
 
 int ChessStackPush(struct ChessStack *chess_stk, struct Chess *chess) {
     if (chess_stk->top < chess_stk->maxSize) {
-        chess_stk->stack[chess_stk->top++] = chess;
+        chess_stk->stack[++chess_stk->top] = chess;
         return true;
     }
     else return false;
+}
+
+struct Chess *ChessStackTop(struct ChessStack *chess_stk) {
+    if (isChessStackEmpty(chess_stk) == true) return NULL;
+    else return chess_stk->stack[chess_stk->top];
 }
 
 Chess initChess(struct ChessBoard *board, int type, int owner, int isAlive) {
@@ -183,6 +199,11 @@ char *chessName(struct Chess* chess) {
     return " ";
 }
 
+/**
+ * @brief 行动完成，可移动路径图层和已选择棋子清空
+ * 
+ * @param board 棋盘
+ */
 void actionFinished(struct ChessBoard *board) {
     for (int i = 0; i < 10; i++)
     {
@@ -325,17 +346,21 @@ void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
         }
         case CHARIOT: // 车，目标位置与源位置是否在同一行或同一列
         {
-            for (int i = src_row+1, j = src_col; isInside(i, j) && isNull(board, i, j); ++i) {
+            for (int i = src_row+1, j = src_col; isInside(i, j); ++i) {
                 board->moveablePos[i][j] = true;
+                if (isNull(board, i, j) == false) break;
             }
-            for (int i = src_row-1, j = src_col; isInside(i, j) && isNull(board, i, j); --i) {
+            for (int i = src_row-1, j = src_col; isInside(i, j); --i) {
                 board->moveablePos[i][j] = true;
+                if (isNull(board, i, j) == false) break;
             }
-            for (int i = src_row, j = src_col+1; isInside(i, j) && isNull(board, i, j); ++j) {
+            for (int i = src_row, j = src_col+1; isInside(i, j); ++j) {
                 board->moveablePos[i][j] = true;
+                if (isNull(board, i, j) == false) break;
             }
-            for (int i = src_row, j = src_col-1; isInside(i, j) && isNull(board, i, j); --j) {
+            for (int i = src_row, j = src_col-1; isInside(i, j); --j) {
                 board->moveablePos[i][j] = true;
+                if (isNull(board, i, j) == false) break;
             }
             break;
         }
@@ -491,13 +516,12 @@ int action(struct ChessBoard* board, int src_row, int src_col, int dest_row, int
                     struct Chess *dead = board->block[dest_row][dest_col];
                     if (board->block[dest_row][dest_col]->owner == PLAYER_1) {
                         cstk = board->dead_player1;
-                        // printf("玩家一的%d已经被击败了", dead->type);
                     }
                     else {
                         cstk = board->dead_player2;
                     }
                     printf("%s的%s已经被击败了", c2tUser(board, dead->owner), chessName(dead));
-                    cstk->stack[cstk->top++] = dead;
+                    ChessStackPush(cstk, dead);
                     getchar();
                     getchar();
                 }
@@ -515,6 +539,42 @@ int action(struct ChessBoard* board, int src_row, int src_col, int dest_row, int
     return false;
 }
 
+/**
+ * @brief 判断游戏是否结束（是否将死）
+ * 
+ * @param board 棋盘
+ * @return int 返回true，如果已经将死；否则返回false
+ */
+int isGameEnd(struct ChessBoard* board) {
+    if (
+    (isChessStackEmpty(board->dead_player1) == false && ChessStackTop(board->dead_player1)->type == GENERAL) || 
+    (isChessStackEmpty(board->dead_player2) == false && ChessStackTop(board->dead_player2)->type == GENERAL))
+        return true;
+    else return false;
+}
+
+int color_printf(int text_color, const char *format, ...) {
+    color(text_color);
+    va_list args;           // 定义一个va_list类型的变量，用来储存单个参数
+    va_start(args, format); // 使args指向可变参数的第一个参数
+    int len = vprintf(format, args);  // 必须用带v的
+    va_end(args);           // 结束可变参数的获取
+    color(WHITE_TEXT);
+    return len;
+}
+
+int autoColor_printf(int user, const char *format, ...) {
+    int text_color = WHITE_TEXT;
+    if (user == PLAYER_1) text_color = RED_TEXT;
+    if (user == PLAYER_2) text_color = GREEN_TEXT;
+    color(text_color);
+    va_list args;           // 定义一个va_list类型的变量，用来储存单个参数
+    va_start(args, format); // 使args指向可变参数的第一个参数
+    int len = vprintf(format, args);  // 必须用带v的
+    va_end(args);           // 结束可变参数的获取
+    color(WHITE_TEXT);
+    return len;
+}
 
 void printChessBoard(struct ChessBoard* board) {
     system("cls"); // 更新界面，windows为"cls"，linux为""
@@ -526,52 +586,49 @@ void printChessBoard(struct ChessBoard* board) {
     putchar('\n');  
     // putchar('\n');
     
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < BOARD_ROW; i++)
     {
         printf("%d ", i);
-        for (int j = 0; j < 9; j++)
+        for (int j = 0; j < BOARD_COL; j++)
         {
             if(board->block[i][j] == NULL) {
                 if (board->moveablePos != NULL && board->moveablePos[i][j] == true) {
-                    color(WHITE_TEXT);
                     printf("++");
                 }
                 else {
-                    color(WHITE_TEXT);
                     printf("**");
                 }
             }
             else {
-                if (board->block[i][j]->owner == PLAYER_1) color(RED_TEXT);
-                if (board->block[i][j]->owner == PLAYER_2) color(GREEN_TEXT);
-                // printf("%d", board->block[i][j]->type);
-                printf("%s", chessName(board->block[i][j]));
+                if (board->block[i][j] == board->chessChoose) color_printf(BLUE_TEXT, "%s", chessName(board->block[i][j]));
+                else autoColor_printf(board->block[i][j]->owner, "%s", chessName(board->block[i][j]));
             }
             putchar(' ');
         }
-        color(WHITE_TEXT);
+        // color(WHITE_TEXT);
         putchar('\n');
     }
 
-    // 打印死亡棋子
+    // 打印玩家击败的棋子
     printf("玩家一\t");
-    for (int i = 0; i < board->dead_player2->top; i++)
+    for (int i = 0; i <= board->dead_player2->top; i++)
     {
-        printf("%s ", chessName(board->dead_player2->stack[i]));
+        autoColor_printf(PLAYER_2, "%s ", chessName(board->dead_player2->stack[i]));
     }
 
     putchar('\n');
     printf("玩家二\t");
-    for (int i = 0; i < board->dead_player1->top; i++)
+    for (int i = 0; i <= board->dead_player1->top; i++)
     {
-        printf("%s ", chessName(board->dead_player1->stack[i]));
+        autoColor_printf(PLAYER_1, "%s ", chessName(board->dead_player1->stack[i]));
     }
     putchar('\n');
 
     // 提示当前操作玩家及其颜色
     printf("当前操作玩家：");
-    if (board->user == PLAYER_1) color(RED_TEXT);
-    if (board->user == PLAYER_2) color(GREEN_TEXT);
-    printf("%s\n", c2tUser(board, board->user));
-    color(WHITE_TEXT);
+    autoColor_printf(board->user, "%s\n", c2tUser(board, board->user));
+
+    printf("当前选中棋子：");
+    if (board->chessChoose == NULL) printf("未选中棋子\n");
+    else autoColor_printf(board->chessChoose->owner, "%s\n", chessName(board->chessChoose));
 }

@@ -9,6 +9,7 @@
 #define GREEN_TEXT 2
 #define RED_TEXT 4
 #define WHITE_TEXT 7
+#define BLUE_TEXT 9
 
 typedef struct Chess
 {
@@ -64,6 +65,9 @@ struct Position
 struct ChessStack* initChessStack(int maxSize);
 struct ChessStack* initChessStack_default();
 int ChessStackPush(struct ChessStack *stack, struct Chess *chess);
+int isChessStackEmpty(struct ChessStack *stack);
+struct Chess *ChessStackTop(struct ChessStack *stack);
+
 Chess initChess(struct ChessBoard *board, int type, int owner, int isAlive);
 struct ChessBoard* initChessBoard();
 int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val);
@@ -84,4 +88,7 @@ int choose(struct ChessBoard* board, int src_row, int src_col);
 void moveablePosition(struct ChessBoard* board, int src_row, int src_col);
 int isMoveable(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col);
 int action(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col);
+int isGameEnd(struct ChessBoard* board);
+int autoColor_printf(int user, const char *format, ...);
+int color_printf(int text_color, const char *format, ...);
 void printChessBoard(struct ChessBoard* board);
