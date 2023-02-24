@@ -1,18 +1,34 @@
 #include "chess.h"
 
-Chess initChess(struct ChessBoard *board, int type, int owner, int isAlive) {
-    struct Chess* ch = (Chess) malloc(sizeof(struct Chess));
-    ch->id = board->objectCount;
-    ch->type = type;
-    ch->owner = owner;
-    ch->isAlive = isAlive;
-    board->objects[board->objectCount++] = ch;
-    return ch;
+struct ChessStack* initChessStack(int maxSize) {
+    struct ChessStack* stack = (struct ChessStack*) malloc(sizeof(struct ChessStack));
+    stack->stack = (struct Chess**) malloc(sizeof(struct Chess*) * maxSize);
+    stack->top = 0;
+    stack->maxSize = maxSize;
+    return stack;
 }
 
-struct chessStack* initChessStack() {
-    struct chessStack* stk = (struct chessStack*) malloc(sizeof(struct chessStack));
-    stk->top = 0;
+struct ChessStack* initChessStack_default() {
+    return initChessStack(16);
+}
+
+
+int ChessStackPush(struct ChessStack *chess_stk, struct Chess *chess) {
+    if (chess_stk->top < chess_stk->maxSize) {
+        chess_stk->stack[chess_stk->top++] = chess;
+        return true;
+    }
+    else return false;
+}
+
+Chess initChess(struct ChessBoard *board, int type, int owner, int isAlive) {
+    struct Chess* chess = (Chess) malloc(sizeof(struct Chess));
+    chess->id = board->objects->top;
+    chess->type = type;
+    chess->owner = owner;
+    chess->isAlive = isAlive;
+    ChessStackPush(board->objects, chess);
+    return chess;
 }
 
 struct ChessBoard* initChessBoard() {
@@ -24,7 +40,7 @@ struct ChessBoard* initChessBoard() {
             board->block[i][j] = NULL;
         }
     }
-    board->objectCount = 0;
+    board->objects = initChessStack_default();
 
     // 玩家一初始化
     board->block[9][4] = initChess(board, GENERAL, PLAYER_1, true);
@@ -92,8 +108,9 @@ struct ChessBoard* initChessBoard() {
     }
     
     board->user = PLAYER_1; // 开局玩家初始化
-    board->dead_player1 = initChessStack();
-    board->dead_player2 = initChessStack();
+    board->chessChoose = NULL;
+    board->dead_player1 = initChessStack_default();
+    board->dead_player2 = initChessStack_default();
 }
 
 int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val) {
@@ -174,6 +191,7 @@ void actionFinished(struct ChessBoard *board) {
             board->moveablePos[i][j] = false;
         } 
     }
+    board->chessChoose = NULL;
 }
 
 /*
@@ -259,7 +277,7 @@ int isInsidePalace(struct ChessBoard* board, int row, int col) {
 }
 
 /**
- * @brief 选择棋子，若可以操纵，则计算出可移动路径图层
+ * @brief 选择棋子，若可以操纵，则记录当前选中棋子，计算出可移动路径图层
  * 
  * @param board 棋盘
  * @param src_row 
@@ -270,6 +288,7 @@ int choose(struct ChessBoard* board, int src_row, int src_col) {
     if (isControllable(board, src_row, src_col) == false) 
         return false;
     else {
+        board->chessChoose = board->block[src_row][src_col];
         moveablePosition(board, src_row, src_col); 
         return true;
     }
@@ -468,7 +487,7 @@ int action(struct ChessBoard* board, int src_row, int src_col, int dest_row, int
             if (isMoveable(board, src_row, src_col, dest_row, dest_col)) {
                 if (!isNull(board, dest_row, dest_col) 
                 && board->block[dest_row][dest_col]->owner != board->user) {
-                    struct chessStack *cstk;
+                    struct ChessStack *cstk;
                     struct Chess *dead = board->block[dest_row][dest_col];
                     if (board->block[dest_row][dest_col]->owner == PLAYER_1) {
                         cstk = board->dead_player1;

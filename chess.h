@@ -37,21 +37,22 @@ typedef struct Chess
 #define DEAD false
 #define ALIVE true
 
-struct chessStack
+struct ChessStack
 {
-    struct Chess *stack[16];
+    struct Chess **stack;
     int top;
+    int maxSize;
 };
 
 typedef struct ChessBoard
 {
     struct Chess *block[10][9];
-    struct Chess *objects[100];
-    int objectCount;
+    struct ChessStack *objects;
     char moveablePos[10][9];
     int user;
-    struct chessStack *dead_player1;
-    struct chessStack *dead_player2;
+    struct Chess *chessChoose;
+    struct ChessStack *dead_player1;
+    struct ChessStack *dead_player2;
 } *Board;
 
 struct Position
@@ -60,20 +61,25 @@ struct Position
     int y; // 纵坐标
 };
 
+struct ChessStack* initChessStack(int maxSize);
+struct ChessStack* initChessStack_default();
+int ChessStackPush(struct ChessStack *stack, struct Chess *chess);
 Chess initChess(struct ChessBoard *board, int type, int owner, int isAlive);
-struct chessStack* initChessStack();
 struct ChessBoard* initChessBoard();
 int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val);
 struct Position* initPosition(int x, int y);
+
 void color(int x);
 char *c2tUser(struct ChessBoard* board, int code);
 char *chessName(struct Chess* chess);
+
 void actionFinished(struct ChessBoard *board);
 int isInside(int row, int col); 
 int isNull(struct ChessBoard* board, int row, int col);
 int isControllable(struct ChessBoard* board, int row, int col);
 int friendlyFireDetect(struct ChessBoard* board, int row, int col);
 int isBeyond(struct ChessBoard* board, int row, int col);
+
 int choose(struct ChessBoard* board, int src_row, int src_col);
 void moveablePosition(struct ChessBoard* board, int src_row, int src_col);
 int isMoveable(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col);
