@@ -12,7 +12,7 @@ int main(int argc, char const *argv[])
 
         Sleep(2000);
         scanf("%s", src);
-        Sleep(1000);
+        Sleep(2000);
         int 
         src_row = src[0] - '0', 
         src_col = src[1] - '0';
