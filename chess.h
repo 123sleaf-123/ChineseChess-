@@ -12,9 +12,10 @@
 
 typedef struct Chess
 {
+    int id;
     int type;
     int owner; // 
-    int isAlive;
+    char isAlive;
 } *Chess;
 
 // block type
@@ -45,6 +46,8 @@ struct chessStack
 typedef struct ChessBoard
 {
     struct Chess *block[10][9];
+    struct Chess *objects[100];
+    int objectCount;
     char moveablePos[10][9];
     int user;
     struct chessStack *dead_player1;
@@ -57,7 +60,7 @@ struct Position
     int y; // 纵坐标
 };
 
-Chess initChess(int type, int owner, int isAlive);
+Chess initChess(struct ChessBoard *board, int type, int owner, int isAlive);
 struct chessStack* initChessStack();
 struct ChessBoard* initChessBoard();
 int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val);

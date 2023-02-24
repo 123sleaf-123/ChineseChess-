@@ -1,10 +1,12 @@
 #include "chess.h"
 
-Chess initChess(int type, int owner, int isAlive) {
+Chess initChess(struct ChessBoard *board, int type, int owner, int isAlive) {
     struct Chess* ch = (Chess) malloc(sizeof(struct Chess));
+    ch->id = board->objectCount;
     ch->type = type;
     ch->owner = owner;
     ch->isAlive = isAlive;
+    board->objects[board->objectCount++] = ch;
     return ch;
 }
 
@@ -22,62 +24,63 @@ struct ChessBoard* initChessBoard() {
             board->block[i][j] = NULL;
         }
     }
+    board->objectCount = 0;
 
     // 玩家一初始化
-    board->block[9][4] = initChess(GENERAL, PLAYER_1, true);
+    board->block[9][4] = initChess(board, GENERAL, PLAYER_1, true);
 
-    board->block[9][3] = initChess(WARRIOR, PLAYER_1, true);
-    board->block[9][5] = initChess(WARRIOR, PLAYER_1, true);
-
-    
-    board->block[9][2] = initChess(ELEPHANT, PLAYER_1, true);
-    board->block[9][6] = initChess(ELEPHANT, PLAYER_1, true);
+    board->block[9][3] = initChess(board, WARRIOR, PLAYER_1, true);
+    board->block[9][5] = initChess(board, WARRIOR, PLAYER_1, true);
 
     
-    board->block[9][1] = initChess(HORSE, PLAYER_1, true);
-    board->block[9][7] = initChess(HORSE, PLAYER_1, true);
+    board->block[9][2] = initChess(board, ELEPHANT, PLAYER_1, true);
+    board->block[9][6] = initChess(board, ELEPHANT, PLAYER_1, true);
 
     
-    board->block[9][0] = initChess(CHARIOT, PLAYER_1, true);
-    board->block[9][8] = initChess(CHARIOT, PLAYER_1, true);
+    board->block[9][1] = initChess(board, HORSE, PLAYER_1, true);
+    board->block[9][7] = initChess(board, HORSE, PLAYER_1, true);
 
     
-    board->block[7][1] = initChess(ARTILLERY, PLAYER_1, true);
-    board->block[7][7] = initChess(ARTILLERY, PLAYER_1, true);
+    board->block[9][0] = initChess(board, CHARIOT, PLAYER_1, true);
+    board->block[9][8] = initChess(board, CHARIOT, PLAYER_1, true);
 
-    board->block[6][0] = initChess(SOLDIER, PLAYER_1, true);
-    board->block[6][2] = initChess(SOLDIER, PLAYER_1, true);
-    board->block[6][4] = initChess(SOLDIER, PLAYER_1, true);
-    board->block[6][6] = initChess(SOLDIER, PLAYER_1, true);
-    board->block[6][8] = initChess(SOLDIER, PLAYER_1, true);
+    
+    board->block[7][1] = initChess(board, ARTILLERY, PLAYER_1, true);
+    board->block[7][7] = initChess(board, ARTILLERY, PLAYER_1, true);
+
+    board->block[6][0] = initChess(board, SOLDIER, PLAYER_1, true);
+    board->block[6][2] = initChess(board, SOLDIER, PLAYER_1, true);
+    board->block[6][4] = initChess(board, SOLDIER, PLAYER_1, true);
+    board->block[6][6] = initChess(board, SOLDIER, PLAYER_1, true);
+    board->block[6][8] = initChess(board, SOLDIER, PLAYER_1, true);
 
     // 玩家二初始化
-    board->block[0][4] = initChess(GENERAL, PLAYER_2, true);
+    board->block[0][4] = initChess(board, GENERAL, PLAYER_2, true);
 
-    board->block[0][3] = initChess(WARRIOR, PLAYER_2, true);
-    board->block[0][5] = initChess(WARRIOR, PLAYER_2, true);
-
-    
-    board->block[0][2] = initChess(ELEPHANT, PLAYER_2, true);
-    board->block[0][6] = initChess(ELEPHANT, PLAYER_2, true);
+    board->block[0][3] = initChess(board, WARRIOR, PLAYER_2, true);
+    board->block[0][5] = initChess(board, WARRIOR, PLAYER_2, true);
 
     
-    board->block[0][1] = initChess(HORSE, PLAYER_2, true);
-    board->block[0][7] = initChess(HORSE, PLAYER_2, true);
+    board->block[0][2] = initChess(board, ELEPHANT, PLAYER_2, true);
+    board->block[0][6] = initChess(board, ELEPHANT, PLAYER_2, true);
 
     
-    board->block[0][0] = initChess(CHARIOT, PLAYER_2, true);
-    board->block[0][8] = initChess(CHARIOT, PLAYER_2, true);
+    board->block[0][1] = initChess(board, HORSE, PLAYER_2, true);
+    board->block[0][7] = initChess(board, HORSE, PLAYER_2, true);
 
     
-    board->block[2][1] = initChess(ARTILLERY, PLAYER_2, true);
-    board->block[2][7] = initChess(ARTILLERY, PLAYER_2, true);
+    board->block[0][0] = initChess(board, CHARIOT, PLAYER_2, true);
+    board->block[0][8] = initChess(board, CHARIOT, PLAYER_2, true);
 
-    board->block[3][0] = initChess(SOLDIER, PLAYER_2, true);
-    board->block[3][2] = initChess(SOLDIER, PLAYER_2, true);
-    board->block[3][4] = initChess(SOLDIER, PLAYER_2, true);
-    board->block[3][6] = initChess(SOLDIER, PLAYER_2, true);
-    board->block[3][8] = initChess(SOLDIER, PLAYER_2, true);
+    
+    board->block[2][1] = initChess(board, ARTILLERY, PLAYER_2, true);
+    board->block[2][7] = initChess(board, ARTILLERY, PLAYER_2, true);
+
+    board->block[3][0] = initChess(board, SOLDIER, PLAYER_2, true);
+    board->block[3][2] = initChess(board, SOLDIER, PLAYER_2, true);
+    board->block[3][4] = initChess(board, SOLDIER, PLAYER_2, true);
+    board->block[3][6] = initChess(board, SOLDIER, PLAYER_2, true);
+    board->block[3][8] = initChess(board, SOLDIER, PLAYER_2, true);
     
     // 可移动区域初始化
     for (int i = 0; i < 10; i++)
@@ -535,14 +538,14 @@ void printChessBoard(struct ChessBoard* board) {
     printf("玩家一\t");
     for (int i = 0; i < board->dead_player2->top; i++)
     {
-        printf("%d ", board->dead_player2->stack[i]->type);
+        printf("%s ", chessName(board->dead_player2->stack[i]));
     }
 
     putchar('\n');
     printf("玩家二\t");
     for (int i = 0; i < board->dead_player1->top; i++)
     {
-        printf("%d ", board->dead_player1->stack[i]->type);
+        printf("%s ", chessName(board->dead_player1->stack[i]));
     }
     putchar('\n');
 
