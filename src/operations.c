@@ -1,208 +1,11 @@
-#include "chess.h"
-#include <stdarg.h>
-
-struct ChessStack* initChessStack(int maxSize) {
-    struct ChessStack* stack = (struct ChessStack*) malloc(sizeof(struct ChessStack));
-    stack->stack = (struct Chess**) malloc(sizeof(struct Chess*) * maxSize);
-    stack->top = -1;
-    stack->maxSize = maxSize;
-    return stack;
-}
-
-struct ChessStack* initChessStack_default() {
-    return initChessStack(16);
-}
+#include "global.h"
+#include "operations.h"
+#include "tools.h"
 
 /**
- * @brief ÅĞ¶ÏÕ»ÊÇ·ñÎª¿Õ
+ * @brief è¡ŒåŠ¨å®Œæˆï¼Œå¯ç§»åŠ¨è·¯å¾„å›¾å±‚å’Œå·²é€‰æ‹©æ£‹å­æ¸…ç©º
  * 
- * @param stack Æå×ÓµÄÕ»
- * @return int ·µ»Øtrue£¬Èç¹ûÕ»Îª¿Õ£»·µ»Øfalse£¬Èô¹ûÕ»·Ç¿Õ
- */
-int isChessStackEmpty(struct ChessStack *chess_stk) {
-    if (chess_stk->top == -1) return true;
-    else return false;
-}
-
-int ChessStackPush(struct ChessStack *chess_stk, struct Chess *chess) {
-    if (chess_stk->top < chess_stk->maxSize) {
-        chess_stk->stack[++chess_stk->top] = chess;
-        return true;
-    }
-    else return false;
-}
-
-struct Chess *ChessStackTop(struct ChessStack *chess_stk) {
-    if (isChessStackEmpty(chess_stk) == true) return NULL;
-    else return chess_stk->stack[chess_stk->top];
-}
-
-Chess initChess(struct ChessBoard *board, int type, int owner, int isAlive) {
-    struct Chess* chess = (Chess) malloc(sizeof(struct Chess));
-    chess->id = board->objects->top;
-    chess->type = type;
-    chess->owner = owner;
-    chess->isAlive = isAlive;
-    ChessStackPush(board->objects, chess);
-    return chess;
-}
-
-struct ChessBoard* initChessBoard() {
-    struct ChessBoard* board = (struct ChessBoard*) malloc(sizeof(struct ChessBoard));
-    for (int i = 0; i < 10; i++)
-    {
-        for (int j = 0; j < 9; j++)
-        {
-            board->block[i][j] = NULL;
-        }
-    }
-    board->objects = initChessStack_default();
-
-    // Íæ¼ÒÒ»³õÊ¼»¯
-    board->block[9][4] = initChess(board, GENERAL, PLAYER_1, true);
-
-    board->block[9][3] = initChess(board, WARRIOR, PLAYER_1, true);
-    board->block[9][5] = initChess(board, WARRIOR, PLAYER_1, true);
-
-    
-    board->block[9][2] = initChess(board, ELEPHANT, PLAYER_1, true);
-    board->block[9][6] = initChess(board, ELEPHANT, PLAYER_1, true);
-
-    
-    board->block[9][1] = initChess(board, HORSE, PLAYER_1, true);
-    board->block[9][7] = initChess(board, HORSE, PLAYER_1, true);
-
-    
-    board->block[9][0] = initChess(board, CHARIOT, PLAYER_1, true);
-    board->block[9][8] = initChess(board, CHARIOT, PLAYER_1, true);
-
-    
-    board->block[7][1] = initChess(board, ARTILLERY, PLAYER_1, true);
-    board->block[7][7] = initChess(board, ARTILLERY, PLAYER_1, true);
-
-    board->block[6][0] = initChess(board, SOLDIER, PLAYER_1, true);
-    board->block[6][2] = initChess(board, SOLDIER, PLAYER_1, true);
-    board->block[6][4] = initChess(board, SOLDIER, PLAYER_1, true);
-    board->block[6][6] = initChess(board, SOLDIER, PLAYER_1, true);
-    board->block[6][8] = initChess(board, SOLDIER, PLAYER_1, true);
-
-    // Íæ¼Ò¶ş³õÊ¼»¯
-    board->block[0][4] = initChess(board, GENERAL, PLAYER_2, true);
-
-    board->block[0][3] = initChess(board, WARRIOR, PLAYER_2, true);
-    board->block[0][5] = initChess(board, WARRIOR, PLAYER_2, true);
-
-    
-    board->block[0][2] = initChess(board, ELEPHANT, PLAYER_2, true);
-    board->block[0][6] = initChess(board, ELEPHANT, PLAYER_2, true);
-
-    
-    board->block[0][1] = initChess(board, HORSE, PLAYER_2, true);
-    board->block[0][7] = initChess(board, HORSE, PLAYER_2, true);
-
-    
-    board->block[0][0] = initChess(board, CHARIOT, PLAYER_2, true);
-    board->block[0][8] = initChess(board, CHARIOT, PLAYER_2, true);
-
-    
-    board->block[2][1] = initChess(board, ARTILLERY, PLAYER_2, true);
-    board->block[2][7] = initChess(board, ARTILLERY, PLAYER_2, true);
-
-    board->block[3][0] = initChess(board, SOLDIER, PLAYER_2, true);
-    board->block[3][2] = initChess(board, SOLDIER, PLAYER_2, true);
-    board->block[3][4] = initChess(board, SOLDIER, PLAYER_2, true);
-    board->block[3][6] = initChess(board, SOLDIER, PLAYER_2, true);
-    board->block[3][8] = initChess(board, SOLDIER, PLAYER_2, true);
-    
-    // ¿ÉÒÆ¶¯ÇøÓò³õÊ¼»¯
-    for (int i = 0; i < 10; i++)
-    {
-        for (int j = 0; j < 9; j++)
-        {
-            board->moveablePos[i][j] = false;
-        } 
-    }
-    
-    board->user = PLAYER_1; // ¿ª¾ÖÍæ¼Ò³õÊ¼»¯
-    board->chessChoose = NULL;
-    board->dead_player1 = initChessStack_default();
-    board->dead_player2 = initChessStack_default();
-}
-
-int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val) {
-    if ((0 <= row && row <= 9) && (0 <= col && col <= 8)) {
-        board->moveablePos[row][col] = val;
-        return true;
-    }
-    else return false;
-}
-
-struct Position* initPosition(int x, int y) {
-    struct Position* pos = (struct Position*) malloc(sizeof(struct Position));
-    pos->x = x;
-    pos->y = y;
-    return pos;
-}
-
-/**
- * @brief ÉèÖÃÎÄ×ÖÑÕÉ«
- * 
- * @param x ÑÕÉ«´úÂë
- */
-void color(int x) {
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), x);
-}
-
-char *c2tUser(struct ChessBoard* board, int code) {
-    if (code == PLAYER_1) return "Íæ¼ÒÒ»";
-    if (code == PLAYER_2) return "Íæ¼Ò¶ş";
-    return "";
-}
-
-/**
- * @brief ÊäÈëÆå×Ó£¬Êä³öÆå×ÓÖĞÎÄÃû×Ö£¬Çø·ÖÍæ¼Ò
- * 
- * @param chess Íæ¼ÒÆå×Ó
- * @return char* Æå×ÓÖĞÎÄÃû×Ö
- */
-char *chessName(struct Chess* chess) {
-    switch(chess->owner) {
-        // Íæ¼ÒÒ»ÊÇºìÉ«
-        case PLAYER_1: {
-            switch(chess->type) {
-                case GENERAL: return "›";
-                case CHARIOT: return "‚e";
-                case HORSE: return "‚Ø";
-                case ARTILLERY: return "ÅÚ";
-                case ELEPHANT: return "Ïà";
-                case WARRIOR: return "ÊË";
-                case SOLDIER: return "±ø";
-            }
-            break;
-        }
-
-        // Íæ¼Ò¶şÊÇÂÌÉ«
-        case PLAYER_2: {
-            switch(chess->type) {
-                case GENERAL: return "½«";
-                case CHARIOT: return "Ü‡";
-                case HORSE: return "ñR";
-                case ARTILLERY: return "³h";
-                case ELEPHANT: return "Ïó";
-                case WARRIOR: return "Ê¿";
-                case SOLDIER: return "×ä";
-            }
-            break;
-        }
-    }
-
-    return " ";
-}
-
-/**
- * @brief ĞĞ¶¯Íê³É£¬¿ÉÒÆ¶¯Â·¾¶Í¼²ãºÍÒÑÑ¡ÔñÆå×ÓÇå¿Õ
- * 
- * @param board ÆåÅÌ
+ * @param board æ£‹ç›˜
  */
 void actionFinished(struct ChessBoard *board) {
     for (int i = 0; i < 10; i++)
@@ -216,58 +19,58 @@ void actionFinished(struct ChessBoard *board) {
 }
 
 /*
-    1.²»¿ÉÒÆ¶¯£º
-        1.1. Ô­Î»ÖÃ²»´æÔÚ¼º·½Æå×Ó»ò²»´æÔÚÆå×Ó
-        1.2. Ä¿±êÎ»ÖÃ³¬³öÆåÅÌ·¶Î§
-        1.3. Ä¿±êÎ»ÖÃ´æÔÚ¼º·½Æå×Ó
-        1.4. ²»·ûºÏÆå×ÓÒÆ¶¯¹æÔò
-    2. ¿ÉÒÆ¶¯£º²Ù×İÁË¼º·½Æå×Ó£¬Î´³¬³öÆåÅÌ·¶Î§£¬ÇÒ·ûºÏÒÆ¶¯¹æÔò£¬ÇÒÄ¿±êÎ»ÖÃ²»´æÔÚ¼º·½Æå×Ó
-        2.1. »÷É±
-        2.2. ÎŞ»÷É±
+    1.ä¸å¯ç§»åŠ¨ï¼š
+        1.1. åŸä½ç½®ä¸å­˜åœ¨å·±æ–¹æ£‹å­æˆ–ä¸å­˜åœ¨æ£‹å­
+        1.2. ç›®æ ‡ä½ç½®è¶…å‡ºæ£‹ç›˜èŒƒå›´
+        1.3. ç›®æ ‡ä½ç½®å­˜åœ¨å·±æ–¹æ£‹å­
+        1.4. ä¸ç¬¦åˆæ£‹å­ç§»åŠ¨è§„åˆ™
+    2. å¯ç§»åŠ¨ï¼šæ“çºµäº†å·±æ–¹æ£‹å­ï¼Œæœªè¶…å‡ºæ£‹ç›˜èŒƒå›´ï¼Œä¸”ç¬¦åˆç§»åŠ¨è§„åˆ™ï¼Œä¸”ç›®æ ‡ä½ç½®ä¸å­˜åœ¨å·±æ–¹æ£‹å­
+        2.1. å‡»æ€
+        2.2. æ— å‡»æ€
 */
 
 /**
- * @brief ÊÇ·ñ³¬³öÆåÅÌ·¶Î§
+ * @brief æ˜¯å¦è¶…å‡ºæ£‹ç›˜èŒƒå›´
  * 
- * @param row Ä¿±êĞĞ
- * @param col Ä¿±êÁĞ
- * @return int ·µ»Øfalse£¬ÈôÄ¿±êÎ»ÖÃ³¬³öÆåÅÌ£»·ñÔò£¬·µ»Øtrue
+ * @param row ç›®æ ‡è¡Œ
+ * @param col ç›®æ ‡åˆ—
+ * @return int è¿”å›falseï¼Œè‹¥ç›®æ ‡ä½ç½®è¶…å‡ºæ£‹ç›˜ï¼›å¦åˆ™ï¼Œè¿”å›true
  */
 int isInside(int row, int col) {
     return (row < BOARD_ROW) && (col < BOARD_COL) && (row >= 0) && (col >= 0);
 }
 
 /**
- * @brief µ±Ç°×ø±êÎ»ÖÃÊÇ·ñ´æÔÚÆå×Ó
+ * @brief å½“å‰åæ ‡ä½ç½®æ˜¯å¦å­˜åœ¨æ£‹å­
  * 
- * @param board ÆåÅÌ
- * @param row ĞĞ
- * @param col ÁĞ
- * @return int ·µ»Øtrue£¬Èô²»´æÔÚÆå×Ó£»·µ»Øfalse£¬Èô´æÔÚÆå×Ó
+ * @param board æ£‹ç›˜
+ * @param row è¡Œ
+ * @param col åˆ—
+ * @return int è¿”å›trueï¼Œè‹¥ä¸å­˜åœ¨æ£‹å­ï¼›è¿”å›falseï¼Œè‹¥å­˜åœ¨æ£‹å­
  */
 int isNull(struct ChessBoard* board, int row, int col) {
     return board->block[row][col] == NULL;
 }
 
 /**
- * @brief Ô­Î»ÖÃÊÇ·ñ´æÔÚ¼º·½Æå×Ó
+ * @brief åŸä½ç½®æ˜¯å¦å­˜åœ¨å·±æ–¹æ£‹å­
  * 
- * @param board ÆåÅÌ
- * @param row Ô­ĞĞ
- * @param col Ô­ÁĞ
- * @return int ·µ»Øtrue£¬Èô´æÔÚ¼º·½Æå×Ó£»·µ»Øfalse£¬Èô²»´æÔÚÆå×Ó»ò´æÔÚµĞ·½Æå×Ó
+ * @param board æ£‹ç›˜
+ * @param row åŸè¡Œ
+ * @param col åŸåˆ—
+ * @return int è¿”å›trueï¼Œè‹¥å­˜åœ¨å·±æ–¹æ£‹å­ï¼›è¿”å›falseï¼Œè‹¥ä¸å­˜åœ¨æ£‹å­æˆ–å­˜åœ¨æ•Œæ–¹æ£‹å­
  */
 int isControllable(struct ChessBoard* board, int row, int col) {
     return !isNull(board, row, col) && (board->block[row][col]->owner == board->user);
 }
 
 /**
- * @brief Ä¿±êÎ»ÖÃÊÇ·ñ´æÔÚ¼º·½Æå×Ó£¬ÊÇ·ñ»áÔì³ÉÓÑÉË
+ * @brief ç›®æ ‡ä½ç½®æ˜¯å¦å­˜åœ¨å·±æ–¹æ£‹å­ï¼Œæ˜¯å¦ä¼šé€ æˆå‹ä¼¤
  * 
- * @param board ÆåÅÌ
- * @param row Ä¿±êĞĞ
- * @param col Ä¿±êÁĞ
- * @return int ·µ»Øtrue£¬ÈôÄ¿±êÎ»ÖÃÎªÎÒ·½Æå×Ó£»·µ»Øfalse£¬ÈôÄ¿±êÎ»ÖÃÎª¿Õ»òµĞ·½Æå×Ó
+ * @param board æ£‹ç›˜
+ * @param row ç›®æ ‡è¡Œ
+ * @param col ç›®æ ‡åˆ—
+ * @return int è¿”å›trueï¼Œè‹¥ç›®æ ‡ä½ç½®ä¸ºæˆ‘æ–¹æ£‹å­ï¼›è¿”å›falseï¼Œè‹¥ç›®æ ‡ä½ç½®ä¸ºç©ºæˆ–æ•Œæ–¹æ£‹å­
  */
 int friendlyFireDetect(struct ChessBoard* board, int row, int col) {
     return !isNull(board, row, col) 
@@ -275,19 +78,20 @@ int friendlyFireDetect(struct ChessBoard* board, int row, int col) {
 }
 
 /**
- * @brief Î»ÖÃÊÇ·ñÔÚÍæ¼ÒÁìµØÄÚ£»Íæ¼ÒÒ»µÄÁìµØÊÇ5-9ĞĞ£¬Íæ¼Ò¶şµÄÁìµØÊÇ0-4ĞĞ
- * Ê¹ÓÃÇ°×îºÃÏÈÊ¹ÓÃisInside()
+ * @brief ä½ç½®æ˜¯å¦åœ¨ç©å®¶é¢†åœ°å†…ï¼›ç©å®¶ä¸€çš„é¢†åœ°æ˜¯5-9è¡Œï¼Œç©å®¶äºŒçš„é¢†åœ°æ˜¯0-4è¡Œ
+ * ä½¿ç”¨å‰æœ€å¥½å…ˆä½¿ç”¨isInside()
  * 
- * @param board ÆåÅÌ
+ * @param board æ£‹ç›˜
  * @param row 
  * @param col 
- * @return int ·µ»Øtrue£¬ÈôÍæ¼Ò²»ÔÚ×Ô¼ºµÄÁìµØÄÚ£»·ñÔò·µ»Øfalse
+ * @return int è¿”å›trueï¼Œè‹¥ç©å®¶ä¸åœ¨è‡ªå·±çš„é¢†åœ°å†…ï¼›å¦åˆ™è¿”å›false
  */
 int isBeyond(struct ChessBoard* board, int row, int col) {
     if (board->user == PLAYER_1) 
         return !((5 <= row && row <= 9) && (0 <= col && col <= 8));
     if (board->user == PLAYER_2) 
         return !((0 <= row && row <= 4) && (0 <= col && col <= 8));
+    return true;
 }
 
 int isInsidePalace(struct ChessBoard* board, int row, int col) {
@@ -295,15 +99,16 @@ int isInsidePalace(struct ChessBoard* board, int row, int col) {
         return (7 <= row) && (row <= 9) && (3 <= col) && (col <= 5);
     if (board->user == PLAYER_2) 
         return (0 <= row) && (row <= 2) && (3 <= col) && (col <= 5);
+    return true;
 }
 
 /**
- * @brief Ñ¡ÔñÆå×Ó£¬Èô¿ÉÒÔ²Ù×İ£¬Ôò¼ÇÂ¼µ±Ç°Ñ¡ÖĞÆå×Ó£¬¼ÆËã³ö¿ÉÒÆ¶¯Â·¾¶Í¼²ã
+ * @brief é€‰æ‹©æ£‹å­ï¼Œè‹¥å¯ä»¥æ“çºµï¼Œåˆ™è®°å½•å½“å‰é€‰ä¸­æ£‹å­ï¼Œè®¡ç®—å‡ºå¯ç§»åŠ¨è·¯å¾„å›¾å±‚
  * 
- * @param board ÆåÅÌ
+ * @param board æ£‹ç›˜
  * @param src_row 
  * @param src_col 
- * @return int ·µ»Øtrue£¬ÈôÆå×Ó¿ÉÒÔ²Ù×İ£»·ñÔò£¬·µ»Øfalse
+ * @return int è¿”å›trueï¼Œè‹¥æ£‹å­å¯ä»¥æ“çºµï¼›å¦åˆ™ï¼Œè¿”å›false
  */
 int choose(struct ChessBoard* board, int src_row, int src_col) {
     if (isControllable(board, src_row, src_col) == false) 
@@ -326,9 +131,9 @@ void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
     }
     
     switch (chess->type) {
-        case GENERAL: // ÊÇ·ñÔÚ¾Å¹¬¸ñÄÚÇÒÒÆ¶¯ÁËÒ»¸ñ
+        case GENERAL: // æ˜¯å¦åœ¨ä¹å®«æ ¼å†…ä¸”ç§»åŠ¨äº†ä¸€æ ¼
         {
-            int dest_row[4], dest_col[4], inside;
+            int dest_row[4], dest_col[4];
             dest_row[0] = src_row + 1;
             dest_row[1] = src_row;
             dest_row[2] = src_row - 1;
@@ -344,7 +149,7 @@ void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
             }
             break;
         }
-        case CHARIOT: // ³µ£¬Ä¿±êÎ»ÖÃÓëÔ´Î»ÖÃÊÇ·ñÔÚÍ¬Ò»ĞĞ»òÍ¬Ò»ÁĞ
+        case CHARIOT: // è½¦ï¼Œç›®æ ‡ä½ç½®ä¸æºä½ç½®æ˜¯å¦åœ¨åŒä¸€è¡Œæˆ–åŒä¸€åˆ—
         {
             for (int i = src_row+1, j = src_col; isInside(i, j); ++i) {
                 board->moveablePos[i][j] = true;
@@ -364,7 +169,7 @@ void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
             }
             break;
         }
-        case HORSE: // Âí
+        case HORSE: // é©¬
         {
             int dest_row[4], dest_col[4];
             dest_row[0] = src_row + 1;
@@ -379,22 +184,22 @@ void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
             {
                 if (isInside(dest_row[i], dest_col[i]) && isNull(board, dest_row[i], dest_col[i])) {
                     if (i == 0) {
-                        // ÏÂ
+                        // ä¸‹
                         setChessBoardMoveablePos(board, dest_row[i] + 1, dest_col[i] - 1, true);
                         setChessBoardMoveablePos(board, dest_row[i] + 1, dest_col[i] + 1, true);
                     }
                     if (i == 1) {
-                        // ÓÒ
+                        // å³
                         setChessBoardMoveablePos(board, dest_row[i] + 1, dest_col[i] + 1, true);
                         setChessBoardMoveablePos(board, dest_row[i] - 1, dest_col[i] + 1, true);
                     }
                     if (i == 2) {
-                        // ÉÏ
+                        // ä¸Š
                         setChessBoardMoveablePos(board, dest_row[i] - 1, dest_col[i] + 1, true);
                         setChessBoardMoveablePos(board, dest_row[i] - 1, dest_col[i] - 1, true);
                     }
                     if (i == 3) {
-                        // ×ó
+                        // å·¦
                         setChessBoardMoveablePos(board, dest_row[i] + 1, dest_col[i] - 1, true);
                         setChessBoardMoveablePos(board, dest_row[i] - 1, dest_col[i] - 1, true);
                     }
@@ -404,8 +209,8 @@ void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
             break;
         }
         case ARTILLERY: 
-            // Ä¿±êÎ»ÖÃÓëÔ´Î»ÖÃÊÇ·ñÔÚÍ¬Ò»ĞĞ»òÍ¬Ò»ÁĞ
-            // ÇÒÄ¿±êÎ»ÖÃÓĞµĞÈË£¬Ä¿±êÎ»ÖÃÓëÔ´Î»ÖÃÖ®¼äÊÇ·ñÓĞÆå×Ó
+            // ç›®æ ‡ä½ç½®ä¸æºä½ç½®æ˜¯å¦åœ¨åŒä¸€è¡Œæˆ–åŒä¸€åˆ—
+            // ä¸”ç›®æ ‡ä½ç½®æœ‰æ•Œäººï¼Œç›®æ ‡ä½ç½®ä¸æºä½ç½®ä¹‹é—´æ˜¯å¦æœ‰æ£‹å­
         {
             int i, j;
             for (i = src_row+1, j = src_col; isInside(i, j) && isNull(board, i, j); ++i) {
@@ -448,18 +253,18 @@ void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
         }
         case ELEPHANT: 
         {
-            // ÔÚÄÚ²¿ÇÒÂ·¾¶ÉÏÃ»ÓĞµĞÈË
+            // åœ¨å†…éƒ¨ä¸”è·¯å¾„ä¸Šæ²¡æœ‰æ•Œäºº
             char stop[4] = {false, false, false, false};
             for (int i = 1; i <= 2; i++)
             {
-                // ÓÒÏÂ½Ç£¬×óÏÂ½Ç£¬×óÉÏ½Ç£¬ÓÒÉÏ½Ç
+                // å³ä¸‹è§’ï¼Œå·¦ä¸‹è§’ï¼Œå·¦ä¸Šè§’ï¼Œå³ä¸Šè§’
                 int 
                 dest_row[4] = { src_row + i, src_row + i, src_row - i, src_row - i }, 
                 dest_col[4] = { src_col + i, src_col - i, src_col - i, src_col + i }; 
                 for (int j = 0; j < 4; j++)
                 {
-                    // Èç¹ûÎ»ÖÃ²»ÔÚÆåÅÌÄÚ¡¢Ô½½ç»òÕßÓĞÆå×Ó×èµ²ÏóÑÛ£¬ÔòÍ£Ö¹Ç°½øÔ¤²â
-                    // ·ñÔò¾ÍÈÏÎª¿ÉÇ°½ø
+                    // å¦‚æœä½ç½®ä¸åœ¨æ£‹ç›˜å†…ã€è¶Šç•Œæˆ–è€…æœ‰æ£‹å­é˜»æŒ¡è±¡çœ¼ï¼Œåˆ™åœæ­¢å‰è¿›é¢„æµ‹
+                    // å¦åˆ™å°±è®¤ä¸ºå¯å‰è¿›
                     if (i == 1 && (isBeyond(board, dest_row[j], dest_col[j]) || !isNull(board, dest_row[j], dest_col[j]))) 
                         stop[j] = true;
                     if (i == 2 && stop[j] == false) {
@@ -471,7 +276,7 @@ void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
         }
         case WARRIOR:
         {
-            // ÓÒÏÂ½Ç£¬×óÏÂ½Ç£¬×óÉÏ½Ç£¬ÓÒÉÏ½Ç
+            // å³ä¸‹è§’ï¼Œå·¦ä¸‹è§’ï¼Œå·¦ä¸Šè§’ï¼Œå³ä¸Šè§’
             int 
             dest_row[4] = { src_row + 1, src_row + 1, src_row - 1, src_row - 1 }, 
             dest_col[4] = { src_col + 1, src_col - 1, src_col - 1, src_col + 1 }; 
@@ -486,11 +291,11 @@ void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
         case SOLDIER:
         {
             if (isInside(src_row, src_col) && isBeyond(board, src_row, src_col)) {
-                // Ô½¹ıÁìµØ£¨³şºÓºº½ç£©£¬¿ÉÒÔÏòÓÒ×ó×ß
+                // è¶Šè¿‡é¢†åœ°ï¼ˆæ¥šæ²³æ±‰ç•Œï¼‰ï¼Œå¯ä»¥å‘å³å·¦èµ°
                 setChessBoardMoveablePos(board, src_row, src_col + 1, true);
                 setChessBoardMoveablePos(board, src_row, src_col - 1, true);
             }
-            // ÎŞÂÛºÎÊ±¶¼¿ÉÒÔÏòÇ°×ß£¨µ±Ç°Ò²Ã»·¨Ïòºó×ßÁË
+            // æ— è®ºä½•æ—¶éƒ½å¯ä»¥å‘å‰èµ°ï¼ˆå½“å‰ä¹Ÿæ²¡æ³•å‘åèµ°äº†
             if (board->user == PLAYER_1) 
                 setChessBoardMoveablePos(board, src_row - 1, src_col, true);
             if (board->user == PLAYER_2) 
@@ -500,7 +305,7 @@ void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
     }
 }
 
-// ÊÇ·ñ·ûºÏÆå×ÓÒÆ¶¯¹æÔò
+// æ˜¯å¦ç¬¦åˆæ£‹å­ç§»åŠ¨è§„åˆ™
 int isMoveable(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col) {
     return board->moveablePos[dest_row][dest_col] == true;
 }
@@ -520,7 +325,7 @@ int action(struct ChessBoard* board, int src_row, int src_col, int dest_row, int
                     else {
                         cstk = board->dead_player2;
                     }
-                    printf("%sµÄ%sÒÑ¾­±»»÷°ÜÁË", c2tUser(board, dead->owner), chessName(dead));
+                    printf("%sçš„%så·²ç»è¢«å‡»è´¥äº†", c2tUser(board, dead->owner), chessName(dead));
                     ChessStackPush(cstk, dead);
                     getchar();
                     getchar();
@@ -533,17 +338,17 @@ int action(struct ChessBoard* board, int src_row, int src_col, int dest_row, int
     }
     // }
     system("cls");
-    printf("²»¿ÉÒÆ¶¯µ½ÕâÀï");
+    printf("ä¸å¯ç§»åŠ¨åˆ°è¿™é‡Œ");
     getchar();
     getchar();
     return false;
 }
 
 /**
- * @brief ÅĞ¶ÏÓÎÏ·ÊÇ·ñ½áÊø£¨ÊÇ·ñ½«ËÀ£©
+ * @brief åˆ¤æ–­æ¸¸æˆæ˜¯å¦ç»“æŸï¼ˆæ˜¯å¦å°†æ­»ï¼‰
  * 
- * @param board ÆåÅÌ
- * @return int ·µ»Øtrue£¬Èç¹ûÒÑ¾­½«ËÀ£»·ñÔò·µ»Øfalse
+ * @param board æ£‹ç›˜
+ * @return int è¿”å›trueï¼Œå¦‚æœå·²ç»å°†æ­»ï¼›å¦åˆ™è¿”å›false
  */
 int isGameEnd(struct ChessBoard* board) {
     if (
@@ -555,10 +360,10 @@ int isGameEnd(struct ChessBoard* board) {
 
 int color_printf(int text_color, const char *format, ...) {
     color(text_color);
-    va_list args;           // ¶¨ÒåÒ»¸öva_listÀàĞÍµÄ±äÁ¿£¬ÓÃÀ´´¢´æµ¥¸ö²ÎÊı
-    va_start(args, format); // Ê¹argsÖ¸Ïò¿É±ä²ÎÊıµÄµÚÒ»¸ö²ÎÊı
-    int len = vprintf(format, args);  // ±ØĞëÓÃ´øvµÄ
-    va_end(args);           // ½áÊø¿É±ä²ÎÊıµÄ»ñÈ¡
+    va_list args;           // å®šä¹‰ä¸€ä¸ªva_listç±»å‹çš„å˜é‡ï¼Œç”¨æ¥å‚¨å­˜å•ä¸ªå‚æ•°
+    va_start(args, format); // ä½¿argsæŒ‡å‘å¯å˜å‚æ•°çš„ç¬¬ä¸€ä¸ªå‚æ•°
+    int len = vprintf(format, args);  // å¿…é¡»ç”¨å¸¦vçš„
+    va_end(args);           // ç»“æŸå¯å˜å‚æ•°çš„è·å–
     color(WHITE_TEXT);
     return len;
 }
@@ -568,16 +373,16 @@ int autoColor_printf(int user, const char *format, ...) {
     if (user == PLAYER_1) text_color = RED_TEXT;
     if (user == PLAYER_2) text_color = GREEN_TEXT;
     color(text_color);
-    va_list args;           // ¶¨ÒåÒ»¸öva_listÀàĞÍµÄ±äÁ¿£¬ÓÃÀ´´¢´æµ¥¸ö²ÎÊı
-    va_start(args, format); // Ê¹argsÖ¸Ïò¿É±ä²ÎÊıµÄµÚÒ»¸ö²ÎÊı
-    int len = vprintf(format, args);  // ±ØĞëÓÃ´øvµÄ
-    va_end(args);           // ½áÊø¿É±ä²ÎÊıµÄ»ñÈ¡
+    va_list args;           // å®šä¹‰ä¸€ä¸ªva_listç±»å‹çš„å˜é‡ï¼Œç”¨æ¥å‚¨å­˜å•ä¸ªå‚æ•°
+    va_start(args, format); // ä½¿argsæŒ‡å‘å¯å˜å‚æ•°çš„ç¬¬ä¸€ä¸ªå‚æ•°
+    int len = vprintf(format, args);  // å¿…é¡»ç”¨å¸¦vçš„
+    va_end(args);           // ç»“æŸå¯å˜å‚æ•°çš„è·å–
     color(WHITE_TEXT);
     return len;
 }
 
 void printChessBoard(struct ChessBoard* board) {
-    system("cls"); // ¸üĞÂ½çÃæ£¬windowsÎª"cls"£¬linuxÎª""
+    system("cls"); // æ›´æ–°ç•Œé¢ï¼Œwindowsä¸º"cls"ï¼Œlinuxä¸º""
     printf("  ");
     for (int i = 0; i < 9; i++)
     {
@@ -609,26 +414,26 @@ void printChessBoard(struct ChessBoard* board) {
         putchar('\n');
     }
 
-    // ´òÓ¡Íæ¼Ò»÷°ÜµÄÆå×Ó
-    printf("Íæ¼ÒÒ»\t");
+    // æ‰“å°ç©å®¶å‡»è´¥çš„æ£‹å­
+    printf("ç©å®¶ä¸€\t");
     for (int i = 0; i <= board->dead_player2->top; i++)
     {
         autoColor_printf(PLAYER_2, "%s ", chessName(board->dead_player2->stack[i]));
     }
 
     putchar('\n');
-    printf("Íæ¼Ò¶ş\t");
+    printf("ç©å®¶äºŒ\t");
     for (int i = 0; i <= board->dead_player1->top; i++)
     {
         autoColor_printf(PLAYER_1, "%s ", chessName(board->dead_player1->stack[i]));
     }
     putchar('\n');
 
-    // ÌáÊ¾µ±Ç°²Ù×÷Íæ¼Ò¼°ÆäÑÕÉ«
-    printf("µ±Ç°²Ù×÷Íæ¼Ò£º");
+    // æç¤ºå½“å‰æ“ä½œç©å®¶åŠå…¶é¢œè‰²
+    printf("å½“å‰æ“ä½œç©å®¶ï¼š");
     autoColor_printf(board->user, "%s\n", c2tUser(board, board->user));
 
-    printf("µ±Ç°Ñ¡ÖĞÆå×Ó£º");
-    if (board->chessChoose == NULL) printf("Î´Ñ¡ÖĞÆå×Ó\n");
+    printf("å½“å‰é€‰ä¸­æ£‹å­ï¼š");
+    if (board->chessChoose == NULL) printf("æœªé€‰ä¸­æ£‹å­\n");
     else autoColor_printf(board->chessChoose->owner, "%s\n", chessName(board->chessChoose));
 }

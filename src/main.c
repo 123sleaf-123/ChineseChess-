@@ -1,33 +1,36 @@
-#include "chess.c"
-#include <string.h>
+#include "global.h"
+#include "operations.h"
 
 int main(int argc, char const *argv[])
-{   
-    // ³õÊ¼»¯ÆåÅÌ
+{
+    // åˆå§‹åŒ–æ£‹ç›˜
     Board board;
     board = initChessBoard();
-    while(true) {
+    while (true)
+    {
         printChessBoard(board);
         char src[10], dest[10];
 
         Sleep(2000);
         scanf("%s", src);
         Sleep(2000);
-        int 
-        src_row = src[0] - '0', 
-        src_col = src[1] - '0';
+        int
+            src_row = src[0] - '0',
+            src_col = src[1] - '0';
 
-        if (choose(board, src_row, src_col) == false) 
-            continue; // Ò»µ©Ö´ÐÐÁË¸Ãº¯Êý£¬±ØÐëÔÚÏÂÒ»Ñ­»·Ç°Ê¹ÓÃactionFinishedº¯Êý
+        if (choose(board, src_row, src_col) == false)
+            continue; // ä¸€æ—¦æ‰§è¡Œäº†è¯¥å‡½æ•°ï¼Œå¿…é¡»åœ¨ä¸‹ä¸€å¾ªçŽ¯å‰ä½¿ç”¨actionFinishedå‡½æ•°
 
         int dest_row, dest_col, action_res;
-        do {
+        do
+        {
             action_res = false;
             printChessBoard(board);
             Sleep(2000);
             scanf("%s", dest);
             Sleep(2000);
-            if (strcmp(dest, "cancel") == 0) {
+            if (strcmp(dest, "cancel") == 0)
+            {
                 actionFinished(board);
                 break;
             }
@@ -36,15 +39,18 @@ int main(int argc, char const *argv[])
             action_res = action(board, src_row, src_col, dest_row, dest_col);
         } while (action_res == false);
         actionFinished(board);
-        if (action_res == true) {
-            // Èç¹ûÍæ¼ÒÒÑ¾­ÐÐ¶¯
-            if (isGameEnd(board) == true) {
+        if (action_res == true)
+        {
+            // å¦‚æžœçŽ©å®¶å·²ç»è¡ŒåŠ¨
+            if (isGameEnd(board) == true)
+            {
                 printChessBoard(board);
                 putchar('\n');
-                printf("ÓÎÏ·½áÊø");
+                printf("æ¸¸æˆç»“æŸ");
                 break;
             }
-            else board->user = !board->user;
+            else
+                board->user = !board->user;
         }
     }
     getchar();
