@@ -2,8 +2,8 @@
 #include "chess_io.h"
 #include "tools.h"
 
-const char *PlayerInput() {
-    char input[10];
+char *PlayerInput() {
+    char *input = (char *)malloc(sizeof(char) * 10);
     scanf("%s", input);
     return input;
 }
