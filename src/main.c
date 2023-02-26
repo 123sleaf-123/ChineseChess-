@@ -1,5 +1,6 @@
 #include "global.h"
 #include "operations.h"
+#include "chess_io.h"
 
 int main(int argc, char const *argv[])
 {
