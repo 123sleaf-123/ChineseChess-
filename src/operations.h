@@ -13,17 +13,8 @@
         2.1. 击杀
         2.2. 无击杀
 */
-int isInside(int row, int col); 
-int isNull(struct ChessBoard* board, int row, int col);
-int isControllable(struct ChessBoard* board, int row, int col);
-int friendlyFireDetect(struct ChessBoard* board, int row, int col);
-int isBeyond(struct ChessBoard* board, int row, int col);
 
-void actionFinished(struct ChessBoard *board);
 int choose(struct ChessBoard* board, int src_row, int src_col);
-void moveablePosition(struct ChessBoard* board, int src_row, int src_col);
-int isMoveable(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col);
-int action(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col);
-int isGameEnd(struct ChessBoard* board);
+int move(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col);
 
 #endif

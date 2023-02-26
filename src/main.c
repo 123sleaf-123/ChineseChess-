@@ -1,6 +1,9 @@
 #include "global.h"
-#include "operations.h"
 #include "chess_io.h"
+#include "operations.h"
+
+extern void actionFinished(struct ChessBoard *board);
+extern bool isGameEnd(struct ChessBoard* board);
 
 int main(int argc, char const *argv[])
 {
@@ -37,7 +40,7 @@ int main(int argc, char const *argv[])
             }
             dest_row = dest[0] - '0';
             dest_col = dest[1] - '0';
-            action_res = action(board, src_row, src_col, dest_row, dest_col);
+            action_res = move(board, src_row, src_col, dest_row, dest_col);
         } while (action_res == false);
         actionFinished(board);
         if (action_res == true)

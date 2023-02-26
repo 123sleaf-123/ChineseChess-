@@ -1,15 +1,6 @@
 #include "global.h"
 #include "tools.h"
 
-/**
- * @brief 设置文字颜色
- * 
- * @param x 颜色代码
- */
-void color(int x) {
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), x);
-}
-
 char *c2tUser(struct ChessBoard* board, int code) {
     if (code == PLAYER_1) return "玩家一";
     if (code == PLAYER_2) return "玩家二";

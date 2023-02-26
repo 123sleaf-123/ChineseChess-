@@ -2,6 +2,29 @@
 #include "chess_io.h"
 #include "tools.h"
 
+const char *PlayerInput() {
+    char input[10];
+    scanf("%s", input);
+    return input;
+}
+
+Cmd init_player_command(int command_type, ...) {
+    va_list args;
+
+    Cmd cmd = (Cmd)malloc(sizeof(struct PlayerCommand));
+    cmd->command_type = command_type;
+    return cmd;
+}
+
+/**
+ * @brief 设置文字颜色
+ * 
+ * @param x 颜色代码
+ */
+void color(int x) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), x);
+}
+
 int color_printf(int text_color, const char *format, ...) {
     color(text_color);
     va_list args;           // 定义一个va_list类型的变量，用来储存单个参数
