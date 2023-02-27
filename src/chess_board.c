@@ -1,4 +1,3 @@
-#include "global.h"
 #include "chess_board.h"
 
 struct ChessBoard* initChessBoard() {
@@ -81,6 +80,8 @@ struct ChessBoard* initChessBoard() {
     board->chessChoose = NULL;
     board->dead_player1 = initChessStack_default();
     board->dead_player2 = initChessStack_default();
+    board->tip = (struct Tips *)malloc(sizeof(struct Tips));
+    board->tip->top = -1;
     return board;
 }
 

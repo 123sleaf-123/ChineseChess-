@@ -103,4 +103,10 @@ void printChessBoard(struct ChessBoard* board) {
     printf("当前选中棋子：");
     if (board->chessChoose == NULL) printf("未选中棋子\n");
     else autoColor_printf(board->chessChoose->owner, "%s\n", chessName(board->chessChoose));
+
+    for (int i = 0; i <= board->tip->top; i++)
+    {
+        printf("%s\n", board->tip->strs[board->tip->top]);
+    }
+    board->tip->top = -1;
 }

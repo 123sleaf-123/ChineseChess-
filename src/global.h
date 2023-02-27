@@ -11,6 +11,9 @@ typedef int bool;
 #define false 0
 #define BOARD_ROW 10
 #define BOARD_COL 9
+#define SHORTER_INTERVAL 100
+#define SHORT_INTERVAL 500
+#define NORMAL_INTERVAL 2000
 #define GREEN_TEXT 2
 #define RED_TEXT 4
 #define WHITE_TEXT 7

@@ -33,40 +33,36 @@ int choose(struct ChessBoard* board, int src_row, int src_col) {
 }
 
 int move(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col) {
-    // if (isInside(dest_row, dest_col)) {
-    //     if (!friendlyFireDetect(board, dest_row, dest_col)) {
-    //         if (isMoveable(board, src_row, src_col, dest_row, dest_col)) {
-    //             if (!isNull(board, dest_row, dest_col) 
-    //             && board->block[dest_row][dest_col]->owner != board->user) {
-    //                 struct ChessStack *cstk;
-    //                 struct Chess *dead = board->block[dest_row][dest_col];
-    //                 if (board->block[dest_row][dest_col]->owner == PLAYER_1) {
-    //                     cstk = board->dead_player1;
-    //                 }
-    //                 else {
-    //                     cstk = board->dead_player2;
-    //                 }
-    //                 printf("%s的%s已经被击败了", c2tUser(board, dead->owner), chessName(dead));
-    //                 ChessStackPush(cstk, dead);
-    //                 getchar();
-    //                 getchar();
-    //             }
-    //             board->block[dest_row][dest_col] = board->block[src_row][src_col];
-    //             board->block[src_row][src_col] = NULL;
-    //             return true;
-    //         }
-    //     }
-    // }
-    // // }
-    // system("cls");
-    // printf("不可移动到这里");
-    // getchar();
-    // getchar();
-    if (isMoveable(board, src_row, src_col, dest_row, dest_col) == true) {
-        board->block[dest_row][dest_col] = board->block[src_row][src_col];
-        board->block[src_row][src_col] = NULL;
-        return true;
+    if (isInside(dest_row, dest_col)) {
+        if (!friendlyFireDetect(board, dest_row, dest_col)) {
+            if (isMoveable(board, src_row, src_col, dest_row, dest_col)) {
+                if (!isNull(board, dest_row, dest_col) 
+                && board->block[dest_row][dest_col]->owner != board->user) {
+                    struct ChessStack *cstk;
+                    struct Chess *dead = board->block[dest_row][dest_col];
+                    if (board->block[dest_row][dest_col]->owner == PLAYER_1) {
+                        cstk = board->dead_player1;
+                    }
+                    else {
+                        cstk = board->dead_player2;
+                    }
+                    system("cls");
+                    sprintf(board->tip->strs[++board->tip->top], "%s的%s已经被击败了", c2tUser(board, dead->owner), chessName(dead));
+                    ChessStackPush(cstk, dead);
+                    getchar();
+                    getchar();
+                }
+                board->block[dest_row][dest_col] = board->block[src_row][src_col];
+                board->block[src_row][src_col] = NULL;
+                return true;
+            }
+        }
     }
-    else return false;
+    // }
+    system("cls");
+    printf("不可移动到这里");
+    getchar();
+    getchar();
+    return false;
 }
 
