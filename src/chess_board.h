@@ -15,6 +15,7 @@ typedef struct ChessBoard
     struct Chess *block[10][9];
     struct ChessStack *objects;
     char moveablePos[10][9];
+    char moveablePos_helper[10][9];
     PLAYER user;
     struct Chess *chessChoose;
     struct ChessStack *dead_player1;
@@ -24,6 +25,7 @@ typedef struct ChessBoard
 
 struct ChessBoard* initChessBoard();
 bool setChessBoardBlock(struct ChessBoard *board, int row, int col, struct Chess *chess);
+void reset_moveablePos(struct ChessBoard *board);
 int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val);
 bool placeChess(struct ChessBoard *board, int row, int col, struct Chess *chess);
 

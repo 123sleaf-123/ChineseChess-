@@ -56,11 +56,7 @@ int move(struct ChessBoard* board, int src_row, int src_col, int dest_row, int d
             }
         }
     }
-    // }
-    system("cls");
-    printf("不可移动到这里");
-    getchar();
-    getchar();
+    sprintf(board->tip->strs[++board->tip->top], "不可移动到这里");
     return false;
 }
 

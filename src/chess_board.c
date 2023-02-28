@@ -62,6 +62,16 @@ bool setChessBoardBlock(struct ChessBoard *board, int row, int col, struct Chess
     else return false;
 }
 
+void reset_moveablePos(struct ChessBoard *board) {
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            board->moveablePos[i][j] = false;
+        } 
+    }
+}
+
 int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val) {
     if ((0 <= row && row <= 9) && (0 <= col && col <= 8)) {
         board->moveablePos[row][col] = val;

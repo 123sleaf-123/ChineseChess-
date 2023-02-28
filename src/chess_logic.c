@@ -291,13 +291,7 @@ void pathFindingByPos(struct ChessBoard *board, int src_row, int src_col) {
 }
 
 void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
-    for (int i = 0; i < 10; i++)
-    {
-        for (int j = 0; j < 9; j++)
-        {
-            board->moveablePos[i][j] = false;
-        } 
-    }
+    reset_moveablePos(board);
     pathFindingByPos(board, src_row, src_col);
 }
 
@@ -334,4 +328,26 @@ void actionFinished(struct ChessBoard *board) {
         } 
     }
     board->chessChoose = NULL;
+}
+
+void aiLogic(struct ChessBoard *board, int *dest_row, int *dest_col) {
+    ChessPtr chess;
+    for (int i = 0; i <= board->objects->top; i++)
+    {
+        if (board->objects->stack[i]->owner != board->user) {
+            chess = board->objects->stack[i];
+            pathFindingByChess(board, chess);
+            break;
+        }
+    }
+    for (int i = 0; i < BOARD_ROW; i++)
+    {
+        for (int j = 0; j < BOARD_COL; j++)
+        {
+            if (!isNull(board, i, j) && (board->block[i][j]->owner != board->user)) // 非空且为敌人
+            {
+            }
+        }
+    }
+    
 }
