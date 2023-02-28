@@ -40,20 +40,18 @@ int move(struct ChessBoard* board, int src_row, int src_col, int dest_row, int d
                 && board->block[dest_row][dest_col]->owner != board->user) {
                     struct ChessStack *cstk;
                     struct Chess *dead = board->block[dest_row][dest_col];
+                    dead->is_alive = false;
                     if (board->block[dest_row][dest_col]->owner == PLAYER_1) {
                         cstk = board->dead_player1;
                     }
                     else {
                         cstk = board->dead_player2;
                     }
-                    system("cls");
                     sprintf(board->tip->strs[++board->tip->top], "%s的%s已经被击败了", c2tUser(board, dead->owner), chessName(dead));
                     ChessStackPush(cstk, dead);
-                    getchar();
-                    getchar();
                 }
-                board->block[dest_row][dest_col] = board->block[src_row][src_col];
-                board->block[src_row][src_col] = NULL;
+                setChessBoardBlock(board, dest_row, dest_col, board->block[src_row][src_col]);
+                setChessBoardBlock(board, src_row, src_col, NULL);
                 return true;
             }
         }

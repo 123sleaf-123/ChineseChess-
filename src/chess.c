@@ -1,18 +1,16 @@
 #include "global.h"
 #include "chess.h"
-#include "chess_stack.h"
 
-struct ChessStack objects;
+int count = 0;
 
 struct Chess *initChess(int type, int owner, int is_alive) {
     if (type == EMPTY)
         return NULL;
     struct Chess* chess = (struct Chess*) malloc(sizeof(struct Chess));
-    chess->id = objects.top;
+    chess->id = count++;
     chess->type = type;
     chess->owner = owner;
     chess->is_alive = is_alive;
-    ChessStackPush(&objects, chess);
     return chess;
 }
 

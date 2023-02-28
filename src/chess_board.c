@@ -19,7 +19,7 @@ struct ChessBoard* initChessBoard() {
     {
         for (int j = 0; j < BOARD_COL; j++)
         {
-            setChessBoardBlock(board, BOARD_ROW - i - 1, j, initChess(half_board[i][j], PLAYER_1, true));
+            placeChess(board, BOARD_ROW - i - 1, j, initChess(half_board[i][j], PLAYER_1, true));
         }
     }
 
@@ -28,7 +28,7 @@ struct ChessBoard* initChessBoard() {
     {
         for (int j = 0; j < BOARD_COL; j++)
         {
-            setChessBoardBlock(board, i, j, initChess(half_board[i][j], PLAYER_2, true));
+            placeChess(board, i, j, initChess(half_board[i][j], PLAYER_2, true));
         }
     }
     
@@ -53,8 +53,10 @@ struct ChessBoard* initChessBoard() {
 bool setChessBoardBlock(struct ChessBoard *board, int row, int col, struct Chess *chess) {
     if ((0 <= row && row <= 9) && (0 <= col && col <= 8)) {
         board->block[row][col] = chess;
-        if (chess != NULL)
-            ChessStackPush(board->objects, chess);
+        if (chess != NULL) {
+            chess->pos.x = row;
+            chess->pos.y = col;
+        }
         return true;
     }
     else return false;
@@ -66,4 +68,11 @@ int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val
         return true;
     }
     else return false;
+}
+
+bool placeChess(struct ChessBoard *board, int row, int col, struct Chess *chess) {
+    if (chess != NULL) {
+        ChessStackPush(board->objects, chess);
+    }
+    return setChessBoardBlock(board, row, col, chess);
 }

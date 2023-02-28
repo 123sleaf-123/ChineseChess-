@@ -3,7 +3,8 @@
 #include "chess_logic.h"
 #include "operations.h"
 
-#define INTERVAL NORMAL_INTERVAL
+// #define INTERVAL NORMAL_INTERVAL
+#define INTERVAL SHORT_INTERVAL
 
 /**
  * 游戏可以分为几个阶段：
@@ -28,6 +29,7 @@ void initChessGame() {
 
         Sleep(INTERVAL);
         scanf("%s", src);
+        Sleep(INTERVAL);
 
         // 退出
         if (strcmp(src, "q") == 0) {
@@ -43,11 +45,11 @@ void initChessGame() {
                 system("cls");
             }
             system("cls");
+            Sleep(INTERVAL);
             break;
         }
 
         // 选中
-        Sleep(INTERVAL);
         int
             src_row = src[0] - '0',
             src_col = src[1] - '0';
@@ -65,7 +67,6 @@ void initChessGame() {
             printChessBoard(board);
             Sleep(INTERVAL);
             scanf("%s", dest);
-            Sleep(INTERVAL);
 
             // 取消选中
             if (strcmp(dest, "cancel") == 0)
@@ -75,13 +76,12 @@ void initChessGame() {
             }
             dest_row = dest[0] - '0';
             dest_col = dest[1] - '0';
-            // 移动
-            action_res = move(board, src_row, src_col, dest_row, dest_col);
+            action_res = move(board, src_row, src_col, dest_row, dest_col); // 移动
         } while (action_res == false);
 
         // 第三阶段 —— 后移动阶段，不需要输入
         printChessBoard(board);
-        Sleep(INTERVAL);
+        Sleep(NORMAL_INTERVAL);
         actionFinished(board);
         if (action_res == true)
         {
@@ -102,7 +102,7 @@ void initChessGame() {
 
 
 void aiInput(Board board, char src[], char dest[]) {
-    
+
 }
 
 void initChessGame_withAI() {
@@ -111,15 +111,17 @@ void initChessGame_withAI() {
     board = initChessBoard();
     while (true)
     {
-        // 待选择阶段
         printChessBoard(board);
         bool action_res;
         char src[10], dest[10];
 
-        Sleep(INTERVAL);
+        // AI阶段
         if (board->user == PLAYER_2)
             aiInput(board, src, dest);
+
+        // 待选择阶段
         if (board->user == PLAYER_1) {
+            Sleep(INTERVAL);
             scanf("%s", src);
 
             // 退出

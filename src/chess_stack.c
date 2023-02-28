@@ -5,7 +5,7 @@ struct ChessStack* initChessStack(int max_size) {
     struct ChessStack* stack = (struct ChessStack*) malloc(sizeof(struct ChessStack));
     stack->stack = (struct Chess**) malloc(sizeof(struct Chess*) * max_size);
     stack->top = -1;
-    stack->maxSize = max_size;
+    stack->maxSize = max_size - 1;
     return stack;
 }
 
