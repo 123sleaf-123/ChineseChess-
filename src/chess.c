@@ -5,6 +5,8 @@
 struct ChessStack objects;
 
 struct Chess *initChess(int type, int owner, int is_alive) {
+    if (type == EMPTY)
+        return NULL;
     struct Chess* chess = (struct Chess*) malloc(sizeof(struct Chess));
     chess->id = objects.top;
     chess->type = type;

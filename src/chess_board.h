@@ -23,6 +23,7 @@ typedef struct ChessBoard
 } *Board;
 
 struct ChessBoard* initChessBoard();
+bool setChessBoardBlock(struct ChessBoard *board, int row, int col, struct Chess *chess);
 int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val);
 
 #endif

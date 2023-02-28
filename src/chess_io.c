@@ -50,6 +50,19 @@ int autoColor_printf(int user, const char *format, ...) {
 
 void printChessBoard(struct ChessBoard* board) {
     system("cls"); // 更新界面，windows为"cls"，linux为""
+
+    printf("\n=================================================================\n");
+    printf("当前棋盘上的棋子：\n");
+    for (int i = 0, len = 0; i <= board->objects->top; i++, len++)
+    {
+        if (len >= 8) {
+            len = 0;
+            putchar('\n');
+        }
+        autoColor_printf(board->objects->stack[i]->owner, "%s(%d)\t", chessName(board->objects->stack[i]), i);
+    }
+    printf("\n=================================================================\n");
+
     printf("  ");
     for (int i = 0; i < 9; i++)
     {

@@ -1,71 +1,36 @@
+#include "global.h"
 #include "chess_board.h"
 
+int half_board[5][9] = 
+{
+    {CHARIOT, HORSE, ELEPHANT, WARRIOR, GENERAL, WARRIOR, ELEPHANT, HORSE, CHARIOT},    // 0
+    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,},                   // 1
+    {EMPTY, ARTILLERY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, ARTILLERY, EMPTY},     // 2
+    {SOLDIER, EMPTY, SOLDIER, EMPTY, SOLDIER, EMPTY, SOLDIER, EMPTY, SOLDIER},          // 3
+    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,},                   // 4
+};
+
 struct ChessBoard* initChessBoard() {
-    struct ChessBoard* board = (struct ChessBoard*) malloc(sizeof(struct ChessBoard));
-    for (int i = 0; i < 10; i++)
-    {
-        for (int j = 0; j < 9; j++)
-        {
-            board->block[i][j] = NULL;
-        }
-    }
-    board->objects = initChessStack_default();
+    struct ChessBoard *board = (struct ChessBoard *)malloc(sizeof(struct ChessBoard));
+    board->objects = initChessStack(32);
 
     // 玩家一初始化
-    board->block[9][4] = initChess(GENERAL, PLAYER_1, true);
-
-    board->block[9][3] = initChess(WARRIOR, PLAYER_1, true);
-    board->block[9][5] = initChess(WARRIOR, PLAYER_1, true);
-
-    
-    board->block[9][2] = initChess(ELEPHANT, PLAYER_1, true);
-    board->block[9][6] = initChess(ELEPHANT, PLAYER_1, true);
-
-    
-    board->block[9][1] = initChess(HORSE, PLAYER_1, true);
-    board->block[9][7] = initChess(HORSE, PLAYER_1, true);
-
-    
-    board->block[9][0] = initChess(CHARIOT, PLAYER_1, true);
-    board->block[9][8] = initChess(CHARIOT, PLAYER_1, true);
-
-    
-    board->block[7][1] = initChess(ARTILLERY, PLAYER_1, true);
-    board->block[7][7] = initChess(ARTILLERY, PLAYER_1, true);
-
-    board->block[6][0] = initChess(SOLDIER, PLAYER_1, true);
-    board->block[6][2] = initChess(SOLDIER, PLAYER_1, true);
-    board->block[6][4] = initChess(SOLDIER, PLAYER_1, true);
-    board->block[6][6] = initChess(SOLDIER, PLAYER_1, true);
-    board->block[6][8] = initChess(SOLDIER, PLAYER_1, true);
+    for (int i = 4; i >= 0; --i)
+    {
+        for (int j = 0; j < BOARD_COL; j++)
+        {
+            setChessBoardBlock(board, BOARD_ROW - i - 1, j, initChess(half_board[i][j], PLAYER_1, true));
+        }
+    }
 
     // 玩家二初始化
-    board->block[0][4] = initChess(GENERAL, PLAYER_2, true);
-
-    board->block[0][3] = initChess(WARRIOR, PLAYER_2, true);
-    board->block[0][5] = initChess(WARRIOR, PLAYER_2, true);
-
-    
-    board->block[0][2] = initChess(ELEPHANT, PLAYER_2, true);
-    board->block[0][6] = initChess(ELEPHANT, PLAYER_2, true);
-
-    
-    board->block[0][1] = initChess(HORSE, PLAYER_2, true);
-    board->block[0][7] = initChess(HORSE, PLAYER_2, true);
-
-    
-    board->block[0][0] = initChess(CHARIOT, PLAYER_2, true);
-    board->block[0][8] = initChess(CHARIOT, PLAYER_2, true);
-
-    
-    board->block[2][1] = initChess(ARTILLERY, PLAYER_2, true);
-    board->block[2][7] = initChess(ARTILLERY, PLAYER_2, true);
-
-    board->block[3][0] = initChess(SOLDIER, PLAYER_2, true);
-    board->block[3][2] = initChess(SOLDIER, PLAYER_2, true);
-    board->block[3][4] = initChess(SOLDIER, PLAYER_2, true);
-    board->block[3][6] = initChess(SOLDIER, PLAYER_2, true);
-    board->block[3][8] = initChess(SOLDIER, PLAYER_2, true);
+    for (int i = 0; i < 5; ++i)
+    {
+        for (int j = 0; j < BOARD_COL; j++)
+        {
+            setChessBoardBlock(board, i, j, initChess(half_board[i][j], PLAYER_2, true));
+        }
+    }
     
     // 可移动区域初始化
     for (int i = 0; i < 10; i++)
@@ -83,6 +48,16 @@ struct ChessBoard* initChessBoard() {
     board->tip = (struct Tips *)malloc(sizeof(struct Tips));
     board->tip->top = -1;
     return board;
+}
+
+bool setChessBoardBlock(struct ChessBoard *board, int row, int col, struct Chess *chess) {
+    if ((0 <= row && row <= 9) && (0 <= col && col <= 8)) {
+        board->block[row][col] = chess;
+        if (chess != NULL)
+            ChessStackPush(board->objects, chess);
+        return true;
+    }
+    else return false;
 }
 
 int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val) {
