@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 #include <windows.h>
 
 typedef int bool;
@@ -11,6 +12,8 @@ typedef int bool;
 #define false 0
 #define BOARD_ROW 10
 #define BOARD_COL 9
+#define RECORD_CMD_LEN 5
+#define NULL_CMD -100
 #define SHORTER_INTERVAL 100
 #define SHORT_INTERVAL 500
 #define NORMAL_INTERVAL 2000

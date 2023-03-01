@@ -74,8 +74,17 @@ bool isInsidePalace(struct ChessBoard* board, int row, int col) {
     return true;
 }
 
-void pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
+bool setBoolMatrix(char **matrix, int row, int col, char value) {
+    if ((0 <= row && row <= 9) && (0 <= col && col <= 8)) {
+        matrix[row][col] = value;
+        return true;
+    }
+    else return false;
+}
+
+char** pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
     int src_row = chess->pos.x, src_col = chess->pos.y;
+    char **matrix = initMatrix();
     switch (chess->type)
     {
     case GENERAL: // 是否在九宫格内且移动了一格
@@ -92,7 +101,7 @@ void pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
         for (int i = 0; i < 4; i++)
         {
             if (isInsidePalace(board, dest_row[i], dest_col[i]) == true)
-                board->moveablePos[dest_row[i]][dest_col[i]] = true;
+                matrix[dest_row[i]][dest_col[i]] = true;
         }
         break;
     }
@@ -100,25 +109,25 @@ void pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
     {
         for (int i = src_row + 1, j = src_col; isInside(i, j); ++i)
         {
-            board->moveablePos[i][j] = true;
+            matrix[i][j] = true;
             if (isNull(board, i, j) == false)
                 break;
         }
         for (int i = src_row - 1, j = src_col; isInside(i, j); --i)
         {
-            board->moveablePos[i][j] = true;
+            matrix[i][j] = true;
             if (isNull(board, i, j) == false)
                 break;
         }
         for (int i = src_row, j = src_col + 1; isInside(i, j); ++j)
         {
-            board->moveablePos[i][j] = true;
+            matrix[i][j] = true;
             if (isNull(board, i, j) == false)
                 break;
         }
         for (int i = src_row, j = src_col - 1; isInside(i, j); --j)
         {
-            board->moveablePos[i][j] = true;
+            matrix[i][j] = true;
             if (isNull(board, i, j) == false)
                 break;
         }
@@ -142,26 +151,26 @@ void pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
                 if (i == 0)
                 {
                     // 下
-                    setChessBoardMoveablePos(board, dest_row[i] + 1, dest_col[i] - 1, true);
-                    setChessBoardMoveablePos(board, dest_row[i] + 1, dest_col[i] + 1, true);
+                    setBoolMatrix(matrix, dest_row[i] + 1, dest_col[i] - 1, true);
+                    setBoolMatrix(matrix, dest_row[i] + 1, dest_col[i] + 1, true);
                 }
                 if (i == 1)
                 {
                     // 右
-                    setChessBoardMoveablePos(board, dest_row[i] + 1, dest_col[i] + 1, true);
-                    setChessBoardMoveablePos(board, dest_row[i] - 1, dest_col[i] + 1, true);
+                    setBoolMatrix(matrix, dest_row[i] + 1, dest_col[i] + 1, true);
+                    setBoolMatrix(matrix, dest_row[i] - 1, dest_col[i] + 1, true);
                 }
                 if (i == 2)
                 {
                     // 上
-                    setChessBoardMoveablePos(board, dest_row[i] - 1, dest_col[i] + 1, true);
-                    setChessBoardMoveablePos(board, dest_row[i] - 1, dest_col[i] - 1, true);
+                    setBoolMatrix(matrix, dest_row[i] - 1, dest_col[i] + 1, true);
+                    setBoolMatrix(matrix, dest_row[i] - 1, dest_col[i] - 1, true);
                 }
                 if (i == 3)
                 {
                     // 左
-                    setChessBoardMoveablePos(board, dest_row[i] + 1, dest_col[i] - 1, true);
-                    setChessBoardMoveablePos(board, dest_row[i] - 1, dest_col[i] - 1, true);
+                    setBoolMatrix(matrix, dest_row[i] + 1, dest_col[i] - 1, true);
+                    setBoolMatrix(matrix, dest_row[i] - 1, dest_col[i] - 1, true);
                 }
             }
         }
@@ -175,53 +184,53 @@ void pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
             int i, j;
             for (i = src_row + 1, j = src_col; isInside(i, j) && isNull(board, i, j); ++i)
             {
-                board->moveablePos[i][j] = true;
+                matrix[i][j] = true;
             }
             for (++i; isInside(i, j); ++i)
             {
                 if (!isNull(board, i, j))
                 {
                     if (!friendlyFireDetect(board, i, j))
-                        board->moveablePos[i][j] = true;
+                        matrix[i][j] = true;
                     break;
                 }
             }
             for (i = src_row - 1, j = src_col; isInside(i, j) && isNull(board, i, j); --i)
             {
-                board->moveablePos[i][j] = true;
+                matrix[i][j] = true;
             }
             for (--i; isInside(i, j); --i)
             {
                 if (!isNull(board, i, j))
                 {
                     if (!friendlyFireDetect(board, i, j))
-                        board->moveablePos[i][j] = true;
+                        matrix[i][j] = true;
                     break;
                 }
             }
             for (i = src_row, j = src_col + 1; isInside(i, j) && isNull(board, i, j); ++j)
             {
-                board->moveablePos[i][j] = true;
+                matrix[i][j] = true;
             }
             for (++j; isInside(i, j); ++j)
             {
                 if (!isNull(board, i, j))
                 {
                     if (!friendlyFireDetect(board, i, j))
-                        board->moveablePos[i][j] = true;
+                        matrix[i][j] = true;
                     break;
                 }
             }
             for (i = src_row, j = src_col - 1; isInside(i, j) && isNull(board, i, j); --j)
             {
-                board->moveablePos[i][j] = true;
+                matrix[i][j] = true;
             }
             for (--j; isInside(i, j); --j)
             {
                 if (!isNull(board, i, j))
                 {
                     if (!friendlyFireDetect(board, i, j))
-                        board->moveablePos[i][j] = true;
+                        matrix[i][j] = true;
                     break;
                 }
             }
@@ -245,7 +254,7 @@ void pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
                     stop[j] = true;
                 if (i == 2 && stop[j] == false)
                 {
-                    setChessBoardMoveablePos(board, dest_row[j], dest_col[j], true);
+                    setBoolMatrix(matrix, dest_row[j], dest_col[j], true);
                 }
             }
         }
@@ -261,7 +270,7 @@ void pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
         {
             if (isInsidePalace(board, dest_row[i], dest_col[i]))
             {
-                setChessBoardMoveablePos(board, dest_row[i], dest_col[i], true);
+                setBoolMatrix(matrix, dest_row[i], dest_col[i], true);
             }
         }
         break;
@@ -271,28 +280,29 @@ void pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
         if (isInside(src_row, src_col) && isBeyond(board, src_row, src_col))
         {
             // 越过领地（楚河汉界），可以向右左走
-            setChessBoardMoveablePos(board, src_row, src_col + 1, true);
-            setChessBoardMoveablePos(board, src_row, src_col - 1, true);
+            setBoolMatrix(matrix, src_row, src_col + 1, true);
+            setBoolMatrix(matrix, src_row, src_col - 1, true);
         }
         // 无论何时都可以向前走（当前也没法向后走了
         if (board->user == PLAYER_1)
-            setChessBoardMoveablePos(board, src_row - 1, src_col, true);
+            setBoolMatrix(matrix, src_row - 1, src_col, true);
         if (board->user == PLAYER_2)
-            setChessBoardMoveablePos(board, src_row + 1, src_col, true);
+            setBoolMatrix(matrix, src_row + 1, src_col, true);
         break;
     }
     }
-
+    return matrix;
 }
 
-void pathFindingByPos(struct ChessBoard *board, int src_row, int src_col) {
+char** pathFindingByPos(struct ChessBoard *board, int src_row, int src_col) {
     struct Chess* chess = board->block[src_row][src_col];
-    pathFindingByChess(board, chess);
+    return pathFindingByChess(board, chess);
 }
 
 void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
     reset_moveablePos(board);
-    pathFindingByPos(board, src_row, src_col);
+    freeMatrix(board->moveablePos);
+    board->moveablePos = pathFindingByPos(board, src_row, src_col);
 }
 
 // 是否符合棋子移动规则
@@ -307,11 +317,19 @@ bool isMoveable(struct ChessBoard* board, int src_row, int src_col, int dest_row
  * @return bool 返回true，如果已经将死；否则返回false
  */
 bool isGameEnd(struct ChessBoard* board) {
-    if (
-    (isChessStackEmpty(board->dead_player1) == false && ChessStackTop(board->dead_player1)->type == GENERAL) || 
-    (isChessStackEmpty(board->dead_player2) == false && ChessStackTop(board->dead_player2)->type == GENERAL))
-        return true;
-    else return false;
+    for (int i = 0; i < 2; i++)
+    {
+        if ((isChessStackEmpty(board->dead_chess[i]) == false) && (ChessStackTop(board->dead_chess[i])->type == GENERAL))
+        {
+            return true;
+        }
+    }
+    return false;
+    // if (
+    // (isChessStackEmpty(board->dead_player1) == false && ChessStackTop(board->dead_player1)->type == GENERAL) || 
+    // (isChessStackEmpty(board->dead_player2) == false && ChessStackTop(board->dead_player2)->type == GENERAL))
+    //     return true;
+    // else return false;
 }
 
 /**

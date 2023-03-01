@@ -28,7 +28,7 @@ int userControl(struct ChessBoard *board, int *res)
     // 退出
     if (strcmp(src, "q") == 0)
     {
-        system("cls");
+        cls;
         for (int i = 0; i < 5; i++)
         {
             printf("伊蕾娜正在构建主界面中");
@@ -37,11 +37,28 @@ int userControl(struct ChessBoard *board, int *res)
                 putchar('.');
                 Sleep(500);
             }
-            system("cls");
+            cls;
         }
-        system("cls");
+        cls;
         Sleep(INTERVAL);
         return BREAK;
+    }
+
+    // 撤回 
+    if (strcmp(src, "w") == 0)
+    {
+        cls;
+        printf("伊蕾娜不喜欢刚才做的决定...");
+        Sleep(INTERVAL);
+        cls;
+        printf("天才美少女魔女伊蕾娜正在使用魔法...");
+        Sleep(INTERVAL);
+        cls;
+        printf("砸，瓦鲁多！");
+        withdraw(board);
+        withdraw(board);
+        Sleep(INTERVAL);
+        return CONTINUE;
     }
 
     // 选中
@@ -51,8 +68,6 @@ int userControl(struct ChessBoard *board, int *res)
 
     if (choose(board, src_row, src_col) == false)
         return CONTINUE; // 一旦执行了该函数，必须在下一循环前使用actionFinished函数
-
-    // 撤回 —— 未实现
 
     // 第二阶段
     int dest_row, dest_col, action_res;
@@ -67,7 +82,7 @@ int userControl(struct ChessBoard *board, int *res)
         if (strcmp(dest, "cancel") == 0)
         {
             actionFinished(board);
-            return BREAK;
+            return CONTINUE;
         }
         dest_row = dest[0] - '0';
         dest_col = dest[1] - '0';

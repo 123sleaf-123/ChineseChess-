@@ -10,23 +10,30 @@ struct Tips {
     int top;
 };
 
+struct RecordStack {
+    int **commands;
+    int top;
+};
+
 typedef struct ChessBoard
 {
     struct Chess *block[10][9];
     struct ChessStack *objects;
-    char moveablePos[10][9];
-    char moveablePos_helper[10][9];
+    char **moveablePos;
     PLAYER user;
     struct Chess *chessChoose;
-    struct ChessStack *dead_player1;
-    struct ChessStack *dead_player2;
+    struct ChessStack **dead_chess;
     struct Tips *tip;
+    struct RecordStack record;
 } *Board;
 
+char **initMatrix();
+void freeMatrix(char **matrix);
 struct ChessBoard* initChessBoard();
 bool setChessBoardBlock(struct ChessBoard *board, int row, int col, struct Chess *chess);
 void reset_moveablePos(struct ChessBoard *board);
 int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val);
 bool placeChess(struct ChessBoard *board, int row, int col, struct Chess *chess);
+void aiLogic(struct ChessBoard *board, int *dest_row, int *dest_col);
 
 #endif

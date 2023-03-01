@@ -10,6 +10,27 @@ int half_board[5][9] =
     {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,},                   // 4
 };
 
+char** initMatrix() {
+    char **matrix = (char **)malloc(sizeof(char *) * BOARD_ROW);
+    for (int i = 0; i < 10; i++)
+    {
+        matrix[i] = (char *) malloc(sizeof(char) * BOARD_COL);
+        for (int j = 0; j < 9; j++)
+        {
+            matrix[i][j] = false;
+        } 
+    }
+    return matrix;
+}
+
+void freeMatrix(char **matrix) {
+    for (int i = 9; i >= 0; --i)
+    {
+        free(matrix[i]);
+    }
+    free(matrix);
+}
+
 struct ChessBoard* initChessBoard() {
     struct ChessBoard *board = (struct ChessBoard *)malloc(sizeof(struct ChessBoard));
     board->objects = initChessStack(32);
@@ -33,20 +54,28 @@ struct ChessBoard* initChessBoard() {
     }
     
     // 可移动区域初始化
-    for (int i = 0; i < 10; i++)
-    {
-        for (int j = 0; j < 9; j++)
-        {
-            board->moveablePos[i][j] = false;
-        } 
-    }
-    
+    board->moveablePos = initMatrix();
+
     board->user = PLAYER_1; // 开局玩家初始化
     board->chessChoose = NULL;
-    board->dead_player1 = initChessStack_default();
-    board->dead_player2 = initChessStack_default();
+    board->dead_chess = (struct ChessStack **)malloc(sizeof(struct ChessStack *) * 2);
+    board->dead_chess[PLAYER_1] = initChessStack_default();
+    board->dead_chess[PLAYER_2] = initChessStack_default();
     board->tip = (struct Tips *)malloc(sizeof(struct Tips));
     board->tip->top = -1;
+    board->record.commands = (int **)malloc(sizeof(int *) * 200);
+    for (int i = 0; i < 200; i++)
+    {
+        board->record.commands[i] = (int *)malloc(sizeof(int) * RECORD_CMD_LEN);
+    }
+    for (int i = 0; i < 5; ++i)
+    {
+        for (int j = 0; j < BOARD_COL; j++)
+        {
+            board->record.commands[i][j] = NULL_CMD;
+        }
+    }
+    board->record.top = -1;
     return board;
 }
 

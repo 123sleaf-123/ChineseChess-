@@ -3,6 +3,8 @@
 
 #include "chess_board.h"
 
+#define cls system("cls")
+
 typedef struct PlayerCommand {
     int command_type;
     short int args[4];
