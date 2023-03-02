@@ -23,7 +23,6 @@ int userControl(struct ChessBoard *board, int *res)
 {
     char src[10], dest[10];
     scanf("%s", src);
-    Sleep(INTERVAL);
 
     // 退出
     if (strcmp(src, "q") == 0)
@@ -48,13 +47,11 @@ int userControl(struct ChessBoard *board, int *res)
     if (strcmp(src, "w") == 0)
     {
         cls;
-        printf("伊蕾娜不喜欢刚才做的决定...");
+        printf("伊蕾娜不喜欢刚才做的决定...\n");
         Sleep(INTERVAL);
-        cls;
-        printf("天才美少女魔女伊蕾娜正在使用魔法...");
+        printf("天才美少女魔女伊蕾娜正在使用魔法...\n");
         Sleep(INTERVAL);
-        cls;
-        printf("砸，瓦鲁多！");
+        printf("败者食尘！\n");
         withdraw(board);
         withdraw(board);
         Sleep(INTERVAL);
@@ -75,7 +72,6 @@ int userControl(struct ChessBoard *board, int *res)
     {
         action_res = false;
         printChessBoard(board);
-        Sleep(INTERVAL);
         scanf("%s", dest);
 
         // 取消选中
@@ -106,16 +102,14 @@ void initChessGame()
     {
         // 待选择阶段
         printChessBoard(board);
-        int action_res;
+        bool action_res;
 
-        int isBreak = userControl(board, &action_res);
+        bool isBreak = userControl(board, &action_res);
         if (isBreak == BREAK) break;
         if (isBreak == CONTINUE) continue;
 
-        Sleep(INTERVAL);
         // 第三阶段 —— 后移动阶段，不需要输入
         printChessBoard(board);
-        Sleep(NORMAL_INTERVAL);
         actionFinished(board);
         if (action_res == true)
         {
@@ -125,12 +119,13 @@ void initChessGame()
                 printChessBoard(board);
                 putchar('\n');
                 printf("游戏结束");
+                Sleep(NORMAL_INTERVAL);
                 break;
             }
             else
                 board->user = !board->user;
         }
     }
-    getchar();
+    // getchar();
 }
 

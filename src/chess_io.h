@@ -14,6 +14,7 @@ Cmd init_player_command(int command_type, ...);
 
 static bool input_status = 0;
 
+void clearScreen();
 void color(int x);
 int autoColor_printf(int user, const char *format, ...);
 int color_printf(int text_color, const char *format, ...);

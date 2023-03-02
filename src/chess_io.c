@@ -16,6 +16,27 @@ Cmd init_player_command(int command_type, ...) {
     return cmd;
 }
 
+void clearScreen(){    
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD coordScreen = { 0, 0 };    // home for the cursor
+    DWORD cCharsWritten;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    DWORD dwConSize;
+
+    // Get the number of character cells in the current buffer.
+
+    // Put the cursor at its home coordinates.
+    SetConsoleCursorPosition(hConsole, coordScreen);
+}
+
+void fillScreenWithBlank() {
+    for (int i = 0; i < 50; i++)
+    {
+        putchar(' ');
+    }
+    putchar('\n');
+}
+
 /**
  * @brief 设置文字颜色
  * 
@@ -49,7 +70,8 @@ int autoColor_printf(int user, const char *format, ...) {
 }
 
 void printChessBoard(struct ChessBoard* board) {
-    system("cls"); // 更新界面，windows为"cls"，linux为""
+    // cls;
+    clearScreen(); // 更新界面，windows为"cls"，linux为""
 
     printf("\n=================================================================\n");
     printf("当前棋盘上的棋子：\n");
@@ -69,7 +91,6 @@ void printChessBoard(struct ChessBoard* board) {
         printf("%d  ", i);
     }
     putchar('\n');  
-    // putchar('\n');
     
     for (int i = 0; i < BOARD_ROW; i++)
     {
@@ -90,7 +111,6 @@ void printChessBoard(struct ChessBoard* board) {
             }
             putchar(' ');
         }
-        // color(WHITE_TEXT);
         putchar('\n');
     }
 
@@ -98,27 +118,34 @@ void printChessBoard(struct ChessBoard* board) {
     for (int i = 0; i < 2; i++)
     {
         printf("%s\t", c2tUser(board, i));
-        for (int j = 0; j < board->dead_chess[1-i]->top; j++)
+        for (int j = 0; j <= board->dead_chess[1-i]->top; j++)
         {
             autoColor_printf(1-i, "%s ", chessName(board->dead_chess[1-i]->stack[j]));
         }
         putchar('\n');
     }
     
-
     // 提示当前操作玩家及其颜色
     printf("当前操作玩家：");
-    autoColor_printf(board->user, "%s\n", c2tUser(board, board->user));
+    autoColor_printf(board->user, "%s", c2tUser(board, board->user));
+    fillScreenWithBlank();
 
     // 提示玩家当前选中棋子
     printf("当前选中棋子：");
-    if (board->chessChoose == NULL) printf("未选中棋子\n");
-    else autoColor_printf(board->chessChoose->owner, "%s\n", chessName(board->chessChoose));
+    if (board->chessChoose == NULL) printf("未选中棋子");
+    else autoColor_printf(board->chessChoose->owner, "%s", chessName(board->chessChoose));
+    fillScreenWithBlank();
+    if (board->tip->top == -1) {
+        fillScreenWithBlank();
+        fillScreenWithBlank();
+    }
 
     // 提示操作结果或者错误
     for (int i = 0; i <= board->tip->top; i++)
     {
-        printf("%s\n", board->tip->strs[board->tip->top]);
+        printf("%s", board->tip->strs[board->tip->top]);
+        fillScreenWithBlank();
     }
     board->tip->top = -1;
+    Sleep(NORMAL_INTERVAL);
 }
