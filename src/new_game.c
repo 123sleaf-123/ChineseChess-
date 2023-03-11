@@ -1,4 +1,5 @@
 #include "global.h"
+#include "new_game.h"
 #include "chess_io.h"
 #include "chess_logic.h"
 #include "operations.h"
@@ -19,7 +20,7 @@
  *      2.2. 撤销选中 —— 继续循环
  */
 
-int userControl(struct ChessBoard *board, int *res)
+int userControl(struct ChessBoard *board, bool *res)
 {
     char src[10], dest[10];
     scanf("%s", src);
@@ -87,7 +88,7 @@ int userControl(struct ChessBoard *board, int *res)
     *res = action_res;
 }
 
-int aiControl(struct ChessBoard *board, int *res)
+int aiControl(struct ChessBoard *board, bool *res)
 {
     int dest_row, dest_col;
     aiLogic(board, &dest_row, &dest_col);

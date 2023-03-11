@@ -1,15 +1,13 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
 #include <windows.h>
 
-typedef int bool;
-#define true 1
-#define false 0
 #define BOARD_ROW 10
 #define BOARD_COL 9
 #define RECORD_CMD_LEN 5
