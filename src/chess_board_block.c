@@ -1,0 +1,19 @@
+#include "chess_board_block.h"
+
+// 棋盘格子初始化函数（新增）
+struct BoardBlock* initBoardBlock(TerrainType terrain, int elevation) {
+    struct BoardBlock* block = (struct BoardBlock*)malloc(sizeof(struct BoardBlock));
+    block->chess = NULL;
+    block->terrain = terrain;
+    block->elevation = elevation;
+    return block;
+}
+
+struct BoardBlock* initDefaultBoardBlock() {
+    return initBoardBlock(TERRAIN_PLAIN, 0);
+}
+
+// 棋盘格子释放函数（新增）
+void freeBoardBlock(struct BoardBlock* block) {
+    free(block);
+}

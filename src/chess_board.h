@@ -4,6 +4,7 @@
 #include "global.h"
 #include "chess.h"
 #include "chess_stack.h"
+#include "chess_board_block.h"
 
 struct Tips {
     char strs[8][64];
@@ -13,21 +14,6 @@ struct Tips {
 struct RecordStack {
     int **commands;
     int top;
-};
-
-typedef enum {
-    TERRAIN_PLAIN,      // 平原
-    TERRAIN_MOUNTAIN,   // 山脉
-    TERRAIN_FOREST,     // 森林
-    TERRAIN_RIVER,      // 河流
-    // 可根据需要添加更多地形
-} TerrainType;
-
-// 棋盘格子结构体（新增）
-struct BoardBlock {
-    struct Chess* chess;    // 棋子指针
-    TerrainType terrain;    // 地形类型
-    int elevation;          // 高度值
 };
 
 typedef struct ChessBoard
