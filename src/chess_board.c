@@ -33,6 +33,27 @@ void freeMatrix(char **matrix) {
 
 struct ChessBoard* initChessBoard() {
     struct ChessBoard *board = (struct ChessBoard *)malloc(sizeof(struct ChessBoard));
+    board->block = (struct Chess ***)malloc(sizeof(struct Chess **) * BOARD_ROW);
+    for (int i = 0; i < 10; i++)
+    {
+        board->block[i] = (struct Chess **)malloc(sizeof(struct Chess *) * BOARD_COL);
+        for (int j = 0; j < 9; j++)
+        {
+            board->block[i][j] = NULL;
+        } 
+    }
+    board->boardBlock = (struct BoardBlock ***)malloc(sizeof(struct BoardBlock **) * BOARD_ROW);
+    for (int i = 0; i < 10; i++)
+    {
+        board->boardBlock[i] = (struct BoardBlock **)malloc(sizeof(struct BoardBlock *) * BOARD_COL);
+        for (int j = 0; j < 9; j++)
+        {
+            board->boardBlock[i][j] = (struct BoardBlock *)malloc(sizeof(struct BoardBlock));
+            board->boardBlock[i][j]->chess = NULL;
+            board->boardBlock[i][j]->terrain = TERRAIN_PLAIN;
+            board->boardBlock[i][j]->elevation = 0;
+        } 
+    }
     board->objects = initChessStack(32);
 
     // 玩家一初始化
