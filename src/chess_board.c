@@ -48,12 +48,10 @@ struct ChessBoard* initChessBoard() {
         board->boardBlock[i] = (struct BoardBlock **)malloc(sizeof(struct BoardBlock *) * BOARD_COL);
         for (int j = 0; j < 9; j++)
         {
-            board->boardBlock[i][j] = (struct BoardBlock *)malloc(sizeof(struct BoardBlock));
-            board->boardBlock[i][j]->chess = NULL;
-            board->boardBlock[i][j]->terrain = TERRAIN_PLAIN;
-            board->boardBlock[i][j]->elevation = 0;
-        } 
+            board->boardBlock[i][j] = initDefaultBoardBlock();
+        }
     }
+
     board->objects = initChessStack(32);
 
     // 玩家一初始化

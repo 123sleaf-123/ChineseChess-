@@ -1,6 +1,9 @@
 #ifndef CHESS_BOARD_BLOCK_H
 #define CHESS_BOARD_BLOCK_H
 
+#include "chess.h"
+#include "global.h"
+
 typedef enum {
     TERRAIN_PLAIN,      // 平原
     TERRAIN_MOUNTAIN,   // 山脉
