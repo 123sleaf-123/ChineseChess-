@@ -4,7 +4,7 @@
 
 char *PlayerInput() {
     char *input = (char *)malloc(sizeof(char) * 10);
-    scanf("%s", input);
+    scanf("%9s", input);  // 防止缓冲区溢出
     return input;
 }
 
@@ -12,26 +12,42 @@ Cmd init_player_command(int command_type, ...) {
     va_list args;
 
     Cmd cmd = (Cmd)malloc(sizeof(struct PlayerCommand));
-    cmd->command_type = command_type;
+    if (cmd != NULL) {
+        cmd->command_type = command_type;
+        // 根据实际需求添加参数处理
+    }
     return cmd;
 }
 
-void clearScreen(){    
+void clearScreen() {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD coordScreen = { 0, 0 };    // home for the cursor
-    DWORD cCharsWritten;
     CONSOLE_SCREEN_BUFFER_INFO csbi;
-    DWORD dwConSize;
+    DWORD written;
 
-    // Get the number of character cells in the current buffer.
+    // 获取控制台缓冲区信息
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+        return;
+    }
 
-    // Put the cursor at its home coordinates.
-    SetConsoleCursorPosition(hConsole, coordScreen);
+    DWORD cells = csbi.dwSize.X * csbi.dwSize.Y;
+    COORD topLeft = {0, 0};
+
+    // 填充整个缓冲区为空格
+    FillConsoleOutputCharacter(hConsole, ' ', cells, topLeft, &written);
+    FillConsoleOutputAttribute(hConsole, csbi.wAttributes, cells, topLeft, &written);
+
+    // 移动光标到左上角
+    SetConsoleCursorPosition(hConsole, topLeft);
 }
 
 void fillScreenWithBlank() {
-    for (int i = 0; i < 50; i++)
-    {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(hConsole, &csbi);
+    
+    // 获取控制台宽度
+    int consoleWidth = csbi.dwSize.X;
+    for (int i = 0; i < consoleWidth; i++) {
         putchar(' ');
     }
     putchar('\n');
