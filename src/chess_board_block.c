@@ -2,10 +2,29 @@
 
 // 棋盘格子初始化函数（新增）
 struct BoardBlock* initBoardBlock(TerrainType terrain, int elevation) {
-    struct BoardBlock* block = (struct BoardBlock*)malloc(sizeof(struct BoardBlock));
+    struct BoardBlock* block = malloc(sizeof(struct BoardBlock));
     block->chess = NULL;
     block->terrain = terrain;
     block->elevation = elevation;
+    
+    // 根据地形设置移动消耗
+    switch(terrain) {
+        case TERRAIN_PLAIN:
+            block->moveCost = 1;
+            break;
+        case TERRAIN_MOUNTAIN:
+            block->moveCost = 3;
+            break;
+        case TERRAIN_FOREST:
+            block->moveCost = 2;
+            break;
+        case TERRAIN_RIVER:
+            block->moveCost = 2;
+            break;
+        default:
+            block->moveCost = 1;
+    }
+    
     return block;
 }
 

@@ -17,6 +17,7 @@ struct BoardBlock {
     struct Chess* chess;    // 棋子指针
     TerrainType terrain;    // 地形类型
     int elevation;          // 高度值
+    int moveCost;           // 移动消耗
 };
 
 struct BoardBlock* initBoardBlock(TerrainType terrain, int elevation);
