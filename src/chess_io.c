@@ -102,7 +102,7 @@ void printChessBoard(struct ChessBoard* board) {
     printf("\n=================================================================\n");
 
     printf("  ");
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < BOARD_COL; i++)
     {
         printf("%d  ", i);
     }
