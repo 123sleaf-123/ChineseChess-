@@ -12,10 +12,10 @@ int half_board[5][9] =
 
 char** initMatrix() {
     char **matrix = (char **)malloc(sizeof(char *) * BOARD_ROW);
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < BOARD_ROW; i++)
     {
         matrix[i] = (char *) malloc(sizeof(char) * BOARD_COL);
-        for (int j = 0; j < 9; j++)
+        for (int j = 0; j < BOARD_COL; j++)
         {
             matrix[i][j] = false;
         } 
@@ -24,7 +24,7 @@ char** initMatrix() {
 }
 
 void freeMatrix(char **matrix) {
-    for (int i = 9; i >= 0; --i)
+    for (int i = BOARD_ROW-1; i >= 0; --i)
     {
         free(matrix[i]);
     }
@@ -101,8 +101,9 @@ struct ChessBoard* initChessBoard() {
 }
 
 bool setChessBoardBlock(struct ChessBoard *board, int row, int col, struct Chess *chess) {
-    if ((0 <= row && row <= 9) && (0 <= col && col <= 8)) {
+    if ((0 <= row && row < BOARD_ROW) && (0 <= col && col < BOARD_COL)) {
         board->block[row][col] = chess;
+        board->boardBlock[row][col]->chess = chess;
         if (chess != NULL) {
             chess->pos.x = row;
             chess->pos.y = col;
@@ -113,9 +114,9 @@ bool setChessBoardBlock(struct ChessBoard *board, int row, int col, struct Chess
 }
 
 void reset_moveablePos(struct ChessBoard *board) {
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < BOARD_ROW; i++)
     {
-        for (int j = 0; j < 9; j++)
+        for (int j = 0; j < BOARD_COL; j++)
         {
             board->moveablePos[i][j] = false;
         } 
@@ -123,7 +124,7 @@ void reset_moveablePos(struct ChessBoard *board) {
 }
 
 int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val) {
-    if ((0 <= row && row <= 9) && (0 <= col && col <= 8)) {
+    if ((0 <= row && row < BOARD_ROW) && (0 <= col && col < BOARD_COL)) {
         board->moveablePos[row][col] = val;
         return true;
     }
