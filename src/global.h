@@ -39,4 +39,10 @@
 #define DEAD false
 #define ALIVE true
 
+struct Position
+{
+    int x; // 横坐标
+    int y; // 纵坐标
+};
+
 #endif

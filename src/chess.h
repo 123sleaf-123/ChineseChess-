@@ -1,13 +1,9 @@
 #ifndef CHESS_H
 #define CHESS_H
 
-typedef int PLAYER;
+#include "global.h"
 
-struct Position
-{
-    int x; // 横坐标
-    int y; // 纵坐标
-};
+typedef int PLAYER;
 
 typedef struct Chess
 {
