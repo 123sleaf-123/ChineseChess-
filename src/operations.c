@@ -85,3 +85,13 @@ bool withdraw(struct ChessBoard *board)
         board->dead_chess[dest_block->owner]->top--;
     return true;
 }
+
+void fight(struct Chess *attacker, struct Chess *defender) {
+    if (attacker == NULL || defender == NULL) return;
+    int damage = attacker->battle_property.attack - defender->battle_property.defense;
+    if (damage < 0) damage = 0;
+    defender->battle_property.health -= damage;
+    if (defender->battle_property.health <= 0) {
+        defender->is_alive = false;
+    }
+}
