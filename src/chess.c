@@ -11,6 +11,8 @@ struct Chess *initChess(int type, int owner, int is_alive) {
     chess->type = type;
     chess->owner = owner;
     chess->is_alive = is_alive;
+    chess->battle_property = initDefaultBattleProperty();
+    chess->pos = initPosition(0, 0);
     return chess;
 }
 
