@@ -1,4 +1,5 @@
 #include "new_game.h"
+#include "global.h"
 #include "tools.h"
 
 int main(int argc, char const *argv[])
