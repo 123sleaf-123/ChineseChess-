@@ -83,7 +83,8 @@ bool setBoolMatrix(char **matrix, int row, int col, char value) {
 }
 
 char** pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
-    int src_row = chess->pos.x, src_col = chess->pos.y;
+    int src_row = getChessPosition(chess)->x;
+    int src_col = getChessPosition(chess)->y;
     char **matrix = initMatrix();
     switch (chess->type)
     {

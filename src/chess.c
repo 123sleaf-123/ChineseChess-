@@ -22,3 +22,7 @@ struct Position *initPosition(int x, int y) {
     pos->y = y;
     return pos;
 }
+
+struct Position *getChessPosition(struct Chess *chess) {
+    return chess->pos;
+}
