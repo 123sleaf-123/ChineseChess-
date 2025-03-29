@@ -3,16 +3,12 @@
 
 #include "global.h"
 #include "chess.h"
+#include "chess_record.h"
 #include "chess_stack.h"
 #include "chess_board_block.h"
 
 struct Tips {
     char strs[8][64];
-    int top;
-};
-
-struct RecordStack {
-    int **commands;
     int top;
 };
 
@@ -26,7 +22,7 @@ typedef struct ChessBoard
     struct Chess *chessChoose;
     struct ChessStack **dead_chess;
     struct Tips *tip;
-    struct RecordStack record;
+    RecordStack record;
 } *Board;
 
 char **initMatrix();
