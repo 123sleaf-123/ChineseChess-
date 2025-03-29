@@ -7,8 +7,9 @@
     1.不可移动：
         1.1. 原位置不存在己方棋子或不存在棋子
         1.2. 目标位置超出棋盘范围
-        1.3. 目标位置存在己方棋子
-        1.4. 不符合棋子移动规则
+        1.3. 目标位置存在棋子
+        1.4. 超出移动范围
+        1.5. 目标位置无法进入
     2. 可移动：操纵了己方棋子，未超出棋盘范围，且符合移动规则，且目标位置不存在己方棋子
         2.1. 击杀
         2.2. 无击杀
@@ -86,12 +87,18 @@ bool withdraw(struct ChessBoard *board)
     return true;
 }
 
-void fight(struct Chess *attacker, struct Chess *defender) {
+void fight(struct ChessBoard* board, struct Chess *attacker, struct Chess *defender) {
     if (attacker == NULL || defender == NULL) return;
-    int damage = attacker->battle_property.attack - defender->battle_property.defense;
+    int damage = attacker->battle_property->attack - defender->battle_property->defense;
     if (damage < 0) damage = 0;
-    defender->battle_property.health -= damage;
-    if (defender->battle_property.health <= 0) {
+    defender->battle_property->health -= damage;
+    if (defender->battle_property->health <= 0) {
         defender->is_alive = false;
     }
+}
+
+void fightByPos(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col) {
+    struct Chess *attacker = getChessByPos(board, src_row, src_col);
+    struct Chess *defender = getChessByPos(board, dest_row, dest_col);
+    fight(board, attacker, defender);
 }
