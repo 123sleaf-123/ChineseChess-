@@ -135,3 +135,10 @@ bool placeChess(struct ChessBoard *board, int row, int col, struct Chess *chess)
     }
     return setChessBoardBlock(board, row, col, chess);
 }
+
+struct Chess *getChessByPos(struct ChessBoard *board, int row, int col) {
+    if ((0 <= row && row < BOARD_ROW) && (0 <= col && col < BOARD_COL)) {
+        return board->block[row][col];
+    }
+    else return NULL;
+}
