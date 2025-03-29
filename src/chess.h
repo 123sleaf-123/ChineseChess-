@@ -12,11 +12,11 @@ typedef struct Chess
     int type;
     PLAYER owner; // 
     char is_alive;
-    struct Position pos;
-    BattleProperty battle_property;
+    struct Position *pos;
+    BattleProperty *battle_property;
 } *ChessPtr;
 
 struct Chess *initChess(int type, int owner, int is_alive);
-struct Position* initPosition(int x, int y);
+struct Position *initPosition(int x, int y);
 
 #endif

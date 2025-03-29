@@ -16,7 +16,7 @@ struct Chess *initChess(int type, int owner, int is_alive) {
     return chess;
 }
 
-struct Position* initPosition(int x, int y) {
+struct Position *initPosition(int x, int y) {
     struct Position* pos = (struct Position*) malloc(sizeof(struct Position));
     pos->x = x;
     pos->y = y;

@@ -103,8 +103,8 @@ bool setChessBoardBlock(struct ChessBoard *board, int row, int col, struct Chess
         board->block[row][col] = chess;
         board->boardBlock[row][col]->chess = chess;
         if (chess != NULL) {
-            chess->pos.x = row;
-            chess->pos.y = col;
+            chess->pos->x = row;
+            chess->pos->y = col;
         }
         return true;
     }
