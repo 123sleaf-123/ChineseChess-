@@ -152,7 +152,7 @@ void fight(struct ChessBoard* board, struct Chess *attacker, struct Chess *defen
         // 创建死亡记录
         OperationRecord deathRecord = {
             .type = OP_DEATH,
-            .chess = defender
+            .chess = defender,
             .data = (void *)(intptr_t)damage  // 存储伤害值
         };
         pushRecord(board->record, deathRecord);

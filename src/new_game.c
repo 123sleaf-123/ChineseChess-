@@ -67,6 +67,7 @@ int userControl(struct ChessBoard *board, bool *res)
     if (choose(board, src_row, src_col) == false)
         return CONTINUE; // 一旦执行了该函数，必须在下一循环前使用actionFinished函数
 
+    int action_res;
     // 第二阶段，移动阶段
     int dest_row, dest_col, move_res;
     do
