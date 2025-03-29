@@ -82,19 +82,7 @@ struct ChessBoard* initChessBoard() {
     board->dead_chess[PLAYER_2] = initChessStack_default();
     board->tip = (struct Tips *)malloc(sizeof(struct Tips));
     board->tip->top = -1;
-    board->record.commands = (int **)malloc(sizeof(int *) * 200);
-    for (int i = 0; i < 200; i++)
-    {
-        board->record.commands[i] = (int *)malloc(sizeof(int) * RECORD_CMD_LEN);
-    }
-    for (int i = 0; i < 5; ++i)
-    {
-        for (int j = 0; j < BOARD_COL; j++)
-        {
-            board->record.commands[i][j] = NULL_CMD;
-        }
-    }
-    board->record.top = -1;
+    board->record = initRecordStack(32);
     return board;
 }
 
@@ -141,4 +129,8 @@ struct Chess *getChessByPos(struct ChessBoard *board, int row, int col) {
         return board->block[row][col];
     }
     else return NULL;
+}
+
+RecordStack *getRecordStack(struct ChessBoard *board) {
+    return board->record;
 }

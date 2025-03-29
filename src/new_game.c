@@ -86,24 +86,24 @@ int userControl(struct ChessBoard *board, bool *res)
         move_res = move(board, src_row, src_col, dest_row, dest_col); // 移动
     } while (move_res == false);
 
-    // 第三阶段，行动阶段
-    int action_res;
-    do
-    {
-        action_res = false;
-        printChessBoard(board);
-        scanf("%s", dest);
+    // // 第三阶段，行动阶段
+    // int action_res;
+    // do
+    // {
+    //     action_res = false;
+    //     printChessBoard(board);
+    //     scanf("%s", dest);
 
-        // 取消选中
-        if (strcmp(dest, "cancel") == 0)
-        {
-            actionFinished(board);
-            return CONTINUE;
-        }
-        dest_row = dest[0] - '0';
-        dest_col = dest[1] - '0';
-        action_res = move(board, src_row, src_col, dest_row, dest_col); // 移动
-    } while (action_res == false);
+    //     // 取消选中
+    //     if (strcmp(dest, "cancel") == 0)
+    //     {
+    //         actionFinished(board);
+    //         return CONTINUE;
+    //     }
+    //     dest_row = dest[0] - '0';
+    //     dest_col = dest[1] - '0';
+    //     action_res = move(board, src_row, src_col, dest_row, dest_col); // 移动
+    // } while (action_res == false);
     *res = action_res;
 }
 

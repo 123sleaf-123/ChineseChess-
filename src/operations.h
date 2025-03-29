@@ -2,6 +2,9 @@
 #define OPERATIONS_H
 
 #include "chess_board.h"
+#include "chess_logic.h"
+#include "chess_record.h"
+#include "tools.h"
 
 /*
     1.不可移动：

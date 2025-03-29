@@ -1,7 +1,6 @@
 #ifndef CHESS_RECORD_H
 #define CHESS_RECORD_H
 
-#inlcude "global.h"
 #include "chess.h"
 
 // 定义操作类型
@@ -28,5 +27,11 @@ typedef struct {
     int capacity;              // 容量
     int top;                   // 栈顶指针
 } RecordStack;
+
+RecordStack *initRecordStack(int capacity);
+void pushRecord(RecordStack *stack, OperationRecord record);
+bool isRecordStackEmpty(RecordStack *stack);
+OperationRecord popRecord(RecordStack *stack);
+void freeRecordStack(RecordStack *stack);
 
 #endif

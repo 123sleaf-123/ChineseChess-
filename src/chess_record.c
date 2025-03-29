@@ -1,9 +1,15 @@
 #include "chess_record.h" 
 
-void initRecordStack(RecordStack *stack, int capacity) {
+RecordStack *initRecordStack(int capacity) {
+    RecordStack *stack = (RecordStack *)malloc(sizeof(RecordStack));
     stack->records = (OperationRecord *)malloc(sizeof(OperationRecord) * capacity);
     stack->capacity = capacity;
     stack->top = -1;
+    return stack;
+}
+
+bool isRecordStackEmpty(RecordStack *stack) {
+    return stack->top == -1;
 }
 
 void pushRecord(RecordStack *stack, OperationRecord record) {
