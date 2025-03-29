@@ -1,6 +1,8 @@
 #ifndef PROPERTY_FIGHT_H
 #define PROPERTY_FIGHT_H
 
+#include "global.h"
+
 typedef struct {
     int max_health;    // 最大生命值
     int health;        // 当前生命值
@@ -15,8 +17,8 @@ typedef struct {
     int range;         // 射程
 } BattleProperty;
 
-BattleProperty initBattleProperty(int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int range);
-BattleProperty initDefaultBattleProperty();
+BattleProperty *initBattleProperty(int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int range);
+BattleProperty *initDefaultBattleProperty();
 void freeBattleProperty(BattleProperty *battle_property);
 
 #endif
