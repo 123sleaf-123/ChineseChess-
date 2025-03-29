@@ -60,7 +60,7 @@ int move(struct ChessBoard *board, int src_row, int src_col, int dest_row, int d
                 {
                     board->record.commands[board->record.top][i] = cmd[i];
                 }
-                board->record.commands[board->record.top][RECORD_CMD_LEN - 1] = (int) dead;
+                // board->record.commands[board->record.top][RECORD_CMD_LEN - 1] = (int) dead;
                 setChessBoardBlock(board, dest_row, dest_col, board->block[src_row][src_col]);
                 setChessBoardBlock(board, src_row, src_col, NULL);
                 return true;
@@ -78,12 +78,12 @@ bool withdraw(struct ChessBoard *board)
     int *cmd = board->record.commands[board->record.top--];
     int src_row = cmd[0], src_col = cmd[1], dest_row = cmd[2], dest_col = cmd[3];
 
-    struct Chess *src_block = board->block[dest_row][dest_col];
+    struct Chess *src_block = getChessByPos(board, dest_row, dest_col);
     setChessBoardBlock(board, src_row, src_col, src_block);
-    struct Chess *dest_block = cmd[RECORD_CMD_LEN - 1];
-    setChessBoardBlock(board, dest_row, dest_col, dest_block);
-    if (dest_block != NULL)
-        board->dead_chess[dest_block->owner]->top--;
+    // struct Chess *dest_block = cmd[RECORD_CMD_LEN - 1];
+    // setChessBoardBlock(board, dest_row, dest_col, dest_block);
+    // if (dest_block != NULL)
+    //     board->dead_chess[dest_block->owner]->top--;
     return true;
 }
 
