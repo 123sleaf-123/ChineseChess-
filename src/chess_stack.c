@@ -1,7 +1,7 @@
 #include "global.h"
 #include "chess_stack.h"
 
-struct ChessStack* initChessStack(int max_size) {
+struct ChessStack *initChessStack(int max_size) {
     struct ChessStack* stack = (struct ChessStack*) malloc(sizeof(struct ChessStack));
     stack->stack = (struct Chess**) malloc(sizeof(struct Chess*) * max_size);
     stack->top = -1;
@@ -9,7 +9,7 @@ struct ChessStack* initChessStack(int max_size) {
     return stack;
 }
 
-struct ChessStack* initChessStack_default() {
+struct ChessStack *initChessStack_default() {
     return initChessStack(16);
 }
 
@@ -35,4 +35,10 @@ int ChessStackPush(struct ChessStack *chess_stk, struct Chess *chess) {
 struct Chess *ChessStackTop(struct ChessStack *chess_stk) {
     if (isChessStackEmpty(chess_stk) == true) return NULL;
     else return chess_stk->stack[chess_stk->top];
+}
+
+void ChessStackPop(struct ChessStack *chess_stk) {
+    if (isChessStackEmpty(chess_stk) == false) {
+        chess_stk->top--;
+    }
 }
