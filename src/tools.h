@@ -5,5 +5,6 @@
 
 char *c2tUser(struct ChessBoard* board, int code);
 char *chessName(struct Chess* chess);
+void windowsDisplayAdaption();
 
 #endif

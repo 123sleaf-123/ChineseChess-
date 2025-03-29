@@ -6,7 +6,9 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-#include <windows.h>
+#ifdef _WIN32
+    #include <windows.h>
+#endif
 
 #define BOARD_ROW 10
 #define BOARD_COL 9

@@ -46,3 +46,11 @@ char *chessName(struct Chess* chess) {
 
     return " ";
 }
+
+void windowsDisplayAdaption() {
+    #ifdef _WIN32
+        // Windows系统下设置控制台输出中文
+        SetConsoleOutputCP(CP_UTF8);
+        SetConsoleCP(CP_UTF8);
+    #endif
+}
