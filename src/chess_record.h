@@ -23,14 +23,15 @@ typedef struct {
 
 // 定义记录栈
 typedef struct {
-    OperationRecord *records;  // 记录数组
+    OperationRecord **records;  // 记录数组
     OperationRecord *emptyRecord;  // 记录数组
     int capacity;              // 容量
     int top;                   // 栈顶指针
 } RecordStack;
 
 RecordStack *initRecordStack(int capacity);
-void pushRecord(RecordStack *stack, OperationRecord record);
+OperationRecord *initOperationRecord(OperationType type, int src_row, int src_col, int dest_row, int dest_col, struct Chess *chess, void *data);
+void pushRecord(RecordStack *stack, OperationRecord *record);
 bool isRecordStackEmpty(RecordStack *stack);
 OperationRecord *popRecord(RecordStack *stack);
 void freeRecordStack(RecordStack *stack);
