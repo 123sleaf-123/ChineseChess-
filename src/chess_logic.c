@@ -20,7 +20,7 @@ bool isInside(int row, int col) {
  * @param col 列
  * @return bool 返回true，若不存在棋子；返回false，若存在棋子
  */
-bool isNull(struct ChessBoard* board, int row, int col) {
+bool isEmptyBlock(struct ChessBoard* board, int row, int col) {
     return board->block[row][col] == NULL;
 }
 
@@ -33,7 +33,7 @@ bool isNull(struct ChessBoard* board, int row, int col) {
  * @return bool 返回true，若存在己方棋子；返回false，若不存在棋子或存在敌方棋子
  */
 bool isControllable(struct ChessBoard* board, int row, int col) {
-    return !isNull(board, row, col) && (board->block[row][col]->owner == board->user);
+    return !isEmptyBlock(board, row, col) && (board->block[row][col]->owner == board->user);
 }
 
 /**
@@ -45,8 +45,19 @@ bool isControllable(struct ChessBoard* board, int row, int col) {
  * @return bool 返回true，若目标位置为我方棋子；返回false，若目标位置为空或敌方棋子
  */
 bool friendlyFireDetect(struct ChessBoard* board, int row, int col) {
-    return !isNull(board, row, col) 
-    && (board->block[row][col]->owner == board->user);
+    return !isEmptyBlock(board, row, col) && (board->block[row][col]->owner == board->user);
+}
+
+/**
+ * @brief 目标位置是否存在敌方棋子
+ * 
+ * @param board 棋盘
+ * @param row 目标行
+ * @param col 目标列
+ * @return bool 返回true，若目标位置为敌方棋子；返回false，若目标位置为空或己方棋子
+ */
+ bool hasEnemy(struct ChessBoard* board, int row, int col) {
+    return !isEmptyBlock(board, row, col) && (board->block[row][col]->owner != board->user);
 }
 
 /**
@@ -82,7 +93,7 @@ bool setBoolMatrix(char **matrix, int row, int col, char value) {
     else return false;
 }
 
-bool isMoveable(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col) {
+bool isMoveable(struct ChessBoard* board, int dest_row, int dest_col) {
     return board->moveablePos[dest_row][dest_col] == true;
 }
 
@@ -109,20 +120,11 @@ bool isGameEnd(struct ChessBoard* board) {
 }
 
 void dfs(struct ChessBoard *board, char ***matrix, int row, int col, int movement_left) {
-    if (!isInside(row, col) || movement_left < 0){
+    if (!isInside(row, col) || movement_left < 0 || hasEnemy(board, row, col)){
         return;
     }
 
-    // Check if there's an enemy piece - stop the path here
-    if (!isNull(board, row, col) && board->block[row][col]->owner != board->user) {
-        setBoolMatrix(*matrix, row, col, true);
-        return;
-    }
-
-    // Only set as moveable if the position is empty or has an enemy piece
-    if (isNull(board, row, col) || board->block[row][col]->owner != board->user) {
-        setBoolMatrix(*matrix, row, col, true);
-    }
+    bool ally_flag = friendlyFireDetect(board, row, col);
 
     // DFS in four directions
     int dx[] = {-1, 1, 0, 0};
@@ -132,10 +134,13 @@ void dfs(struct ChessBoard *board, char ***matrix, int row, int col, int movemen
         int new_row = row + dx[i];
         int new_col = col + dy[i];
         // Continue DFS only if not blocked by enemy
-        if (!(!isNull(board, row, col) && board->block[row][col]->owner != board->user)) {
+        if (!(!isEmptyBlock(board, row, col) && board->block[row][col]->owner != board->user)) {
             dfs(board, matrix, new_row, new_col, movement_left - getBlockMovementCost(board, row, col));
         }
     }
+
+    if (!ally_flag)
+        setBoolMatrix(*matrix, row, col, true);
 }
 
 char** pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
@@ -189,7 +194,7 @@ void aiLogic(struct ChessBoard *board, int *dest_row, int *dest_col) {
     {
         for (int j = 0; j < BOARD_COL; j++)
         {
-            if (!isNull(board, i, j) && (board->block[i][j]->owner != board->user)) // 非空且为敌人
+            if (!isEmptyBlock(board, i, j) && (board->block[i][j]->owner != board->user)) // 非空且为敌人
             {
             }
         }
