@@ -6,6 +6,8 @@ enable_testing()
 
 aux_source_directory(./src DIR_CRCS)
 add_executable(ChineseChess ${DIR_CRCS})
+include_directories(include)
+link_directories(lib)
 # target_compile_options(ChineseChess PRIVATE -fexec-charset=UTF-8)
 
 set(EXECUTABLE_OUTPUT_PATH ./output)

@@ -18,7 +18,8 @@
         "chess.h": "c",
         "string.h": "c",
         "stdlib.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "curses.h": "c"
     },
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools", // 我个人的习惯，按回车时一定是真正的换行，只有tab才会接受Intellisense
 
