@@ -1,0 +1,40 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "echo vscode",
+			"type": "shell",
+			"command": "echo ${command:cmake.launchTargetDirectory}",
+			"problemMatcher": []
+		},
+		{
+			"type": "process",
+			"label": "Make",
+			"command": "cmake",
+			"args": [
+				"--build",
+				"${workspaceFolder}/build",
+				"--config",
+				"Debug",
+				"--target",
+				"all",
+				"-j",
+				"23",
+				"--"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": true
+			},
+			"problemMatcher": "$gcc"
+		},
+	]
+}

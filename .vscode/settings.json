@@ -1,0 +1,31 @@
+{
+    "files.defaultLanguage": "c",   // ctrl+N新建文件后默认的语言
+    "editor.formatOnType": true,    // 输入分号(C/C++的语句结束标识)后自动格式化当前这一行的代码
+    "editor.suggest.snippetsPreventQuickSuggestions": false,    // clangd的snippets有很多的跳转点，不用这个就必须手动触发Intellisense了
+    "editor.acceptSuggestionOnEnter": "on",
+    "files.associations": {
+        "chess_stack.h": "c",
+        "chess_board.h": "c",
+        "global.h": "c",
+        "tools.h": "c",
+        "ios.h": "c",
+        "chess_logic.h": "c",
+        "chess_io.h": "c",
+        "windows.h": "c",
+        "cstdio": "c",
+        "new_game.h": "c",
+        "operations.h": "c",
+        "chess.h": "c",
+        "string.h": "c",
+        "stdlib.h": "c",
+        "stdbool.h": "c"
+    },
+    // "clang.cflags": [ // 控制c语言静态检测的参数
+    //     "--target=x86_64-w64-mingw",
+    //     "-std=c11",
+    //     "-Wall"
+    // ],
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools", // 我个人的习惯，按回车时一定是真正的换行，只有tab才会接受Intellisense
+
+    // "code-runner.runInTerminal": true, // 设置成false会在“输出”中输出，无法输入
+}

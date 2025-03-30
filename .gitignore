@@ -1,0 +1,8 @@
+# 忽略目录
+output/
+build/
+.cache/
+.VSCodeCounter/
+
+# 忽略某一类型文件
+*.exe
