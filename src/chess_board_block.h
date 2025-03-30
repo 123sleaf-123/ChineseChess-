@@ -23,5 +23,6 @@ struct BoardBlock* initBoardBlock(TerrainType terrain, int elevation);
 struct BoardBlock* initDefaultBoardBlock();
 void freeBoardBlock(struct BoardBlock* block);
 float getTerrainCost(TerrainType terrain);
+float getTerrainCostByBlock(struct BoardBlock* block);
 
 #endif
