@@ -20,5 +20,6 @@ typedef struct {
 BattleProperty *initBattleProperty(int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int range);
 BattleProperty *initDefaultBattleProperty();
 void freeBattleProperty(BattleProperty *battle_property);
+int getMovement(BattleProperty *battle_property);
 
 #endif

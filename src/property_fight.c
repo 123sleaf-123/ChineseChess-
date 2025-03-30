@@ -24,3 +24,6 @@ void freeBattleProperty(BattleProperty *battle_property) {
     free(battle_property);
 }
 
+int getMovement(BattleProperty *battle_property) {
+    return battle_property->movement;
+}
