@@ -134,3 +134,10 @@ struct Chess *getChessByPos(struct ChessBoard *board, int row, int col) {
 RecordStack *getRecordStack(struct ChessBoard *board) {
     return board->record;
 }
+
+int getBlockMovementCost(struct ChessBoard *board, int row, int col) {
+    if (board->boardBlock[row][col] != NULL) {
+        return getTerrainCostByBlock(board->boardBlock[row][col]);
+    }
+    return 0;
+}
