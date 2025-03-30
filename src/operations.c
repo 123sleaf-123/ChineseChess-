@@ -35,50 +35,6 @@ int choose(struct ChessBoard *board, int src_row, int src_col)
 int move(struct ChessBoard *board, int src_row, int src_col, int dest_row, int dest_col) {
     RecordStack *record_stack = getRecordStack(board);
     if (isInside(dest_row, dest_col) && isMoveable(board, dest_row, dest_col)) {
-        // if (!friendlyFireDetect(board, dest_row, dest_col)) {
-        //     if (isMoveable(board, src_row, src_col, dest_row, dest_col)) {
-        //         bool isKill = !isNull(board, dest_row, dest_col) && 
-        //                      (board->block[dest_row][dest_col]->owner != board->user);
-                
-        //         // 创建移动记录
-        //         OperationRecord moveRecord = {
-        //             .type = OP_MOVE,
-        //             .src_row = src_row,
-        //             .src_col = src_col,
-        //             .dest_row = dest_row,
-        //             .dest_col = dest_col,
-        //             .chess = board->block[src_row][src_col]
-        //         };
-                
-        //         // 如果有击杀，创建死亡记录
-        //         if (isKill) {
-        //             struct Chess *dead = board->block[dest_row][dest_col];
-        //             dead->is_alive = false;
-                    
-        //             OperationRecord deathRecord = {
-        //                 .type = OP_DEATH,
-        //                 .src_row = dest_row,
-        //                 .src_col = dest_col,
-        //                 .chess = dead
-        //             };
-                    
-        //             pushRecord(record_stack, deathRecord);
-                    
-        //             struct ChessStack *cstk = board->dead_chess[dead->owner];
-        //             ChessStackPush(cstk, dead);
-        //             sprintf(board->tip->strs[++board->tip->top], "%s的%s已经被击败了", 
-        //                     c2tUser(board, dead->owner), chessName(dead));
-        //         }
-                
-        //         pushRecord(record_stack, moveRecord);
-                
-        //         // 执行移动
-        //         setChessBoardBlock(board, dest_row, dest_col, board->block[src_row][src_col]);
-        //         setChessBoardBlock(board, src_row, src_col, NULL);
-        //         return true;
-        //     }
-        // }
-
         // 创建移动记录
         OperationRecord *moveRecord = initOperationRecord(OP_MOVE, src_row, src_col, dest_row, dest_col, board->block[src_row][src_col], NULL);
         pushRecord(record_stack, moveRecord);
