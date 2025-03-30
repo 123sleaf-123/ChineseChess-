@@ -34,50 +34,59 @@ int choose(struct ChessBoard *board, int src_row, int src_col)
 
 int move(struct ChessBoard *board, int src_row, int src_col, int dest_row, int dest_col) {
     RecordStack *record_stack = getRecordStack(board);
-    if (isInside(dest_row, dest_col)) {
-        if (!friendlyFireDetect(board, dest_row, dest_col)) {
-            if (isMoveable(board, src_row, src_col, dest_row, dest_col)) {
-                bool isKill = !isNull(board, dest_row, dest_col) && 
-                             (board->block[dest_row][dest_col]->owner != board->user);
+    if (isInside(dest_row, dest_col) && isMoveable(board, dest_row, dest_col)) {
+        // if (!friendlyFireDetect(board, dest_row, dest_col)) {
+        //     if (isMoveable(board, src_row, src_col, dest_row, dest_col)) {
+        //         bool isKill = !isNull(board, dest_row, dest_col) && 
+        //                      (board->block[dest_row][dest_col]->owner != board->user);
                 
-                // 创建移动记录
-                OperationRecord moveRecord = {
-                    .type = OP_MOVE,
-                    .src_row = src_row,
-                    .src_col = src_col,
-                    .dest_row = dest_row,
-                    .dest_col = dest_col,
-                    .chess = board->block[src_row][src_col]
-                };
+        //         // 创建移动记录
+        //         OperationRecord moveRecord = {
+        //             .type = OP_MOVE,
+        //             .src_row = src_row,
+        //             .src_col = src_col,
+        //             .dest_row = dest_row,
+        //             .dest_col = dest_col,
+        //             .chess = board->block[src_row][src_col]
+        //         };
                 
-                // 如果有击杀，创建死亡记录
-                if (isKill) {
-                    struct Chess *dead = board->block[dest_row][dest_col];
-                    dead->is_alive = false;
+        //         // 如果有击杀，创建死亡记录
+        //         if (isKill) {
+        //             struct Chess *dead = board->block[dest_row][dest_col];
+        //             dead->is_alive = false;
                     
-                    OperationRecord deathRecord = {
-                        .type = OP_DEATH,
-                        .src_row = dest_row,
-                        .src_col = dest_col,
-                        .chess = dead
-                    };
+        //             OperationRecord deathRecord = {
+        //                 .type = OP_DEATH,
+        //                 .src_row = dest_row,
+        //                 .src_col = dest_col,
+        //                 .chess = dead
+        //             };
                     
-                    pushRecord(record_stack, deathRecord);
+        //             pushRecord(record_stack, deathRecord);
                     
-                    struct ChessStack *cstk = board->dead_chess[dead->owner];
-                    ChessStackPush(cstk, dead);
-                    sprintf(board->tip->strs[++board->tip->top], "%s的%s已经被击败了", 
-                            c2tUser(board, dead->owner), chessName(dead));
-                }
+        //             struct ChessStack *cstk = board->dead_chess[dead->owner];
+        //             ChessStackPush(cstk, dead);
+        //             sprintf(board->tip->strs[++board->tip->top], "%s的%s已经被击败了", 
+        //                     c2tUser(board, dead->owner), chessName(dead));
+        //         }
                 
-                pushRecord(record_stack, moveRecord);
+        //         pushRecord(record_stack, moveRecord);
                 
-                // 执行移动
-                setChessBoardBlock(board, dest_row, dest_col, board->block[src_row][src_col]);
-                setChessBoardBlock(board, src_row, src_col, NULL);
-                return true;
-            }
-        }
+        //         // 执行移动
+        //         setChessBoardBlock(board, dest_row, dest_col, board->block[src_row][src_col]);
+        //         setChessBoardBlock(board, src_row, src_col, NULL);
+        //         return true;
+        //     }
+        // }
+
+        // 创建移动记录
+        OperationRecord *moveRecord = initOperationRecord(OP_MOVE, src_row, src_col, dest_row, dest_col, board->block[src_row][src_col], NULL);
+        pushRecord(record_stack, moveRecord);
+
+        // 执行移动
+        setChessBoardBlock(board, dest_row, dest_col, board->block[src_row][src_col]);
+        setChessBoardBlock(board, src_row, src_col, NULL);
+        return true;
     }
     sprintf(board->tip->strs[++board->tip->top], "不可移动到这里");
     return false;
@@ -85,35 +94,35 @@ int move(struct ChessBoard *board, int src_row, int src_col, int dest_row, int d
 
 bool withdraw(struct ChessBoard *board) {
     RecordStack *record_stack = getRecordStack(board);
-    if (!isRecordStackEmpty(record_stack))
+    if (isRecordStackEmpty(record_stack))
         return false;
-        
+    
     // 从栈顶开始处理记录，直到遇到一个完整操作的边界
     while (!isRecordStackEmpty(record_stack)) {
-        OperationRecord record = popRecord(record_stack);
+        OperationRecord *record = popRecord(record_stack);
         
-        switch (record.type) {
+        switch (record->type) {
             case OP_MOVE: {
                 // 撤销移动：将棋子移回原位置
-                struct Chess *chess = record.chess;
-                setChessBoardBlock(board, record.src_row, record.src_col, chess);
-                setChessBoardBlock(board, record.dest_row, record.dest_col, NULL);
+                struct Chess *chess = record->chess;
+                setChessBoardBlock(board, record->src_row, record->src_col, chess);
+                setChessBoardBlock(board, record->dest_row, record->dest_col, NULL);
                 break;
             }
             case OP_ATTACK: {
                 // 撤销攻击：恢复生命值
-                int damage = (int)(intptr_t)record.data;
-                record.chess->battle_property->health += damage;
+                int damage = (int)(intptr_t)record->data;
+                record->chess->battle_property->health += damage;
                 break;
             }
             case OP_DEATH: {
                 // 撤销死亡：复活棋子
-                int damage = (int)(intptr_t)record.data;
-                record.chess->is_alive = true;
-                record.chess->battle_property->health += damage;
+                int damage = (int)(intptr_t)record->data;
+                record->chess->is_alive = true;
+                record->chess->battle_property->health += damage;
                 
                 // 从死亡栈中移除
-                ChessStackPop(board->dead_chess[record.chess->owner]);
+                ChessStackPop(board->dead_chess[record->chess->owner]);
                 break;
             }
             // 其他操作类型的处理...
@@ -122,7 +131,7 @@ bool withdraw(struct ChessBoard *board) {
         }
         
         // 如果这是一个操作的开始记录，则停止
-        if (record.type == OP_MOVE || record.type == OP_ATTACK) {
+        if (record->type == OP_MOVE || record->type == OP_ATTACK) {
             break;
         }
     }
@@ -137,12 +146,8 @@ void fight(struct ChessBoard* board, struct Chess *attacker, struct Chess *defen
     if (damage < 0) damage = 0;
     
     // 创建攻击记录
-    OperationRecord attackRecord = {
-        .type = OP_ATTACK,
-        .chess = attacker,
-        .data = (void *)(intptr_t)damage  // 存储伤害值
-    };
-    pushRecord(board->record, attackRecord);
+    OperationRecord *attackRecord = initOperationRecord(OP_ATTACK, 0, 0, 0, 0, attacker, (void *)(intptr_t)damage);
+    pushRecord(getRecordStack(board), attackRecord);
     
     defender->battle_property->health -= damage;
     
@@ -150,12 +155,8 @@ void fight(struct ChessBoard* board, struct Chess *attacker, struct Chess *defen
         defender->is_alive = false;
         
         // 创建死亡记录
-        OperationRecord deathRecord = {
-            .type = OP_DEATH,
-            .chess = defender,
-            .data = (void *)(intptr_t)damage  // 存储伤害值
-        };
-        pushRecord(board->record, deathRecord);
+        OperationRecord *deathRecord = initOperationRecord(OP_DEATH, 0, 0, 0, 0, defender, (void *)(intptr_t)damage);
+        pushRecord(getRecordStack(board), deathRecord);
     }
 }
 
