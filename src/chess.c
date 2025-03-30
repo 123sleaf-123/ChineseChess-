@@ -26,3 +26,7 @@ struct Position *initPosition(int x, int y) {
 struct Position *getChessPosition(struct Chess *chess) {
     return chess->pos;
 }
+
+int getChessMovement(struct Chess *chess) {
+    return chess->battle_property->movement;
+}

@@ -19,5 +19,6 @@ typedef struct Chess
 struct Chess *initChess(int type, int owner, int is_alive);
 struct Position *initPosition(int x, int y);
 struct Position *getChessPosition(struct Chess *chess);
+int getChessMovement(struct Chess *chess);
 
 #endif
