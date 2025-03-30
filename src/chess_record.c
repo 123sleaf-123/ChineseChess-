@@ -3,6 +3,7 @@
 RecordStack *initRecordStack(int capacity) {
     RecordStack *stack = (RecordStack *)malloc(sizeof(RecordStack));
     stack->records = (OperationRecord *)malloc(sizeof(OperationRecord) * capacity);
+    stack->emptyRecord = (OperationRecord *)malloc(sizeof(OperationRecord));
     stack->capacity = capacity;
     stack->top = -1;
     return stack;
@@ -21,12 +22,11 @@ void pushRecord(RecordStack *stack, OperationRecord record) {
     stack->records[++stack->top] = record;
 }
 
-OperationRecord popRecord(RecordStack *stack) {
+OperationRecord *popRecord(RecordStack *stack) {
     if (stack->top < 0) {
-        OperationRecord empty = {0};
-        return empty;
+        return stack->emptyRecord; // 返回空记录
     }
-    return stack->records[stack->top--];
+    return &stack->records[stack->top--];
 }
 
 void freeRecordStack(RecordStack *stack) {
@@ -34,4 +34,41 @@ void freeRecordStack(RecordStack *stack) {
     stack->records = NULL;
     stack->capacity = 0;
     stack->top = -1;
+}
+
+void printOperationRecord(const OperationRecord *record) {
+    if (record == NULL) {
+        printf("NULL OperationRecord\n");
+        return;
+    }
+
+    printf("OperationRecord {\n");
+    printf("  type: %d\n", record->type);
+    printf("  src: (%d, %d)\n", record->src_row, record->src_col);
+    printf("  dest: (%d, %d)\n", record->dest_row, record->dest_col);
+    printf("  chess: %p\n", (void*)record->chess);
+    printf("  data: %p\n", record->data);
+    printf("}\n");
+}
+
+void printRecordStack(const RecordStack *stack) {
+    if (stack == NULL) {
+        printf("NULL RecordStack\n");
+        return;
+    }
+
+    printf("RecordStack {\n");
+    printf("  capacity: %d\n", stack->capacity);
+    printf("  top: %d\n", stack->top);
+    printf("  records: [\n");
+    
+    for (int i = 0; i <= stack->top; i++) {
+        printf("    %d: ", i);
+        printOperationRecord(&stack->records[i]);
+    }
+    
+    printf("  ]\n");
+    printf("  emptyRecord: ");
+    printOperationRecord(stack->emptyRecord);
+    printf("}\n");
 }
