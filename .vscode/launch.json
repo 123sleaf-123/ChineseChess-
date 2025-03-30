@@ -27,7 +27,18 @@
                 },
             ],
             "preLaunchTask": "Make"  // 调试前执行的任务，一般为编译程序。与tasks.json的label相对应
+        },
+        
+        {
+            "name": "clang.exe - Build and debug active file",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/output/ChineseChess.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "externalTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "preLaunchTask": "Make"  // 调试前执行的任务，一般为编译程序。与tasks.json的label相对应
         }
-
     ]
 }
