@@ -110,7 +110,7 @@ bool withdraw(struct ChessBoard *board) {
                 // 撤销死亡：复活棋子
                 int damage = (int)(intptr_t)record.data;
                 record.chess->is_alive = true;
-                record.chess->battle_property->health += damage; // 至少恢复1点生命
+                record.chess->battle_property->health += damage;
                 
                 // 从死亡栈中移除
                 ChessStackPop(board->dead_chess[record.chess->owner]);
