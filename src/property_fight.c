@@ -27,3 +27,7 @@ void freeBattleProperty(BattleProperty *battle_property) {
 int getMovement(BattleProperty *battle_property) {
     return battle_property->movement;
 }
+
+int getAttackRange(BattleProperty *battle_property) {
+    return battle_property->range;
+}

@@ -21,5 +21,6 @@ BattleProperty *initBattleProperty(int max_health, int health, int movement, int
 BattleProperty *initDefaultBattleProperty();
 void freeBattleProperty(BattleProperty *battle_property);
 int getMovement(BattleProperty *battle_property);
+int getAttackRange(BattleProperty *battle_property);
 
 #endif
