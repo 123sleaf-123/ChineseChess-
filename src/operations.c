@@ -105,6 +105,14 @@ int fight(struct ChessBoard* board, struct Chess *attacker, struct Chess *defend
     int damage = attacker->battle_property->attack - defender->battle_property->defense;
     if (damage < 0) damage = 0;
     
+    // 打印攻击信息
+    printf("Attack: %s(ATK:%d) -> %s(DEF:%d), Damage:%d\n", 
+           chessName(attacker),
+           attacker->battle_property->attack,
+           chessName(defender),
+           defender->battle_property->defense,
+           damage);
+    
     // 创建攻击记录
     OperationRecord *attackRecord = initOperationRecord(OP_ATTACK, 0, 0, 0, 0, attacker, (void *)(intptr_t)damage);
     pushRecord(getRecordStack(board), attackRecord);
