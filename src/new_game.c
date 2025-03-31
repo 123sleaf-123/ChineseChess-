@@ -87,6 +87,9 @@ int userControl(struct ChessBoard *board, bool *res)
         move_res = moveChess(board, src_row, src_col, dest_row, dest_col); // 移动
     } while (move_res == false);
 
+    src_row = dest_row;
+    src_col = dest_col;
+
     // 第三阶段，行动阶段
     do
     {
