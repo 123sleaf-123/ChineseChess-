@@ -1,4 +1,5 @@
 #include "global.h"
+#include "property_fight.h"
 #include "chess.h"
 
 int count = 0;
@@ -30,3 +31,15 @@ struct Position *getChessPosition(struct Chess *chess) {
 int getChessMovement(struct Chess *chess) {
     return chess->battle_property->movement;
 }
+
+bool isInsideAttackRangeByChess(struct Chess *attacker, struct Chess *defender) {
+    struct Position *atttacker_pos = getChessPosition(attacker);
+    struct Position *defender_pos = getChessPosition(defender);
+    int attack_range = getAttackRange(attacker->battle_property);
+    return isInsideAttackRangeByPos(atttacker_pos->x, atttacker_pos->y, defender_pos->x, defender_pos->y, attack_range);
+}
+
+bool isInsideAttackRangeByPos(int attacker_row, int attacker_col, int defender_row, int defender_col, int range) {
+    return (abs(defender_row - attacker_row) + abs(defender_col - attacker_col) <= range);
+}
+
