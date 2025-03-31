@@ -33,6 +33,9 @@ int choose(struct ChessBoard *board, int src_row, int src_col)
 }
 
 int moveChess(struct ChessBoard *board, int src_row, int src_col, int dest_row, int dest_col) {
+    if (src_row == dest_row && src_col == dest_col) {
+        return true;
+    }
     RecordStack *record_stack = getRecordStack(board);
     if (isInside(dest_row, dest_col) && isMoveable(board, dest_row, dest_col)) {
         // 创建移动记录
