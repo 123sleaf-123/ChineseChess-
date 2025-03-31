@@ -1,4 +1,5 @@
 #include "operations.h"
+#include "chess.h"
 
 /*
     1.不可移动：
@@ -98,8 +99,8 @@ bool withdraw(struct ChessBoard *board) {
     return true;
 }
 
-void fight(struct ChessBoard* board, struct Chess *attacker, struct Chess *defender) {
-    if (attacker == NULL || defender == NULL) return;
+int fight(struct ChessBoard* board, struct Chess *attacker, struct Chess *defender) {
+    if (attacker == NULL || defender == NULL || !isInsideAttackRangeByChess(attacker, defender)) return false;
     
     int damage = attacker->battle_property->attack - defender->battle_property->defense;
     if (damage < 0) damage = 0;
@@ -117,10 +118,11 @@ void fight(struct ChessBoard* board, struct Chess *attacker, struct Chess *defen
         OperationRecord *deathRecord = initOperationRecord(OP_DEATH, 0, 0, 0, 0, defender, (void *)(intptr_t)damage);
         pushRecord(getRecordStack(board), deathRecord);
     }
+    return true;
 }
 
-void fightByPos(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col) {
+int fightByPos(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col) {
     struct Chess *attacker = getChessByPos(board, src_row, src_col);
     struct Chess *defender = getChessByPos(board, dest_row, dest_col);
-    fight(board, attacker, defender);
+    return fight(board, attacker, defender);
 }
