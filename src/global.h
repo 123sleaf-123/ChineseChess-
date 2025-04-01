@@ -22,6 +22,7 @@
 #define RED_TEXT 4
 #define WHITE_TEXT 7
 #define BLUE_TEXT 9
+#define YELLOW_TEXT 14
 
 // block type
 #define EMPTY 0
