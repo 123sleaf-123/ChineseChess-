@@ -93,8 +93,18 @@ bool setBoolMatrix(char **matrix, int row, int col, char value) {
     else return false;
 }
 
-bool isMoveable(struct ChessBoard* board, int dest_row, int dest_col) {
+bool isMoveable(struct ChessBoard *board, int dest_row, int dest_col) {
+    if (board->moveablePos == NULL) {
+        return false;  
+    }
     return board->moveablePos[dest_row][dest_col] == true;
+}
+
+bool isAttackable(struct ChessBoard *board, int dest_row, int dest_col) {
+    if (board->attackablePos == NULL) {
+        return false;  
+    }
+    return board->attackablePos[dest_row][dest_col] == true;
 }
 
 /**
@@ -143,7 +153,7 @@ void dfs(struct ChessBoard *board, char ***matrix, int row, int col, int movemen
         setBoolMatrix(*matrix, row, col, true);
 }
 
-char** pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
+char **pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
     int src_row = getChessPosition(chess)->x;
     int src_col = getChessPosition(chess)->y;
     char **matrix = initMatrix();
@@ -152,7 +162,7 @@ char** pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
     return matrix;
 }
 
-char** pathFindingByPos(struct ChessBoard *board, int src_row, int src_col) {
+char **pathFindingByPos(struct ChessBoard *board, int src_row, int src_col) {
     struct Chess* chess = board->block[src_row][src_col];
     return pathFindingByChess(board, chess);
 }
@@ -163,6 +173,34 @@ void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
     board->moveablePos = pathFindingByPos(board, src_row, src_col);
 }
 
+char **attackableAreaFindingByChess(struct ChessBoard *board, struct Chess *chess) {
+    int src_row = getChessPosition(chess)->x;
+    int src_col = getChessPosition(chess)->y;
+    char **matrix = initMatrix();
+    int attack_range = getAttackRange(chess->battle_property);
+    matrix[src_row + attack_range][src_col] = true;
+    matrix[src_row - attack_range][src_col] = true;
+    matrix[src_row][src_col + attack_range] = true;
+    matrix[src_row][src_col - attack_range] = true;
+    return matrix;
+}
+
+char **attackableAreaFindingByPos(struct ChessBoard *board, int src_row, int src_col) {
+    return attackableAreaFindingByChess(board, getChessByPos(board, src_row, src_col));
+}
+
+/**
+ * @brief 计算攻击范围
+ * 
+ * @param board 棋盘
+ * @param src_row 原行
+ * @param src_col 原列
+ */
+void attackablePosition(struct ChessBoard* board, int src_row, int src_col) {
+    reset_moveablePos(board);
+    freeMatrix(board->attackablePos);
+    board->attackablePos = attackableAreaFindingByPos(board, src_row, src_col);
+}
 
 /**
  * @brief 行动完成，可移动路径图层和已选择棋子清空
@@ -175,6 +213,7 @@ void actionFinished(struct ChessBoard *board) {
         for (int j = 0; j < 9; j++)
         {
             board->moveablePos[i][j] = false;
+            board->attackablePos[i][j] = false;
         } 
     }
     board->chessChoose = NULL;
