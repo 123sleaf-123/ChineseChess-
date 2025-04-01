@@ -18,6 +18,7 @@ typedef struct ChessBoard
     struct BoardBlock ***boardBlock;
     struct ChessStack *objects;
     char **moveablePos;
+    char **attackablePos;
     PLAYER user;
     struct Chess *chessChoose;
     struct ChessStack **dead_chess;
@@ -34,6 +35,8 @@ int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val
 bool placeChess(struct ChessBoard *board, int row, int col, struct Chess *chess);
 struct Chess *getChessByPos(struct ChessBoard *board, int row, int col);
 RecordStack *getRecordStack(struct ChessBoard *board);
+struct Chess *getChessChoose(struct ChessBoard *board);
+void setChessChoose(struct ChessBoard *board, struct Chess *chess);
 int getBlockMovementCost(struct ChessBoard *board, int row, int col);
 void aiLogic(struct ChessBoard *board, int *dest_row, int *dest_col);
 

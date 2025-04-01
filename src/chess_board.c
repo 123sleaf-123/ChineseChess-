@@ -74,6 +74,7 @@ struct ChessBoard* initChessBoard() {
     
     // 可移动区域初始化
     board->moveablePos = initMatrix();
+    board->attackablePos = initMatrix();
 
     board->user = PLAYER_1; // 开局玩家初始化
     board->chessChoose = NULL;
@@ -131,8 +132,14 @@ struct Chess *getChessByPos(struct ChessBoard *board, int row, int col) {
     else return NULL;
 }
 
-RecordStack *getRecordStack(struct ChessBoard *board) {
-    return board->record;
+RecordStack *getRecordStack(struct ChessBoard *board) { return board->record; }
+
+struct Chess *getChessChoose(struct ChessBoard *board) {
+  return board->chessChoose;
+}
+
+void setChessChoose(struct ChessBoard *board, struct Chess *chess) {
+    board->chessChoose = chess;
 }
 
 int getBlockMovementCost(struct ChessBoard *board, int row, int col) {
