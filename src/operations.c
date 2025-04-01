@@ -100,13 +100,21 @@ bool withdraw(struct ChessBoard *board) {
 }
 
 int fight(struct ChessBoard* board, struct Chess *attacker, struct Chess *defender) {
-    if (attacker == NULL || defender == NULL || !isInsideAttackRangeByChess(attacker, defender)) return false;
+    if (attacker == NULL || defender == NULL) {
+        sprintf(board->tip->strs[++board->tip->top], "攻击者或防御者不存在");
+        return false;
+    }
+    if (!isInsideAttackRangeByChess(attacker, defender)) {
+        sprintf(board->tip->strs[++board->tip->top], "目标不在攻击范围内");
+        return false;
+    }
     
     int damage = attacker->battle_property->attack - defender->battle_property->defense;
     if (damage < 0) damage = 0;
     
     // 打印攻击信息
-    printf("Attack: %s(ATK:%d) -> %s(DEF:%d), Damage:%d\n", 
+    sprintf(board->tip->strs[++board->tip->top],
+            "Attack: %s(ATK:%d) -> %s(DEF:%d), Damage:%d\n", 
            chessName(attacker),
            attacker->battle_property->attack,
            chessName(defender),
