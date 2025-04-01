@@ -2,6 +2,7 @@
 #define CHESS_IO_H
 
 #include "chess_board.h"
+#include "chess_logic.h"
 #include "curses.h"
 
 #define cls system("cls")

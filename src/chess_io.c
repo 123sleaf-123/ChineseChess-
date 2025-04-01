@@ -1,5 +1,5 @@
-#include "global.h"
 #include "chess_io.h"
+#include "chess_board.h"
 #include "tools.h"
 
 char *PlayerInput() {
@@ -113,8 +113,8 @@ void printChessBoard(struct ChessBoard* board) {
         printf("%d ", i);
         for (int j = 0; j < BOARD_COL; j++)
         {
-            if(board->block[i][j] == NULL) {
-                if (board->moveablePos != NULL && board->moveablePos[i][j] == true) {
+            if(isEmptyBlock(board, i, j)) {
+                if (isMoveable(board, i, j)) {
                     printf("++");
                 }
                 else {
@@ -122,8 +122,15 @@ void printChessBoard(struct ChessBoard* board) {
                 }
             }
             else {
-                if (board->block[i][j] == board->chessChoose) color_printf(BLUE_TEXT, "%s", chessName(board->block[i][j]));
-                else autoColor_printf(board->block[i][j]->owner, "%s", chessName(board->block[i][j]));
+                struct Chess *piece = getChessByPos(board, i, j);
+                const char* name = chessName(piece);
+                if (piece == getChessChoose(board)) {
+                    color_printf(BLUE_TEXT, "%s", name);
+                } else if (isAttackable(board, i, j)) {
+                    color_printf(YELLOW_TEXT, "%s", name);
+                } else {
+                    autoColor_printf(piece->owner, "%s", name);
+                }
             }
             putchar(' ');
         }
