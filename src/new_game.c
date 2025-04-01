@@ -89,6 +89,10 @@ int userControl(struct ChessBoard *board, bool *res)
 
     src_row = dest_row;
     src_col = dest_col;
+    
+    // TODO: 以后删掉这里
+    // 选中后，重新计算攻击范围
+    attackablePosition(board, src_row, src_col);
 
     // 第三阶段，行动阶段
     do
