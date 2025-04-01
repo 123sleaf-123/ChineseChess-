@@ -43,3 +43,9 @@ bool isInsideAttackRangeByPos(int attacker_row, int attacker_col, int defender_r
     return (abs(defender_row - attacker_row) + abs(defender_col - attacker_col) <= range);
 }
 
+void printChessBattleProperty(struct Chess *chess) {
+    if (chess == NULL || chess->battle_property == NULL) return;
+    BattleProperty *bp = chess->battle_property;
+    printBattleProperty(bp);
+}
+

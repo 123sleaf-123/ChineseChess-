@@ -22,5 +22,6 @@ struct Position *getChessPosition(struct Chess *chess);
 int getChessMovement(struct Chess *chess);
 bool isInsideAttackRangeByChess(struct Chess *attacker, struct Chess *defender);
 bool isInsideAttackRangeByPos(int attacker_row, int attacker_col, int defender_row, int defender_col, int range);
+void printChessBattleProperty(struct Chess *chess);
 
 #endif

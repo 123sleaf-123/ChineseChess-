@@ -22,5 +22,6 @@ BattleProperty *initDefaultBattleProperty();
 void freeBattleProperty(BattleProperty *battle_property);
 int getMovement(BattleProperty *battle_property);
 int getAttackRange(BattleProperty *battle_property);
+void printBattleProperty(BattleProperty *battle_property);
 
 #endif

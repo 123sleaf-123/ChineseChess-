@@ -31,3 +31,11 @@ int getMovement(BattleProperty *battle_property) {
 int getAttackRange(BattleProperty *battle_property) {
     return battle_property->range;
 }
+
+void printBattleProperty(BattleProperty *battle_property) {
+    if (battle_property == NULL) return;
+    printf("战斗属性: 生命 %d/%d, 移动力 %d, 攻击 %d, 命中 %d, 必杀 %d, 攻速 %d, 防御 %d, 耐魔 %d, 回避 %d, 射程 %d\n",
+           battle_property->health, battle_property->max_health, battle_property->movement, battle_property->attack,
+           battle_property->hitRate, battle_property->critical, battle_property->attack_speed,
+           battle_property->defense, battle_property->magic_resist, battle_property->evasion, battle_property->range);
+}

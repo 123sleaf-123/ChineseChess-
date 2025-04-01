@@ -85,15 +85,6 @@ int autoColor_printf(int user, const char *format, ...) {
     return len;
 }
 
-// 新增函数：打印棋子的战斗属性
-void printBattleProperty(struct Chess *chess) {
-    if (chess == NULL || chess->battle_property == NULL) return;
-    BattleProperty *bp = chess->battle_property;
-    printf("\n战斗属性: 生命 %d/%d, 移动力 %d, 攻击 %d, 命中 %d, 必杀 %d, 攻速 %d, 防御 %d, 耐魔 %d, 回避 %d, 射程 %d\n",
-           bp->health, bp->max_health, bp->movement, bp->attack, bp->hitRate, bp->critical, bp->attack_speed,
-           bp->defense, bp->magic_resist, bp->evasion, bp->range);
-}
-
 void printChessBoard(struct ChessBoard* board) {
     // cls;
     clearScreen(); // 更新界面，windows为"cls"，linux为""
@@ -161,7 +152,7 @@ void printChessBoard(struct ChessBoard* board) {
         printf("未选中棋子");
     } else {
         autoColor_printf(board->chessChoose->owner, "%s", chessName(board->chessChoose));
-        printBattleProperty(board->chessChoose);
+        printChessBattleProperty(board->chessChoose);
     }
     fillScreenWithBlank();
     if (board->tip->top == -1) {
