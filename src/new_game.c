@@ -1,8 +1,5 @@
-#include "global.h"
 #include "new_game.h"
-#include "chess_io.h"
-#include "chess_logic.h"
-#include "operations.h"
+
 
 // #define INTERVAL NORMAL_INTERVAL
 #define INTERVAL SHORT_INTERVAL
@@ -10,108 +7,124 @@
 #define CONTINUE 101
 
 /**
- * 游戏可以分为几个阶段：
+ * 玩家控制可以分为几个阶段：
  * 1. 第一阶段：
- *      1.1. 选中 象棋 —— 第二阶段
+ *      1.1. 选中 棋子 —— 第二阶段
  *      1.2. 回退 操作/指令 —— 继续循环
  *      1.3. 退出 —— 结束循环
  * 2. 第二阶段：
- *      2.1. 移动 象棋 —— 继续循环
- *      2.2. 撤销选中 —— 继续循环
+ *      2.1. 移动 棋子 —— 第三阶段
+ *      2.2. 取消选中 —— 继续循环
+ * 3. 第三阶段：
+ *      3.1. 选择作用方式（装备、技能） —— 第四阶段
+ *      3.2. 取消移动 —— 第二阶段
+ * 4. 第四阶段：
+ *      4.1. 选择作用棋子 —— 第五阶段
+ *      4.2. 取消作用方式选择 —— 第三阶段
+ * 5. 第五阶段：
+ *      5.1. 进入战斗 —— 结束
  */
-
-int userControl(struct ChessBoard *board, bool *res)
-{
-    char src[10], dest[10];
-    scanf("%s", src);
-
-    // 退出
-    if (strcmp(src, "q") == 0)
-    {
-        cls;
-        for (int i = 0; i < 5; i++)
-        {
-            printf("伊蕾娜正在构建主界面中");
-            for (int i = 0; i < 3; i++)
-            {
-                putchar('.');
-                Sleep(500);
-            }
-            cls;
-        }
-        cls;
-        Sleep(INTERVAL);
-        return BREAK;
-    }
-
-    // 撤回 
-    if (strcmp(src, "w") == 0)
-    {
-        cls;
-        printf("伊蕾娜不喜欢刚才做的决定...\n");
-        Sleep(INTERVAL);
-        printf("天才美少女魔女伊蕾娜正在使用魔法...\n");
-        Sleep(INTERVAL);
-        printf("败者食尘！\n");
-        withdraw(board);
-        withdraw(board);
-        Sleep(INTERVAL);
-        return CONTINUE;
-    }
-
-    // 选中
-    int
-        src_row = src[0] - '0',
-        src_col = src[1] - '0';
-
-    if (choose(board, src_row, src_col) == false)
-        return CONTINUE; // 一旦执行了该函数，必须在下一循环前使用actionFinished函数
-
-    int dest_row, dest_col, move_res = false, action_res = false;
-
-    // 第二阶段，移动阶段
-    do
-    {
-        move_res = false;
-        printChessBoard(board);
-        scanf("%s", dest);
-
-        // 取消选中
-        if (strcmp(dest, "cancel") == 0)
-        {
-            actionFinished(board);
-            return CONTINUE;
-        }
-        dest_row = dest[0] - '0';
-        dest_col = dest[1] - '0';
-        move_res = moveChess(board, src_row, src_col, dest_row, dest_col); // 移动
-    } while (move_res == false);
-
-    src_row = dest_row;
-    src_col = dest_col;
+int userControl(struct ChessBoard *board, bool *res) {
+    char input[10];
+    int stage = 1;  // Start at stage 1
+    int src_row, src_col, dest_row, dest_col, target_row, target_col;
     
-    // TODO: 以后删掉这里
-    // 选中后，重新计算攻击范围
-    attackablePosition(board, src_row, src_col);
-
-    // 第三阶段，行动阶段
-    do
-    {
-        action_res = false;
+    while (stage <= 5) {
         printChessBoard(board);
-        scanf("%s", dest);
+        scanf("%s", input);
 
-        // 取消选中
-        if (strcmp(dest, "cancel") == 0)
-        {
-            actionFinished(board);
-            return CONTINUE;
+        switch (stage) {
+            case 1:  // Selection stage
+                if (strcmp(input, "q") == 0) {
+                    cls;
+                    for (int i = 0; i < 5; i++) {
+                        printf("伊蕾娜正在构建主界面中");
+                        for (int j = 0; j < 3; j++) {
+                            putchar('.');
+                            Sleep(500);
+                        }
+                        cls;
+                    }
+                    Sleep(INTERVAL);
+                    return BREAK;
+                }
+                if (strcmp(input, "w") == 0) {
+                    cls;
+                    printf("伊蕾娜不喜欢刚才做的决定...\n");
+                    Sleep(INTERVAL);
+                    printf("天才美少女魔女伊蕾娜正在使用魔法...\n");
+                    Sleep(INTERVAL);
+                    printf("败者食尘！\n");
+                    withdraw(board);
+                    withdraw(board);
+                    Sleep(INTERVAL);
+                    return CONTINUE;
+                }
+                src_row = input[0] - '0';
+                src_col = input[1] - '0';
+                if (choose(board, src_row, src_col)) {
+                    stage = 2;
+                }
+                break;
+
+            case 2:  // Movement stage
+                if (strcmp(input, "cancel") == 0) {
+                    // actionFinished(board);
+                    stage = 1;
+                }
+                dest_row = input[0] - '0';
+                dest_col = input[1] - '0';
+                if (moveChess(board, src_row, src_col, dest_row, dest_col)) {
+                    stage = 3;
+                }
+                break;
+            case 3:  // Action selection stage
+                if (strcmp(input, "cancel") == 0) {
+                    withdraw(board);
+                    stage = 2;
+                    continue;
+                }
+                else if (strcmp(input, "bow")) {
+                    getChessByPos(board, dest_row, dest_col)->battle_property->attack = 2;
+                    attackablePosition(board, dest_row, dest_col);
+                    stage = 4;
+                }
+                else if (strcmp(input, "sword")) {
+                    getChessByPos(board, dest_row, dest_col)->battle_property->attack = 1;
+                    attackablePosition(board, dest_row, dest_col);
+                    stage = 4;
+                } else if (strcmp(input, "fin")) {
+                    actionFinished(board);
+                    *res = true;
+                    return true;
+                }
+                break;
+            case 4:  // Target selection stage
+                if (strcmp(input, "cancel") == 0) {
+                    stage = 3;
+                    continue;
+                }
+                target_row = input[0] - '0';
+                target_col = input[1] - '0';
+                setChessTobeOperated(board, getChessByPos(board, target_row, target_col));
+                stage = 5;
+                break;
+
+            case 5:  // Combat stage
+                if (strcmp(input, "cancel") == 0) {
+                    stage = 4;
+                    continue;
+                }
+                dest_row = input[0] - '0';
+                dest_col = input[1] - '0';
+                if (fight(board, getChessChoose(board), getChessTobeOperated(board))) {
+                    *res = true;
+                    return true;
+                }
+                break;
         }
-        dest_row = dest[0] - '0';
-        dest_col = dest[1] - '0';
-        action_res = fightByPos(board, src_row, src_col, dest_row, dest_col); // 战斗
-    } while (action_res == false);
-    *res = action_res;
+    }
+    return CONTINUE;
 }
 
 int aiControl(struct ChessBoard *board, bool *res)

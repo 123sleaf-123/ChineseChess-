@@ -3,6 +3,8 @@
 
 #include "global.h"
 #include "chess_board.h"
+#include "chess_io.h"
+#include "operations.h"
 
 int userControl(struct ChessBoard *, bool *);
 int aiControl(struct ChessBoard *, bool *);
