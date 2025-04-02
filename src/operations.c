@@ -57,43 +57,35 @@ bool withdraw(struct ChessBoard *board) {
     if (isRecordStackEmpty(record_stack))
         return false;
     
-    // 从栈顶开始处理记录，直到遇到一个完整操作的边界
-    while (!isRecordStackEmpty(record_stack)) {
-        OperationRecord *record = popRecord(record_stack);
-        
-        switch (record->type) {
-            case OP_MOVE: {
-                // 撤销移动：将棋子移回原位置
-                struct Chess *chess = record->chess;
-                setChessBoardBlock(board, record->src_row, record->src_col, chess);
-                setChessBoardBlock(board, record->dest_row, record->dest_col, NULL);
-                break;
-            }
-            case OP_ATTACK: {
-                // 撤销攻击：恢复生命值
-                int damage = (int)(intptr_t)record->data;
-                record->chess->battle_property->health += damage;
-                break;
-            }
-            case OP_DEATH: {
-                // 撤销死亡：复活棋子
-                int damage = (int)(intptr_t)record->data;
-                record->chess->is_alive = true;
-                record->chess->battle_property->health += damage;
-                
-                // 从死亡栈中移除
-                ChessStackPop(board->dead_chess[record->chess->owner]);
-                break;
-            }
-            // 其他操作类型的处理...
-            default:
-                break;
-        }
-        
-        // 如果这是一个操作的开始记录，则停止
-        if (record->type == OP_MOVE || record->type == OP_ATTACK) {
+    OperationRecord *record = popRecord(record_stack);
+    
+    switch (record->type) {
+        case OP_MOVE: {
+            // 撤销移动：将棋子移回原位置
+            struct Chess *chess = record->chess;
+            setChessBoardBlock(board, record->src_row, record->src_col, chess);
+            setChessBoardBlock(board, record->dest_row, record->dest_col, NULL);
             break;
         }
+        case OP_ATTACK: {
+            // 撤销攻击：恢复生命值
+            int damage = (int)(intptr_t)record->data;
+            record->chess->battle_property->health += damage;
+            break;
+        }
+        case OP_DEATH: {
+            // 撤销死亡：复活棋子
+            int damage = (int)(intptr_t)record->data;
+            record->chess->is_alive = true;
+            record->chess->battle_property->health += damage;
+            
+            // 从死亡栈中移除
+            ChessStackPop(board->dead_chess[record->chess->owner]);
+            break;
+        }
+        // 其他操作类型的处理...
+        default:
+            break;
     }
     
     return true;
