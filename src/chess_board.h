@@ -21,6 +21,7 @@ typedef struct ChessBoard
     char **attackablePos;
     PLAYER user;
     struct Chess *chessChoose;
+    struct Chess *chessTobeOperated;
     struct ChessStack **dead_chess;
     struct Tips *tip;
     RecordStack *record;
@@ -37,6 +38,8 @@ struct Chess *getChessByPos(struct ChessBoard *board, int row, int col);
 RecordStack *getRecordStack(struct ChessBoard *board);
 struct Chess *getChessChoose(struct ChessBoard *board);
 void setChessChoose(struct ChessBoard *board, struct Chess *chess);
+struct Chess *getChessTobeOperated(struct ChessBoard *board);
+void setChessTobeOperated(struct ChessBoard *board, struct Chess *chess);
 int getBlockMovementCost(struct ChessBoard *board, int row, int col);
 void aiLogic(struct ChessBoard *board, int *dest_row, int *dest_col);
 

@@ -142,6 +142,14 @@ void setChessChoose(struct ChessBoard *board, struct Chess *chess) {
     board->chessChoose = chess;
 }
 
+struct Chess *getChessTobeOperated(struct ChessBoard *board) {
+    return board->chessTobeOperated;
+}
+
+void setChessTobeOperated(struct ChessBoard *board, struct Chess *chess) {
+    board->chessTobeOperated = chess;
+}
+
 int getBlockMovementCost(struct ChessBoard *board, int row, int col) {
     if (board->boardBlock[row][col] != NULL) {
         return getTerrainCostByBlock(board->boardBlock[row][col]);
