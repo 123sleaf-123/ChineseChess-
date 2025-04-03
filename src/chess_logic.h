@@ -13,11 +13,11 @@ bool isInsidePalace(struct ChessBoard *board, int row, int col);
 bool isMoveable(struct ChessBoard *board, int dest_row, int dest_col);
 bool isAttackable(struct ChessBoard *board, int dest_row, int dest_col);
 bool isGameEnd(struct ChessBoard* board);
-char **pathFindingByPos(struct ChessBoard *board, int src_row, int src_col);
-char **pathFindingByChess(struct ChessBoard *board, struct Chess* chess);
+void moveablePosFindingByChess(struct ChessBoard *board, int src_row, int src_col, char** matrix);
+void moveablePosFindingByPos(struct ChessBoard *board, struct Chess* chess, char** matrix);
 void moveablePosition(struct ChessBoard *board, int src_row, int src_col);
-char **attackableAreaFindingByPos(struct ChessBoard *board, int src_row, int src_col);
-char **attackableAreaFindingByChess(struct ChessBoard *board, struct Chess *chess);
+void attackableAreaFindingByPos(struct ChessBoard *board, int src_row, int src_col, char** matrix);
+void attackableAreaFindingByChess(struct ChessBoard *board, struct Chess *chess, char** matrix);
 void attackablePosition(struct ChessBoard *board, int src_row, int src_col);
 void actionFinished(struct ChessBoard *board);
 

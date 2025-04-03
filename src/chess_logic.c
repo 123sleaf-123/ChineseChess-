@@ -153,27 +153,30 @@ void dfs(struct ChessBoard *board, char ***matrix, int row, int col, int movemen
         setBoolMatrix(*matrix, row, col, true);
 }
 
-char **pathFindingByChess(struct ChessBoard *board, struct Chess* chess) {
+void moveablePosFindingByChess(struct ChessBoard *board, struct Chess* chess, char** matrix) {
+    if (matrix == NULL) {
+        matrix = initMatrix();
+    }
     int src_row = getChessPosition(chess)->x;
     int src_col = getChessPosition(chess)->y;
-    char **matrix = initMatrix();
     int movement = getChessMovement(chess);
     dfs(board, &matrix, src_row, src_col, movement);
-    return matrix;
 }
 
-char **pathFindingByPos(struct ChessBoard *board, int src_row, int src_col) {
+void moveablePosFindingByPos(struct ChessBoard *board, int src_row, int src_col, char** matrix) {
     struct Chess* chess = board->block[src_row][src_col];
-    return pathFindingByChess(board, chess);
+    return moveablePosFindingByChess(board, chess, matrix);
 }
 
 void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
     reset_moveablePos(board);
-    freeMatrix(board->moveablePos);
-    board->moveablePos = pathFindingByPos(board, src_row, src_col);
+    moveablePosFindingByPos(board, src_row, src_col, board->moveablePos);
 }
 
-char **attackableAreaFindingByChess(struct ChessBoard *board, struct Chess *chess) {
+void attackableAreaFindingByChess(struct ChessBoard *board, struct Chess *chess, char** matrix) {
+    if (matrix == NULL) {
+        matrix = initMatrix();    
+    }
     int src_row = getChessPosition(chess)->x;
     int src_col = getChessPosition(chess)->y;
     char **matrix = initMatrix();
@@ -187,6 +190,9 @@ char **attackableAreaFindingByChess(struct ChessBoard *board, struct Chess *ches
 
 char **attackableAreaFindingByPos(struct ChessBoard *board, int src_row, int src_col) {
     return attackableAreaFindingByChess(board, getChessByPos(board, src_row, src_col));
+
+void attackableAreaFindingByPos(struct ChessBoard *board, int src_row, int src_col, char** matrix) {
+    attackableAreaFindingByChess(board, getChessByPos(board, src_row, src_col), matrix);
 }
 
 /**
@@ -197,9 +203,8 @@ char **attackableAreaFindingByPos(struct ChessBoard *board, int src_row, int src
  * @param src_col 原列
  */
 void attackablePosition(struct ChessBoard* board, int src_row, int src_col) {
-    reset_moveablePos(board);
-    freeMatrix(board->attackablePos);
-    board->attackablePos = attackableAreaFindingByPos(board, src_row, src_col);
+    resetAttackablePos(board);
+    attackableAreaFindingByPos(board, src_row, src_col, board->attackablePos);
 }
 
 /**
@@ -225,7 +230,7 @@ void aiLogic(struct ChessBoard *board, int *dest_row, int *dest_col) {
     {
         if (board->objects->stack[i]->owner != board->user) {
             chess = board->objects->stack[i];
-            pathFindingByChess(board, chess);
+            // moveablePosFindingByChess(board, chess,);
             break;
         }
     }
