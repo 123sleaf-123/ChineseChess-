@@ -179,17 +179,7 @@ void attackableAreaFindingByChess(struct ChessBoard *board, struct Chess *chess,
     }
     int src_row = getChessPosition(chess)->x;
     int src_col = getChessPosition(chess)->y;
-    char **matrix = initMatrix();
-    int attack_range = getAttackRange(chess->battle_property);
-    matrix[src_row + attack_range][src_col] = true;
-    matrix[src_row - attack_range][src_col] = true;
-    matrix[src_row][src_col + attack_range] = true;
-    matrix[src_row][src_col - attack_range] = true;
-    return matrix;
-}
-
-char **attackableAreaFindingByPos(struct ChessBoard *board, int src_row, int src_col) {
-    return attackableAreaFindingByChess(board, getChessByPos(board, src_row, src_col));
+    int attack_range = getChessMinRange(chess);
 
 void attackableAreaFindingByPos(struct ChessBoard *board, int src_row, int src_col, char** matrix) {
     attackableAreaFindingByChess(board, getChessByPos(board, src_row, src_col), matrix);
