@@ -110,6 +110,16 @@ void reset_moveablePos(struct ChessBoard *board) {
     }
 }
 
+void resetAttackablePos(struct ChessBoard *board) {
+    for (int i = 0; i < BOARD_ROW; i++)
+    {
+        for (int j = 0; j < BOARD_COL; j++)
+        {
+            board->attackablePos[i][j] = false;
+        } 
+    }
+}
+
 int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val) {
     if ((0 <= row && row < BOARD_ROW) && (0 <= col && col < BOARD_COL)) {
         board->moveablePos[row][col] = val;
