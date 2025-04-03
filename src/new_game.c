@@ -1,4 +1,6 @@
 #include "new_game.h"
+#include "chess.h"
+#include "chess_board.h"
 
 
 // #define INTERVAL NORMAL_INTERVAL
@@ -84,16 +86,18 @@ int userControl(struct ChessBoard *board, bool *res) {
                     stage = 2;
                     continue;
                 }
-                else if (strcmp(input, "bow")) {
-                    getChessByPos(board, dest_row, dest_col)->battle_property->attack = 2;
+                else if (strcmp(input, "bow") == 0) {
+                    setChessMinRange(getChessChoose(board), 2);
+                    setChessMaxRange(getChessChoose(board), 2);
                     attackablePosition(board, dest_row, dest_col);
                     stage = 4;
                 }
-                else if (strcmp(input, "sword")) {
-                    getChessByPos(board, dest_row, dest_col)->battle_property->attack = 1;
+                else if (strcmp(input, "sword") == 0) {
+                    setChessMinRange(getChessChoose(board), 1);
+                    setChessMaxRange(getChessChoose(board), 1);
                     attackablePosition(board, dest_row, dest_col);
                     stage = 4;
-                } else if (strcmp(input, "fin")) {
+                } else if (strcmp(input, "fin") == 0) {
                     actionFinished(board);
                     *res = true;
                     return true;
@@ -101,6 +105,7 @@ int userControl(struct ChessBoard *board, bool *res) {
                 break;
             case 4:  // Target selection stage
                 if (strcmp(input, "cancel") == 0) {
+                    resetAttackablePos(board);
                     stage = 3;
                     continue;
                 }
