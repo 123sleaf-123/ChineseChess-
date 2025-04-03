@@ -12,12 +12,19 @@ BattleProperty *initBattleProperty(int max_health, int health, int movement, int
     battle_property->defense = defense;
     battle_property->magic_resist = magic_resist;
     battle_property->evasion = evasion;
-    battle_property->range = range;
+    battle_property->min_range = range;
+    battle_property->max_range = range;
     return battle_property;
 }
 
+BattleProperty *initBattlePropertyV2(int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int min_range, int max_range) {
+    BattleProperty *bp = initBattleProperty(max_health, health, movement, attack, hitRate, critical, attack_speed, defense, magic_resist, evasion, min_range);
+    bp->max_range = max_range;
+    return bp;
+}
+
 BattleProperty *initDefaultBattleProperty() {
-    return initBattleProperty(27, 27, 4, 13, 6, 9, 8, 8, 6, 6, 1);
+    return initBattlePropertyV2(27, 27, 4, 13, 6, 9, 8, 8, 6, 6, 1, 1);
 }
 
 void freeBattleProperty(BattleProperty *battle_property) {
@@ -28,14 +35,26 @@ int getMovement(BattleProperty *battle_property) {
     return battle_property->movement;
 }
 
-int getAttackRange(BattleProperty *battle_property) {
-    return battle_property->range;
+int getAttackMinRange(BattleProperty *battle_property) {
+    return battle_property->min_range;
+}
+
+void setAttackMinRange(BattleProperty *battle_property, int min_range) {
+    battle_property->min_range = min_range;
+}
+
+int getAttackMaxRange(BattleProperty *battle_property) {
+    return battle_property->max_range;
+}
+
+void setAttackMaxRange(BattleProperty *battle_property, int max_range) {
+    battle_property->max_range = max_range;
 }
 
 void printBattleProperty(BattleProperty *battle_property) {
     if (battle_property == NULL) return;
-    printf("战斗属性: 生命 %d/%d, 移动力 %d, 攻击 %d, 命中 %d, 必杀 %d, 攻速 %d, 防御 %d, 耐魔 %d, 回避 %d, 射程 %d\n",
+    printf("战斗属性: 生命 %d/%d, 移动力 %d, 攻击 %d, 命中 %d, 必杀 %d, 攻速 %d, 防御 %d, 耐魔 %d, 回避 %d, 射程 %d-%d\n",
            battle_property->health, battle_property->max_health, battle_property->movement, battle_property->attack,
            battle_property->hitRate, battle_property->critical, battle_property->attack_speed,
-           battle_property->defense, battle_property->magic_resist, battle_property->evasion, battle_property->range);
+           battle_property->defense, battle_property->magic_resist, battle_property->evasion, battle_property->min_range, battle_property->max_range);
 }
