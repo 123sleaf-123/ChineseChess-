@@ -1,3 +1,4 @@
+#include "chess.h"
 #include "global.h"
 #include "chess_board.h"
 
@@ -180,6 +181,28 @@ void attackableAreaFindingByChess(struct ChessBoard *board, struct Chess *chess,
     int src_row = getChessPosition(chess)->x;
     int src_col = getChessPosition(chess)->y;
     int attack_range = getChessMinRange(chess);
+
+    // 遍历所有可能的 Δx（从 -attack_range 到 +attack_range）
+    for (int dx = -attack_range; dx <= attack_range; dx++) {
+        // 计算对应的 |Δy| = attack_range - |dx|
+        int dy_abs = attack_range - abs(dx);
+        
+        // 检查 Δy 是否有效（避免重复计算）
+        if (dy_abs < 0) continue;
+
+        // 两种情况：Δy = +dy_abs 或 Δy = -dy_abs
+        for (int sign = -1; sign <= 1; sign += 2) {
+            int dy = sign * dy_abs;
+            int new_row = src_row + dx;
+            int new_col = src_col + dy;
+
+            // 检查边界
+            if (isInside(new_row, new_col)) {
+                matrix[new_row][new_col] = true;
+            }
+        }
+    }
+}
 
 void attackableAreaFindingByPos(struct ChessBoard *board, int src_row, int src_col, char** matrix) {
     attackableAreaFindingByChess(board, getChessByPos(board, src_row, src_col), matrix);
