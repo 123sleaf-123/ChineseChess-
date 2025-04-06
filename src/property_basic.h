@@ -1,6 +1,8 @@
 #ifndef PROPERTY_BASIC_H
 #define PROPERTY_BASIC_H
 
+#include "global.h"
+
 typedef struct {
     int strength;      // 力量
     int magic;         // 魔力
@@ -15,5 +17,8 @@ typedef struct {
     int level;         // 等级
     int experience;    // 经验值
 } BasicProperty;
+
+void initBasicProperty(BasicProperty *property, int strength, int magic, int skill, int speed, int luck, int defense, int magic_defense, int charm, int movement, int health, int level, int experience);
+BasicProperty *createBasicPropertyDeault();
 
 #endif
