@@ -30,6 +30,7 @@ int userControl(struct ChessBoard *board, bool *res) {
     char input[10];
     int stage = 1;  // Start at stage 1
     int src_row, src_col, dest_row, dest_col, target_row, target_col;
+    struct Chess *chessChoose = NULL;
     
     while (stage <= 5) {
         printChessBoard(board);
@@ -80,21 +81,22 @@ int userControl(struct ChessBoard *board, bool *res) {
                     stage = 3;
                 }
                 break;
-            case 3:  // Action selection stage
+            case 3: // Action selection stage
+                chessChoose = getChessChoose(board);
                 if (strcmp(input, "cancel") == 0) {
                     withdraw(board);
                     stage = 2;
                     continue;
                 }
                 else if (strcmp(input, "bow") == 0) {
-                    setChessMinRange(getChessChoose(board), 2);
-                    setChessMaxRange(getChessChoose(board), 2);
+                    setChessMinRange(chessChoose, 2);
+                    setChessMaxRange(chessChoose, 2);
                     attackablePosition(board, dest_row, dest_col);
                     stage = 4;
                 }
                 else if (strcmp(input, "sword") == 0) {
-                    setChessMinRange(getChessChoose(board), 1);
-                    setChessMaxRange(getChessChoose(board), 1);
+                    setChessMinRange(chessChoose, 1);
+                    setChessMaxRange(chessChoose, 1);
                     attackablePosition(board, dest_row, dest_col);
                     stage = 4;
                 } else if (strcmp(input, "fin") == 0) {
