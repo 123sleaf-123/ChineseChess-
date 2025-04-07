@@ -18,9 +18,9 @@ typedef struct {
     int max_range;         // 最远射程
 } BattleProperty;
 
-BattleProperty *initBattleProperty(int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int range);
-BattleProperty *initBattlePropertyV2(int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int min_range, int max_range);
-BattleProperty *initDefaultBattleProperty();
+void initBattleProperty(BattleProperty *battle_property, int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int range);
+void initBattlePropertyV2(BattleProperty *battle_property, int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int min_range, int max_range);
+BattleProperty *createBattlePropertyDefault();
 void freeBattleProperty(BattleProperty *battle_property);
 int getHealth(BattleProperty *battle_property);
 void setHealth(BattleProperty *battle_property, int health);

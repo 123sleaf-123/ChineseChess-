@@ -1,8 +1,7 @@
 #include "property_fight.h"
 #include <minwindef.h>
 
-BattleProperty *initBattleProperty(int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int range) {
-    BattleProperty *battle_property = (BattleProperty *)malloc(sizeof(BattleProperty));
+void initBattleProperty(BattleProperty *battle_property, int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int range) {
     battle_property->max_health = max_health;
     battle_property->health = health;
     battle_property->movement = movement;
@@ -15,17 +14,21 @@ BattleProperty *initBattleProperty(int max_health, int health, int movement, int
     battle_property->evasion = evasion;
     battle_property->min_range = range;
     battle_property->max_range = range;
+}
+
+void initBattlePropertyV2(BattleProperty *battle_property, int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int min_range, int max_range) {
+    initBattleProperty(battle_property, max_health, health, movement, attack, hitRate, critical, attack_speed, defense, magic_resist, evasion, min_range);
+    battle_property->max_range = max_range;
+}
+
+BattleProperty *createBattlePropertyDefault() {
+    BattleProperty *battle_property = (BattleProperty *)malloc(sizeof(BattleProperty));
+    if (battle_property == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
+    initBattlePropertyV2(battle_property, 27, 27, 4, 13, 6, 9, 8, 8, 6, 6, 1, 1);
     return battle_property;
-}
-
-BattleProperty *initBattlePropertyV2(int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int min_range, int max_range) {
-    BattleProperty *bp = initBattleProperty(max_health, health, movement, attack, hitRate, critical, attack_speed, defense, magic_resist, evasion, min_range);
-    bp->max_range = max_range;
-    return bp;
-}
-
-BattleProperty *initDefaultBattleProperty() {
-    return initBattlePropertyV2(27, 27, 4, 13, 6, 9, 8, 8, 6, 6, 1, 1);
 }
 
 void freeBattleProperty(BattleProperty *battle_property) {
