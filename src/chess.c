@@ -12,8 +12,8 @@ struct Chess *initChess(int type, int owner, int is_alive) {
     chess->type = type;
     chess->owner = owner;
     chess->is_alive = is_alive;
-    // chess->battle_property = initDefaultBattleProperty();
     chess->pos = initPosition(0, 0);
+    chess->character = createCharacterDeault();
     return chess;
 }
 
@@ -24,12 +24,12 @@ struct Position *initPosition(int x, int y) {
     return pos;
 }
 
-struct Position *getChessPosition(struct Chess *chess) {
-    return chess->pos;
-}
+struct Position *getChessPosition(struct Chess *chess) { return chess->pos; }
+
+Character *getChessCharacter(struct Chess *chess) { return chess->character; }
 
 int getChessMovement(struct Chess *chess) {
-    return chess->battle_property->movement;
+    return getMovement(getCharacterBattleProperty(chess->character));
 }
 
 int getChessMinRange(struct Chess *chess) {
@@ -48,11 +48,15 @@ void setChessMaxRange(struct Chess *chess, int max_range) {
     setAttackMaxRange(getCharacterBattleProperty(chess->character), max_range);
 }
 
+BattleProperty *getChessBattleProperty(struct Chess *chess) {
+    return getCharacterBattleProperty(chess->character);
+}
+
 bool isInsideAttackRangeByChess(struct Chess *attacker, struct Chess *defender) {
     struct Position *atttacker_pos = getChessPosition(attacker);
     struct Position *defender_pos = getChessPosition(defender);
-    int min_range = getAttackMinRange(attacker->battle_property);
-    int max_range = getAttackMaxRange(attacker->battle_property);
+    int min_range = getAttackMinRange(getChessBattleProperty(attacker));
+    int max_range = getAttackMaxRange(getChessBattleProperty(attacker));
     return isInsideAttackRangeByPos(atttacker_pos->x, atttacker_pos->y, defender_pos->x, defender_pos->y, min_range, max_range);
 }
 
@@ -62,8 +66,8 @@ bool isInsideAttackRangeByPos(int attacker_row, int attacker_col, int defender_r
 }
 
 void printChessBattleProperty(struct Chess *chess) {
-    if (chess == NULL || chess->battle_property == NULL) return;
-    BattleProperty *bp = chess->battle_property;
+    if (chess == NULL || getChessBattleProperty(chess) == NULL) return;
+    BattleProperty *bp = getChessBattleProperty(chess);
     printBattleProperty(bp);
 }
 
