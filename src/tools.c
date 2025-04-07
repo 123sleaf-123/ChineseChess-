@@ -1,7 +1,7 @@
 #include "global.h"
 #include "tools.h"
 
-char *c2tUser(struct ChessBoard* board, int code) {
+char *c2tUser(int code) {
     if (code == PLAYER_1) return "玩家一";
     if (code == PLAYER_2) return "玩家二";
     return "";
