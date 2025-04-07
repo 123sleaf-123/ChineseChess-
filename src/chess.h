@@ -2,6 +2,7 @@
 #define CHESS_H
 
 #include "global.h"
+#include "character.h"
 #include "property_fight.h"
 
 typedef int PLAYER;
@@ -14,6 +15,7 @@ typedef struct Chess
     char is_alive;
     struct Position *pos;
     BattleProperty *battle_property;
+    Character *character; // 角色属性
 } *ChessPtr;
 
 struct Chess *initChess(int type, int owner, int is_alive);
@@ -28,6 +30,5 @@ void setChessMaxRange(struct Chess *chess, int max_range);
 bool isInsideAttackRangeByChess(struct Chess *attacker, struct Chess *defender);
 bool isInsideAttackRangeByPos(int attacker_row, int attacker_col, int defender_row, int defender_col, int min_range, int max_range);
 void printChessBattleProperty(struct Chess *chess);
-BattleProperty *getBattleProperty(struct Chess *chess);
 
 #endif

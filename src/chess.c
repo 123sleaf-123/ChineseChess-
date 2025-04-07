@@ -1,4 +1,5 @@
 #include "chess.h"
+#include "character.h"
 #include "property_fight.h"
 
 int count = 0;
@@ -11,7 +12,7 @@ struct Chess *initChess(int type, int owner, int is_alive) {
     chess->type = type;
     chess->owner = owner;
     chess->is_alive = is_alive;
-    chess->battle_property = initDefaultBattleProperty();
+    // chess->battle_property = initDefaultBattleProperty();
     chess->pos = initPosition(0, 0);
     return chess;
 }
@@ -32,19 +33,19 @@ int getChessMovement(struct Chess *chess) {
 }
 
 int getChessMinRange(struct Chess *chess) {
-    return getAttackMinRange(getBattleProperty(chess));
+    return getAttackMinRange(getCharacterBattleProperty(chess->character));
 }
 
 void setChessMinRange(struct Chess *chess, int min_range) {
-    setAttackMinRange(getBattleProperty(chess), min_range);
+    setAttackMinRange(getCharacterBattleProperty(chess->character), min_range);
 }
 
 int getChessMaxRange(struct Chess *chess) {
-    return getAttackMaxRange(getBattleProperty(chess));
+    return getAttackMaxRange(getCharacterBattleProperty(chess->character));
 }
 
 void setChessMaxRange(struct Chess *chess, int max_range) {
-    setAttackMaxRange(getBattleProperty(chess), max_range);
+    setAttackMaxRange(getCharacterBattleProperty(chess->character), max_range);
 }
 
 bool isInsideAttackRangeByChess(struct Chess *attacker, struct Chess *defender) {
@@ -64,9 +65,5 @@ void printChessBattleProperty(struct Chess *chess) {
     if (chess == NULL || chess->battle_property == NULL) return;
     BattleProperty *bp = chess->battle_property;
     printBattleProperty(bp);
-}
-
-BattleProperty *getBattleProperty(struct Chess *chess) {
-    return chess->battle_property;
 }
 
