@@ -140,7 +140,7 @@ void printChessBoard(struct ChessBoard* board) {
     // 打印玩家击败的棋子
     for (int i = 0; i < 2; i++)
     {
-        printf("%s\t", c2tUser(board, i));
+        printf("%s\t", c2tUser(i));
         for (int j = 0; j <= board->dead_chess[1-i]->top; j++)
         {
             autoColor_printf(1-i, "%s ", chessName(board->dead_chess[1-i]->stack[j]));
@@ -150,7 +150,7 @@ void printChessBoard(struct ChessBoard* board) {
     
     // 提示当前操作玩家及其颜色
     printf("当前操作玩家：");
-    autoColor_printf(board->user, "%s", c2tUser(board, board->user));
+    autoColor_printf(board->user, "%s", c2tUser(board->user));
     fillScreenWithBlank();
 
     // 提示玩家当前选中棋子及其战斗属性
