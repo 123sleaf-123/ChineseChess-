@@ -22,6 +22,8 @@ BattleProperty *initBattleProperty(int max_health, int health, int movement, int
 BattleProperty *initBattlePropertyV2(int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int min_range, int max_range);
 BattleProperty *initDefaultBattleProperty();
 void freeBattleProperty(BattleProperty *battle_property);
+int getHealth(BattleProperty *battle_property);
+void setHealth(BattleProperty *battle_property, int health);
 int getMovement(BattleProperty *battle_property);
 int getAttackMinRange(BattleProperty *battle_property);
 void setAttackMinRange(BattleProperty *battle_property, int min_range);

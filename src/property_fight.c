@@ -1,4 +1,5 @@
 #include "property_fight.h"
+#include <minwindef.h>
 
 BattleProperty *initBattleProperty(int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int range) {
     BattleProperty *battle_property = (BattleProperty *)malloc(sizeof(BattleProperty));
@@ -29,6 +30,14 @@ BattleProperty *initDefaultBattleProperty() {
 
 void freeBattleProperty(BattleProperty *battle_property) {
     free(battle_property);
+}
+
+int getHealth(BattleProperty *battle_property) {
+    return battle_property->health;
+}
+
+void setHealth(BattleProperty *battle_property, int health) {
+    battle_property->health = max(battle_property->max_health, health);
 }
 
 int getMovement(BattleProperty *battle_property) {
