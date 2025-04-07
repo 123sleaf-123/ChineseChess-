@@ -36,4 +36,7 @@ bool isInsideAttackRangeByChess(struct Chess *attacker, struct Chess *defender);
 bool isInsideAttackRangeByPos(int attacker_row, int attacker_col, int defender_row, int defender_col, int min_range, int max_range);
 void printChessBattleProperty(struct Chess *chess);
 
+void recoverChess(struct Chess *chess, int health);
+void takeDamageChess(struct Chess *chess, int damage);
+
 #endif

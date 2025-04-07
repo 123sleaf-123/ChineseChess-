@@ -71,3 +71,19 @@ void printChessBattleProperty(struct Chess *chess) {
     printBattleProperty(bp);
 }
 
+void recoverChess(struct Chess *chess, int health) {
+    if (chess == NULL) return;
+    chess->is_alive = true;
+    BattleProperty *bp = getChessBattleProperty(chess);
+    setHealth(bp, getHealth(bp) + health);
+}
+
+void takeDamageChess(struct Chess *chess, int damage) {
+    if (chess == NULL) return;
+    BattleProperty *bp = getChessBattleProperty(chess);
+    setHealth(bp, getHealth(bp) - damage);
+    if (getHealth(bp) <= 0) {
+        chess->is_alive = false;
+    }
+}
+
