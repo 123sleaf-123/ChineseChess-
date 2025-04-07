@@ -44,6 +44,66 @@ int getMovement(BattleProperty *battle_property) {
     return battle_property->movement;
 }
 
+void setMovement(BattleProperty *battle_property, int movement) {
+    battle_property->movement = movement;
+}
+
+int getAttack(BattleProperty *battle_property) {
+    return battle_property->attack;
+}
+
+void setAttack(BattleProperty *battle_property, int attack) {
+    battle_property->attack = attack;
+}
+
+int getHitRate(BattleProperty *battle_property) {
+    return battle_property->hitRate;
+}
+
+void setHitRate(BattleProperty *battle_property, int hit_rate) {
+    battle_property->hitRate = hit_rate;
+}
+
+int getCritical(BattleProperty *battle_property) {
+    return battle_property->critical;
+}
+
+void setCritical(BattleProperty *battle_property, int critical) {
+    battle_property->critical = critical;
+}
+
+int getAttackSpeed(BattleProperty *battle_property) {
+    return battle_property->attack_speed;
+}
+
+void setAttackSpeed(BattleProperty *battle_property, int attack_speed) {
+    battle_property->attack_speed = attack_speed;
+}
+
+int getDefense(BattleProperty *battle_property) {
+    return battle_property->defense;
+}
+
+void setDefense(BattleProperty *battle_property, int defense) {
+    battle_property->defense = defense;
+}
+
+int getMagicResist(BattleProperty *battle_property) {
+    return battle_property->magic_resist;
+}
+
+void setMagicResist(BattleProperty *battle_property, int magic_resist) {
+    battle_property->magic_resist = magic_resist;
+}
+
+int getEvasion(BattleProperty *battle_property) {
+    return battle_property->evasion;
+}
+
+void setEvasion(BattleProperty *battle_property, int evasion) {
+    battle_property->evasion = evasion;
+}
+
 int getAttackMinRange(BattleProperty *battle_property) {
     return battle_property->min_range;
 }
