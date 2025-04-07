@@ -8,6 +8,7 @@ void initCharacter(Character *character, const char *name, BasicProperty *proper
     character->property_fight = property_fight;
 }
 
+// 从基础属性生成战斗属性
 void initCharacterV2(Character *character, const char *name, BasicProperty *property_basic) {
     strcpy(character->name, name);
     character->property_basic = property_basic;
