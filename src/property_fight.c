@@ -1,5 +1,4 @@
 #include "property_fight.h"
-#include <minwindef.h>
 
 void initBattleProperty(BattleProperty *battle_property, int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int range) {
     battle_property->max_health = max_health;
@@ -27,7 +26,23 @@ BattleProperty *createBattlePropertyDefault() {
         fprintf(stderr, "Memory allocation failed\n");
         exit(EXIT_FAILURE);
     }
-    initBattlePropertyV2(battle_property, 27, 27, 4, 13, 6, 9, 8, 8, 6, 6, 1, 1);
+    initBattlePropertyV2(battle_property, 27, 27, 4, 13, 6, 9, 8, 8, 6, 6, 0, 0);
+    return battle_property;
+}
+
+BattleProperty *createBattlePropertyFromBasicProperty(BasicProperty *basic_property) {
+    BattleProperty *battle_property = (BattleProperty *)malloc(sizeof(BattleProperty));
+    if (battle_property == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
+    initBattlePropertyV2(battle_property, basic_property->health,
+                         basic_property->health, basic_property->movement,
+                         basic_property->strength, basic_property->skill,
+                         basic_property->charm, basic_property->speed,
+                         basic_property->defense, basic_property->magic_defense,
+                         basic_property->speed,
+                         0, 0);
     return battle_property;
 }
 

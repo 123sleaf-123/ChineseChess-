@@ -2,6 +2,7 @@
 #define PROPERTY_FIGHT_H
 
 #include "global.h"
+#include "property_basic.h"
 
 typedef struct {
     int max_health;    // 最大生命值
@@ -21,6 +22,7 @@ typedef struct {
 void initBattleProperty(BattleProperty *battle_property, int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int range);
 void initBattlePropertyV2(BattleProperty *battle_property, int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int min_range, int max_range);
 BattleProperty *createBattlePropertyDefault();
+BattleProperty *createBattlePropertyFromBasicProperty(BasicProperty *basic_property);
 void freeBattleProperty(BattleProperty *battle_property);
 int getHealth(BattleProperty *battle_property);
 void setHealth(BattleProperty *battle_property, int health);
