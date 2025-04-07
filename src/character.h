@@ -10,4 +10,10 @@ typedef struct {
     BattleProperty *property_fight;
 } Character;
 
+void initCharacter(Character *character, const char *name, BasicProperty *property_basic, BattleProperty *property_fight);
+Character *createCharacter(const char *name, BasicProperty *property_basic, BattleProperty *property_fight);
+Character *createCharacterDeault();
+BasicProperty *getCharacterBasicProperty(Character *character);
+BattleProperty *getCharacterBattleProperty(Character *character);
+
 #endif // CHARACTER_H

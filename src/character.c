@@ -1,4 +1,5 @@
 #include "character.h"
+#include "property_basic.h"
 
 void initCharacter(Character *character, const char *name, BasicProperty *property_basic, BattleProperty *property_fight) {
     strcpy(character->name, name);
@@ -17,6 +18,15 @@ Character *createCharacter(const char *name, BasicProperty *property_basic, Batt
 }
 
 Character *createCharacterDeault() {
-    Character *new_character = createCharacter("Default", ni, initDefaultBattleProperty());
+    Character *new_character = createCharacter("Default", createBasicPropertyDeault(), initDefaultBattleProperty());
     return new_character;
+}
+
+// Getters & Setters
+BasicProperty *getCharacterBasicProperty(Character *character) {
+    return character->property_basic;
+}
+
+BattleProperty *getCharacterBattleProperty(Character *character) {
+    return character->property_fight;
 }
