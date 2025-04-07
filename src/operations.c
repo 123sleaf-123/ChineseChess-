@@ -1,5 +1,4 @@
 #include "operations.h"
-#include "chess.h"
 
 /*
     1.不可移动：
@@ -70,14 +69,13 @@ bool withdraw(struct ChessBoard *board) {
         case OP_ATTACK: {
             // 撤销攻击：恢复生命值
             int damage = (int)(intptr_t)record->data;
-            record->chess->battle_property->health += damage;
+            recoverChess(record->chess, damage);
             break;
         }
         case OP_DEATH: {
             // 撤销死亡：复活棋子
             int damage = (int)(intptr_t)record->data;
-            record->chess->is_alive = true;
-            record->chess->battle_property->health += damage;
+            recoverChess(record->chess, damage);
             
             // 从死亡栈中移除
             ChessStackPop(board->dead_chess[record->chess->owner]);
@@ -100,26 +98,28 @@ int fight(struct ChessBoard* board, struct Chess *attacker, struct Chess *defend
         sprintf(board->tip->strs[++board->tip->top], "目标不在攻击范围内");
         return false;
     }
-    
-    int damage = attacker->battle_property->attack - defender->battle_property->defense;
+
+    int attack = getAttack(getChessBattleProperty(attacker));
+    int defense = getDefense(getChessBattleProperty(defender));
+    int damage = attack - defense;
     if (damage < 0) damage = 0;
     
     // 打印攻击信息
     sprintf(board->tip->strs[++board->tip->top],
             "Attack: %s(ATK:%d) -> %s(DEF:%d), Damage:%d\n", 
            chessName(attacker),
-           attacker->battle_property->attack,
+           attack,
            chessName(defender),
-           defender->battle_property->defense,
+           defense,
            damage);
     
     // 创建攻击记录
     OperationRecord *attackRecord = initOperationRecord(OP_ATTACK, 0, 0, 0, 0, attacker, (void *)(intptr_t)damage);
     pushRecord(getRecordStack(board), attackRecord);
     
-    defender->battle_property->health -= damage;
+    takeDamageChess(defender, damage);
     
-    if (defender->battle_property->health <= 0) {
+    if (getHealth(getChessBattleProperty(defender)) <= 0) {
         defender->is_alive = false;
         
         // 创建死亡记录
