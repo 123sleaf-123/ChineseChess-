@@ -11,6 +11,7 @@ typedef struct {
 } Character;
 
 void initCharacter(Character *character, const char *name, BasicProperty *property_basic, BattleProperty *property_fight);
+void initCharacterV2(Character *character, const char *name, BasicProperty *property_basic);
 Character *createCharacter(const char *name, BasicProperty *property_basic, BattleProperty *property_fight);
 Character *createCharacterDeault();
 BasicProperty *getCharacterBasicProperty(Character *character);

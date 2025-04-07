@@ -7,6 +7,12 @@ void initCharacter(Character *character, const char *name, BasicProperty *proper
     character->property_fight = property_fight;
 }
 
+void initCharacterV2(Character *character, const char *name, BasicProperty *property_basic) {
+    strcpy(character->name, name);
+    character->property_basic = property_basic;
+    character->property_fight = createBattlePropertyDefault();
+}
+
 Character *createCharacter(const char *name, BasicProperty *property_basic, BattleProperty *property_fight) {
     Character *character = (Character *)malloc(sizeof(Character));
     if (character == NULL) {
@@ -18,7 +24,7 @@ Character *createCharacter(const char *name, BasicProperty *property_basic, Batt
 }
 
 Character *createCharacterDeault() {
-    Character *new_character = createCharacter("Default", createBasicPropertyDeault(), initDefaultBattleProperty());
+    Character *new_character = createCharacter("Default", createBasicPropertyDeault(), createBattlePropertyDefault());
     return new_character;
 }
 
