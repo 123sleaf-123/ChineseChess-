@@ -1,6 +1,8 @@
 #include "new_game.h"
+#include "character.h"
 #include "chess.h"
 #include "chess_board.h"
+#include "weapon.h"
 
 
 // #define INTERVAL NORMAL_INTERVAL
@@ -87,27 +89,26 @@ int userControl(struct ChessBoard *board, bool *res) {
                     withdraw(board);
                     stage = 2;
                     continue;
-                }
-                else if (strcmp(input, "bow") == 0) {
-                    setChessMinRange(chessChoose, 2);
-                    setChessMaxRange(chessChoose, 2);
-                    attackablePosition(board, dest_row, dest_col);
-                    stage = 4;
-                }
-                else if (strcmp(input, "sword") == 0) {
-                    setChessMinRange(chessChoose, 1);
-                    setChessMaxRange(chessChoose, 1);
-                    attackablePosition(board, dest_row, dest_col);
-                    stage = 4;
                 } else if (strcmp(input, "fin") == 0) {
                     actionFinished(board);
                     *res = true;
                     return true;
-                }
+                } else {
+                    Character *chess_character = getChessCharacter(chessChoose);
+                    Weapon *weapon = createWeaponPrefab(input);
+                    if (weapon == NULL) {
+                        printf("无效的武器名称！\n");
+                        continue;
+                    }
+                    equipWeapon(chess_character, weapon);
+                    attackablePosition(board, dest_row, dest_col);
+                    stage = 4;
+                } 
                 break;
             case 4:  // Target selection stage
                 if (strcmp(input, "cancel") == 0) {
                     resetAttackablePos(board);
+                    unequipWeapon(getChessCharacter(getChessChoose(board)));
                     stage = 3;
                     continue;
                 }
