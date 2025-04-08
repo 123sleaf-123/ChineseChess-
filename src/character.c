@@ -41,9 +41,10 @@ BattleProperty *getCharacterBattleProperty(Character *character) {
 
 void equipWeapon(Character *character, Weapon *weapon) {
     character->weapon = weapon;
-    if (weapon != NULL && weapon->basic_property != NULL) {
-        addBasicProperty(character->property_basic, weapon->basic_property);
-        character->property_fight = createBattlePropertyFromBasicProperty(character->property_basic);
+    if (weapon != NULL) {
+        character->property_fight->attack += weapon->attack_power;
+        character->property_fight->hit_rate += weapon->hit;
+        character->property_fight->critical += weapon->critical;
         character->property_fight->min_range = weapon->min_range;
         character->property_fight->max_range = weapon->max_range + character->property_basic->attack_range;
     }
@@ -51,9 +52,12 @@ void equipWeapon(Character *character, Weapon *weapon) {
 
 void unequipWeapon(Character *character) {
     if (character->weapon != NULL) {
-        removeBasicProperty(character->property_basic, character->weapon->basic_property);
+        character->property_fight->attack -= character->weapon->attack_power;
+        character->property_fight->hit_rate -= character->weapon->hit;
+        character->property_fight->critical -= character->weapon->critical;
+        character->property_fight->min_range = 0;
+        character->property_fight->max_range = 0;
         free(character->weapon);
         character->weapon = NULL;
-        character->property_fight = createBattlePropertyFromBasicProperty(character->property_basic);
     }
 }
