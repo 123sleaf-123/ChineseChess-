@@ -38,3 +38,20 @@ BasicProperty *getCharacterBasicProperty(Character *character) {
 BattleProperty *getCharacterBattleProperty(Character *character) {
     return character->property_fight;
 }
+
+void equipWeapon(Character *character, Weapon *weapon) {
+    character->weapon = weapon;
+    if (weapon != NULL && weapon->basic_property != NULL) {
+        addBasicProperty(character->property_basic, weapon->basic_property);
+        character->property_fight = createBattlePropertyFromBasicProperty(character->property_basic);
+    }
+}
+
+void unequipWeapon(Character *character) {
+    if (character->weapon != NULL) {
+        removeBasicProperty(character->property_basic, character->weapon->basic_property);
+        free(character->weapon);
+        character->weapon = NULL;
+        character->property_fight = createBattlePropertyFromBasicProperty(character->property_basic);
+    }
+}

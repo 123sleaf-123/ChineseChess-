@@ -3,9 +3,11 @@
 
 #include "property_basic.h"
 #include "property_fight.h"
+#include "weapon.h"
 
 typedef struct {
     char name[20];  // Character name
+    Weapon *weapon;  // Character weapon
     BasicProperty *property_basic;
     BattleProperty *property_fight;
 } Character;
@@ -16,5 +18,8 @@ Character *createCharacter(const char *name, BasicProperty *property_basic, Batt
 Character *createCharacterDeault();
 BasicProperty *getCharacterBasicProperty(Character *character);
 BattleProperty *getCharacterBattleProperty(Character *character);
+
+void equipWeapon(Character *character, Weapon *weapon);
+void unequipWeapon(Character *character);
 
 #endif // CHARACTER_H
