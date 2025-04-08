@@ -1,11 +1,11 @@
 #include "property_fight.h"
 
-void initBattleProperty(BattleProperty *battle_property, int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int range) {
+void initBattleProperty(BattleProperty *battle_property, int max_health, int health, int movement, int attack, int hit_rate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int range) {
     battle_property->max_health = max_health;
     battle_property->health = health;
     battle_property->movement = movement;
     battle_property->attack = attack;
-    battle_property->hitRate = hitRate;
+    battle_property->hit_rate = hit_rate;
     battle_property->critical = critical;
     battle_property->attack_speed = attack_speed;
     battle_property->defense = defense;
@@ -15,8 +15,8 @@ void initBattleProperty(BattleProperty *battle_property, int max_health, int hea
     battle_property->max_range = range;
 }
 
-void initBattlePropertyV2(BattleProperty *battle_property, int max_health, int health, int movement, int attack, int hitRate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int min_range, int max_range) {
-    initBattleProperty(battle_property, max_health, health, movement, attack, hitRate, critical, attack_speed, defense, magic_resist, evasion, min_range);
+void initBattlePropertyV2(BattleProperty *battle_property, int max_health, int health, int movement, int attack, int hit_rate, int critical, int attack_speed, int defense, int magic_resist, int evasion, int min_range, int max_range) {
+    initBattleProperty(battle_property, max_health, health, movement, attack, hit_rate, critical, attack_speed, defense, magic_resist, evasion, min_range);
     battle_property->max_range = max_range;
 }
 
@@ -75,11 +75,11 @@ void setAttack(BattleProperty *battle_property, int attack) {
 }
 
 int getHitRate(BattleProperty *battle_property) {
-    return battle_property->hitRate;
+    return battle_property->hit_rate;
 }
 
 void setHitRate(BattleProperty *battle_property, int hit_rate) {
-    battle_property->hitRate = hit_rate;
+    battle_property->hit_rate = hit_rate;
 }
 
 int getCritical(BattleProperty *battle_property) {
@@ -142,6 +142,6 @@ void printBattleProperty(BattleProperty *battle_property) {
     if (battle_property == NULL) return;
     printf("战斗属性: 生命 %d/%d, 移动力 %d, 攻击 %d, 命中 %d, 必杀 %d, 攻速 %d, 防御 %d, 耐魔 %d, 回避 %d, 射程 %d-%d\n",
            battle_property->health, battle_property->max_health, battle_property->movement, battle_property->attack,
-           battle_property->hitRate, battle_property->critical, battle_property->attack_speed,
+           battle_property->hit_rate, battle_property->critical, battle_property->attack_speed,
            battle_property->defense, battle_property->magic_resist, battle_property->evasion, battle_property->min_range, battle_property->max_range);
 }
