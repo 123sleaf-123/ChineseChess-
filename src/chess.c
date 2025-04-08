@@ -82,8 +82,5 @@ void takeDamageChess(struct Chess *chess, int damage) {
     if (chess == NULL) return;
     BattleProperty *bp = getChessBattleProperty(chess);
     setHealth(bp, getHealth(bp) - damage);
-    if (getHealth(bp) <= 0) {
-        chess->is_alive = false;
-    }
 }
 
