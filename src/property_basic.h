@@ -21,4 +21,7 @@ typedef struct {
 void initBasicProperty(BasicProperty *property, int strength, int magic, int skill, int speed, int luck, int defense, int magic_defense, int charm, int movement, int health, int level, int experience);
 BasicProperty *createBasicPropertyDeault();
 
+void addBasicProperty(BasicProperty *target, BasicProperty *source);
+void removeBasicProperty(BasicProperty *target, BasicProperty *source);
+
 #endif

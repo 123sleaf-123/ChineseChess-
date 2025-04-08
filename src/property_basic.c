@@ -25,3 +25,18 @@ BasicProperty *createBasicPropertyDeault() {
     
     return new_property;
 }
+
+void addBasicProperty(BasicProperty *target, BasicProperty *source) {
+    target->strength += source->strength;
+    target->magic += source->magic;
+    target->skill += source->skill;
+    target->speed += source->speed;
+    target->luck += source->luck;
+    target->defense += source->defense;
+    target->magic_defense += source->magic_defense;
+    target->charm += source->charm;
+    target->movement += source->movement;
+    target->health += source->health;
+    target->level += source->level;
+    target->experience += source->experience;
+}
