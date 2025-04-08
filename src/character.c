@@ -44,6 +44,8 @@ void equipWeapon(Character *character, Weapon *weapon) {
     if (weapon != NULL && weapon->basic_property != NULL) {
         addBasicProperty(character->property_basic, weapon->basic_property);
         character->property_fight = createBattlePropertyFromBasicProperty(character->property_basic);
+        character->property_fight->min_range = weapon->min_range;
+        character->property_fight->max_range = weapon->max_range + character->property_basic->attack_range;
     }
 }
 
