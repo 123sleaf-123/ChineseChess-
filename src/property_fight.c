@@ -55,7 +55,7 @@ int getHealth(BattleProperty *battle_property) {
 }
 
 void setHealth(BattleProperty *battle_property, int health) {
-    battle_property->health = max(battle_property->max_health, health);
+    battle_property->health = health > battle_property->max_health ? battle_property->max_health : health;
 }
 
 int getMovement(BattleProperty *battle_property) {
