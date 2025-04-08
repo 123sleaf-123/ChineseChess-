@@ -16,9 +16,10 @@ typedef struct {
     int health;        // 生命值
     int level;         // 等级
     int experience;    // 经验值
+    int attack_range;  // 攻击范围
 } BasicProperty;
 
-void initBasicProperty(BasicProperty *property, int strength, int magic, int skill, int speed, int luck, int defense, int magic_defense, int charm, int movement, int health, int level, int experience);
+void initBasicProperty(BasicProperty *property, int strength, int magic, int skill, int speed, int luck, int defense, int magic_defense, int charm, int movement, int health, int level, int experience, int attack_range);
 BasicProperty *createBasicPropertyDeault();
 
 void addBasicProperty(BasicProperty *target, BasicProperty *source);
