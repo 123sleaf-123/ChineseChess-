@@ -2,9 +2,10 @@
 
 void initializeKnapsack(Knapsack *k, int capacity) {
     if (k == NULL) {
-        k->weapons = malloc(sizeof(Weapon) * capacity);
+        k->weapons = malloc(sizeof(Weapon *) * capacity);
     }
     k->capacity = capacity;
+    k->size = 0; // Initialize size to 0
 }
 
 Knapsack *createKnapsack(int capacity) {
@@ -14,15 +15,10 @@ Knapsack *createKnapsack(int capacity) {
 }
 
 void addWeaponToKnapsack(Knapsack *k, Weapon *w) {
-    if (k == NULL || w == NULL) {
+    if (k == NULL || w == NULL || k->capacity <= 0 || k->capacity <= k->size) {
         return;
     }
-    for (int i = 0; i < k->capacity; i++) {
-        if (k->weapons[i].name == NULL) {
-            k->weapons[i] = *w;
-            break;
-        }
-    }
+    k->weapons[k->size++] = w; // Add weapon to the knapsack
 }
 
 void removeWeaponFromKnapsack(Knapsack *k, Weapon *w) {
@@ -30,8 +26,8 @@ void removeWeaponFromKnapsack(Knapsack *k, Weapon *w) {
         return;
     }
     for (int i = 0; i < k->capacity; i++) {
-        if (strcmp(k->weapons[i].name, w->name) == 0) {
-            k->weapons[i].name = NULL;
+        if (k->weapons[i] == w) {
+            k->weapons[i] = NULL; // Assuming name is a string, set it to NULL to indicate removal
             break;
         }
     }
@@ -41,7 +37,7 @@ void removeWeaponFromKnapsackByIndex(Knapsack *k, int index) {
     if (k == NULL || index < 0 || index >= k->capacity) {
         return;
     }
-    k->weapons[index].name = NULL;
+    k->weapons[index] = NULL;
 }
 
 void clearKnapsack(Knapsack *k) {
@@ -49,7 +45,6 @@ void clearKnapsack(Knapsack *k) {
         return;
     }
     for (int i = 0; i < k->capacity; i++) {
-        k->weapons[i].name = NULL;
+        k->weapons[i] = NULL;
     }
 }
-

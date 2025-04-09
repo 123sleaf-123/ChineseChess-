@@ -4,8 +4,9 @@
 #include "weapon.h"
 
 typedef struct {
-    Weapon *weapons;
+    Weapon **weapons;
     int capacity;
+    int size; // Current number of weapons in the knapsack
 } Knapsack;
 
 void initializeKnapsack(Knapsack *k, int capacity);
