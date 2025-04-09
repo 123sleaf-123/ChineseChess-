@@ -1,6 +1,4 @@
 #include "character.h"
-#include "property_basic.h"
-#include "property_fight.h"
 
 void initCharacter(Character *character, const char *name, BasicProperty *property_basic,
                    BattleProperty *property_fight) {
@@ -43,7 +41,21 @@ Character *createCharacterV2(const char *name, BasicProperty *property_basic) {
 
 Character *createCharacterV3(const char *name, BasicProperty *property_basic, Knapsack *knapsack) {
     Character *character = (Character *)malloc(sizeof(Character));
+    if (character == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
     initCharacterV3(character, name, property_basic, knapsack);
+    return character;
+}
+
+Character *createCharacterWithDefaultKnapsack(const char *name, BasicProperty *property_basic) {
+    Character *character = (Character *)malloc(sizeof(Character));
+    if (character == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
+    initCharacterV3(character, name, property_basic, createKnapsackDefault());
     return character;
 }
 
