@@ -59,3 +59,15 @@ void clearKnapsack(Knapsack *k) {
         k->weapons[i] = NULL;
     }
 }
+
+void displayKnapsackContents(Knapsack *k) {
+    if (k == NULL) {
+        return;
+    }
+    printf("Knapsack contents:\n");
+    for (int i = 0; i < k->size; i++) {
+        if (k->weapons[i] != NULL) {
+            printf("Weapon %d: %s\n", i, k->weapons[i]->name);
+        }
+    }
+}
