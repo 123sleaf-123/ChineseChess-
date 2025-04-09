@@ -1,4 +1,5 @@
 #include "knapsack.h"
+#include "weapon.h"
 
 void initializeKnapsack(Knapsack *k, int capacity) {
     if (k == NULL) {
@@ -18,7 +19,9 @@ Knapsack *createKnapsackDefault() {
     Knapsack *k = malloc(sizeof(Knapsack));
     initializeKnapsack(k, 5);              // Default capacity of 5
     k->weapons[0] = createWeaponDefault(); // Default weapon
-
+    k->weapons[2] = createWeaponPrefab("sword");
+    k->weapons[1] = createWeaponPrefab("bow");
+    k->weapons[3] = createWeaponPrefab("lbow");
     return k;
 }
 
