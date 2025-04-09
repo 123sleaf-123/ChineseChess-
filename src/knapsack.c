@@ -14,6 +14,14 @@ Knapsack *createKnapsack(int capacity) {
     return k;
 }
 
+Knapsack *createKnapsackDefault() {
+    Knapsack *k = malloc(sizeof(Knapsack));
+    initializeKnapsack(k, 5);              // Default capacity of 5
+    k->weapons[0] = createWeaponDefault(); // Default weapon
+
+    return k;
+}
+
 void addWeaponToKnapsack(Knapsack *k, Weapon *w) {
     if (k == NULL || w == NULL || k->capacity <= 0 || k->capacity <= k->size) {
         return;

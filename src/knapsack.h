@@ -11,6 +11,7 @@ typedef struct {
 
 void initializeKnapsack(Knapsack *k, int capacity);
 Knapsack *createKnapsack(int capacity);
+Knapsack *createKnapsackDefault();
 void addWeaponToKnapsack(Knapsack *k, Weapon *w);
 void removeWeaponFromKnapsack(Knapsack *k, Weapon *w);
 void removeWeaponFromKnapsackByIndex(Knapsack *k, int index);
