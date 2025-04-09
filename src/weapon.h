@@ -14,7 +14,7 @@ typedef struct {
 
 void initWeapon(Weapon *weapon, char *name, int attack_power, int hit, int critical, int min_range, int max_range);
 Weapon *createWeapon(char *name, int attack_power, int hit, int critical, int min_range, int max_range);
-Weapon *createWeaponDeault();
+Weapon *createWeaponDefault();
 Weapon *createWeaponPrefab(char *name);
 
 #endif

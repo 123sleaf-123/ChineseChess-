@@ -15,12 +15,12 @@ Weapon *createWeapon(char *name, int attack_power, int hit, int critical, int mi
     return weapon;
 }
 
-Weapon *createWeaponDeault() {
+Weapon *createWeaponDefault() {
     return createWeapon("Default Weapon", 0, 0, 0, 0, 0);
 }
 
 Weapon *createWeaponPrefab(char *name) {
-    Weapon *weapon = createWeaponDeault();
+    Weapon *weapon = createWeaponDefault();
     if (strcmp(name, "sword") == 0) {
         weapon->name = "sword";
         weapon->attack_power = 5;
@@ -45,7 +45,6 @@ Weapon *createWeaponPrefab(char *name) {
     } else {
         free(weapon);
         return NULL; // Invalid name
-    
     }
     return weapon;
 }
