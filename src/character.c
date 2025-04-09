@@ -2,7 +2,8 @@
 #include "property_basic.h"
 #include "property_fight.h"
 
-void initCharacter(Character *character, const char *name, BasicProperty *property_basic, BattleProperty *property_fight) {
+void initCharacter(Character *character, const char *name, BasicProperty *property_basic,
+                   BattleProperty *property_fight) {
     strcpy(character->name, name);
     character->property_basic = property_basic;
     character->property_fight = property_fight;
@@ -13,6 +14,14 @@ void initCharacterV2(Character *character, const char *name, BasicProperty *prop
     strcpy(character->name, name);
     character->property_basic = property_basic;
     character->property_fight = createBattlePropertyFromBasicProperty(property_basic);
+}
+
+void initCharacterV3(Character *character, const char *name, BasicProperty *property_basic,
+                     BattleProperty *property_fight, Knapsack *knapsack) {
+    strcpy(character->name, name);
+    character->property_basic = property_basic;
+    character->property_fight = property_fight;
+    character->knapsack = knapsack;
 }
 
 Character *createCharacter(const char *name, BasicProperty *property_basic, BattleProperty *property_fight) {
