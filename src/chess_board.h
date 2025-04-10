@@ -1,19 +1,19 @@
 #ifndef CHESS_BOARD_H
 #define CHESS_BOARD_H
 
-#include "global.h"
 #include "chess.h"
+#include "chess_board_block.h"
 #include "chess_record.h"
 #include "chess_stack.h"
-#include "chess_board_block.h"
+#include "global.h"
+
 
 struct Tips {
     char strs[8][64];
     int top;
 };
 
-typedef struct ChessBoard
-{
+typedef struct ChessBoard {
     struct Chess ***block;
     struct BoardBlock ***boardBlock;
     struct ChessStack *objects;
@@ -29,7 +29,7 @@ typedef struct ChessBoard
 
 char **initMatrix();
 void freeMatrix(char **matrix);
-struct ChessBoard* initChessBoard();
+struct ChessBoard *initChessBoard();
 bool setChessBoardBlock(struct ChessBoard *board, int row, int col, struct Chess *chess);
 void resetMoveablePos(struct ChessBoard *board);
 void resetAttackablePos(struct ChessBoard *board);
