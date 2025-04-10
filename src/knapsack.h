@@ -9,7 +9,7 @@ typedef struct {
     int size; // Current number of weapons in the knapsack
 } Knapsack;
 
-void initializeKnapsack(Knapsack *k, int capacity);
+void initKnapsack(Knapsack *k, int capacity);
 Knapsack *createKnapsack(int capacity);
 Knapsack *createKnapsackDefault();
 void addWeaponToKnapsack(Knapsack *k, Weapon *w);
