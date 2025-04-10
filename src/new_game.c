@@ -4,10 +4,9 @@
 #include "chess_board.h"
 #include "weapon.h"
 
-
 // #define INTERVAL NORMAL_INTERVAL
 #define INTERVAL SHORT_INTERVAL
-#define BREAK 100
+#define BREAK    100
 #define CONTINUE 101
 
 /**
@@ -30,16 +29,16 @@
  */
 int userControl(struct ChessBoard *board, bool *res) {
     char input[10];
-    int stage = 1;  // Start at stage 1
+    int stage = 1; // Start at stage 1
     int src_row, src_col, dest_row, dest_col, target_row, target_col;
     struct Chess *chessChoose = NULL;
-    
+
     while (stage <= 5) {
         printChessBoard(board);
         scanf("%s", input);
 
         switch (stage) {
-            case 1:  // Selection stage
+            case 1: // Selection stage
                 if (strcmp(input, "q") == 0) {
                     cls;
                     for (int i = 0; i < 5; i++) {
@@ -72,7 +71,7 @@ int userControl(struct ChessBoard *board, bool *res) {
                 }
                 break;
 
-            case 2:  // Movement stage
+            case 2: // Movement stage
                 if (strcmp(input, "cancel") == 0) {
                     setChessChoose(board, NULL);
                     resetMoveablePos(board);
@@ -106,9 +105,9 @@ int userControl(struct ChessBoard *board, bool *res) {
                     equipWeapon(chess_character, weapon);
                     attackablePosition(board, dest_row, dest_col);
                     stage = 4;
-                } 
+                }
                 break;
-            case 4:  // Target selection stage
+            case 4: // Target selection stage
                 if (strcmp(input, "cancel") == 0) {
                     resetAttackablePos(board);
                     unequipWeapon(getChessCharacter(getChessChoose(board)));
@@ -121,7 +120,7 @@ int userControl(struct ChessBoard *board, bool *res) {
                 stage = 5;
                 break;
 
-            case 5:  // Combat stage
+            case 5: // Combat stage
                 if (strcmp(input, "cancel") == 0) {
                     stage = 4;
                     continue;
@@ -138,46 +137,41 @@ int userControl(struct ChessBoard *board, bool *res) {
     return CONTINUE;
 }
 
-int aiControl(struct ChessBoard *board, bool *res)
-{
+int aiControl(struct ChessBoard *board, bool *res) {
     int dest_row, dest_col;
     aiLogic(board, &dest_row, &dest_col);
 }
 
-void initChessGame()
-{
+void initChessGame() {
     // 初始化棋盘
     Board board;
     board = initChessBoard();
-    while (true)
-    {
+    while (true) {
         // 待选择阶段
         printChessBoard(board);
         bool action_res;
 
         // 移动阶段
         bool isBreak = userControl(board, &action_res);
-        if (isBreak == BREAK) break;
-        if (isBreak == CONTINUE) continue;
+        if (isBreak == BREAK)
+            break;
+        if (isBreak == CONTINUE)
+            continue;
 
         // 结束阶段，不需要输入
         printChessBoard(board);
         actionFinished(board);
-        if (action_res == true)
-        {
+        if (action_res == true) {
             // 如果玩家已经行动
-            if (isGameEnd(board) == true)
-            {
+            if (isGameEnd(board) == true) {
                 printChessBoard(board);
                 putchar('\n');
                 printf("游戏结束");
                 Sleep(NORMAL_INTERVAL);
                 break;
-            }
-            else
+            } else
                 board->user = !board->user;
         }
     }
     // getchar();
 }
-
