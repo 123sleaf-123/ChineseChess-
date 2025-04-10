@@ -3,8 +3,8 @@
 
 #include "chess_board.h"
 #include "chess_logic.h"
+#include "knapsack.h"
 #include "tools.h"
-
 
 #define cls system("cls")
 

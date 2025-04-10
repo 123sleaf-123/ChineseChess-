@@ -147,11 +147,13 @@ void printChessBoard(struct ChessBoard *board) {
 
     // 提示玩家当前选中棋子及其战斗属性
     printf("当前选中棋子：");
-    if (board->chessChoose == NULL) {
+    struct Chess *chessChoose = getChessChoose(board);
+    if (chessChoose == NULL) {
         printf("未选中棋子");
     } else {
-        autoColor_printf(board->chessChoose->owner, "%s", chessName(board->chessChoose));
-        printChessBattleProperty(board->chessChoose);
+        autoColor_printf(chessChoose->owner, "%s", chessName(board->chessChoose));
+        printChessBattleProperty(chessChoose);
+        displayKnapsackContents(getChessKnapsack(chessChoose));
     }
     fillScreenWithBlank();
     if (board->tip->top == -1) {
