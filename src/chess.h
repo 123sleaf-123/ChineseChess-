@@ -1,17 +1,18 @@
 #ifndef CHESS_H
 #define CHESS_H
 
-#include "global.h"
 #include "character.h"
+#include "global.h"
+#include "knapsack.h"
 #include "property_fight.h"
+
 
 typedef int PLAYER;
 
-typedef struct Chess
-{
+typedef struct Chess {
     int id;
     int type;
-    PLAYER owner; // 
+    PLAYER owner; //
     char is_alive;
     struct Position *pos;
     Character *character; // 角色属性
@@ -31,9 +32,11 @@ void setChessMaxRange(struct Chess *chess, int max_range);
 
 // Indirect
 BattleProperty *getChessBattleProperty(struct Chess *chess);
+Knapsack *getChessKnapsack(struct Chess *chess);
 
 bool isInsideAttackRangeByChess(struct Chess *attacker, struct Chess *defender);
-bool isInsideAttackRangeByPos(int attacker_row, int attacker_col, int defender_row, int defender_col, int min_range, int max_range);
+bool isInsideAttackRangeByPos(int attacker_row, int attacker_col, int defender_row, int defender_col, int min_range,
+                              int max_range);
 void printChessBattleProperty(struct Chess *chess);
 
 void recoverChess(struct Chess *chess, int health);
