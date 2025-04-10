@@ -170,7 +170,7 @@ void moveablePosFindingByPos(struct ChessBoard *board, int src_row, int src_col,
 }
 
 void moveablePosition(struct ChessBoard* board, int src_row, int src_col) {
-    reset_moveablePos(board);
+    resetMoveablePos(board);
     moveablePosFindingByPos(board, src_row, src_col, board->moveablePos);
 }
 

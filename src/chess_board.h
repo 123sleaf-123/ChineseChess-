@@ -31,7 +31,7 @@ char **initMatrix();
 void freeMatrix(char **matrix);
 struct ChessBoard* initChessBoard();
 bool setChessBoardBlock(struct ChessBoard *board, int row, int col, struct Chess *chess);
-void reset_moveablePos(struct ChessBoard *board);
+void resetMoveablePos(struct ChessBoard *board);
 void resetAttackablePos(struct ChessBoard *board);
 int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val);
 bool placeChess(struct ChessBoard *board, int row, int col, struct Chess *chess);
