@@ -74,8 +74,11 @@ int userControl(struct ChessBoard *board, bool *res) {
 
             case 2:  // Movement stage
                 if (strcmp(input, "cancel") == 0) {
-                    // actionFinished(board);
+                    setChessChoose(board, NULL);
+                    resetMoveablePos(board);
+                    resetAttackablePos(board);
                     stage = 1;
+                    continue;
                 }
                 dest_row = input[0] - '0';
                 dest_col = input[1] - '0';
