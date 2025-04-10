@@ -3,7 +3,8 @@
 
 #include "chess_board.h"
 #include "chess_logic.h"
-#include "curses.h"
+#include "tools.h"
+
 
 #define cls system("cls")
 
@@ -20,6 +21,6 @@ void clearScreen();
 void color(int x);
 int autoColor_printf(int user, const char *format, ...);
 int color_printf(int text_color, const char *format, ...);
-void printChessBoard(struct ChessBoard* board);
+void printChessBoard(struct ChessBoard *board);
 
 #endif
