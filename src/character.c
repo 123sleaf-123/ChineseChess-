@@ -60,7 +60,7 @@ Character *createCharacterWithDefaultKnapsack(const char *name, BasicProperty *p
 }
 
 Character *createCharacterDeault() {
-    Character *new_character = createCharacter("Default", createBasicPropertyDeault(), createBattlePropertyDefault());
+    Character *new_character = createCharacterWithDefaultKnapsack("Default", createBasicPropertyDeault());
     return new_character;
 }
 
