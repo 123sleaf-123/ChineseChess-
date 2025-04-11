@@ -118,14 +118,14 @@ bool isAttackable(struct ChessBoard *board, int dest_row, int dest_col) {
 bool isGameEnd(struct ChessBoard *board) {
     for (int i = 0; i < 2; i++) {
         if ((isChessStackEmpty(board->dead_chess[i]) == false) &&
-            (ChessStackTop(board->dead_chess[i])->type == GENERAL)) {
+            (chessStackTop(board->dead_chess[i])->type == GENERAL)) {
             return true;
         }
     }
     return false;
     // if (
-    // (isChessStackEmpty(board->dead_player1) == false && ChessStackTop(board->dead_player1)->type == GENERAL) ||
-    // (isChessStackEmpty(board->dead_player2) == false && ChessStackTop(board->dead_player2)->type == GENERAL))
+    // (isChessStackEmpty(board->dead_player1) == false && chessStackTop(board->dead_player1)->type == GENERAL) ||
+    // (isChessStackEmpty(board->dead_player2) == false && chessStackTop(board->dead_player2)->type == GENERAL))
     //     return true;
     // else return false;
 }

@@ -12,9 +12,9 @@ struct ChessStack
 
 struct ChessStack *initChessStack(int maxSize);
 struct ChessStack *initChessStack_default();
-int ChessStackPush(struct ChessStack *stack, struct Chess *chess);
+int chessStackPush(struct ChessStack *stack, struct Chess *chess);
 int isChessStackEmpty(struct ChessStack *stack);
-struct Chess *ChessStackTop(struct ChessStack *stack);
-void ChessStackPop(struct ChessStack *stack);
+struct Chess *chessStackTop(struct ChessStack *stack);
+void chessStackPop(struct ChessStack *stack);
 
 #endif

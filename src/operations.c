@@ -78,7 +78,7 @@ bool withdraw(struct ChessBoard *board) {
             recoverChess(record->chess, damage);
             
             // 从死亡栈中移除
-            ChessStackPop(board->dead_chess[record->chess->owner]);
+            chessStackPop(board->dead_chess[record->chess->owner]);
             break;
         }
         // 其他操作类型的处理...

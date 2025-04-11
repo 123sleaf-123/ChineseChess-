@@ -24,7 +24,7 @@ int isChessStackEmpty(struct ChessStack *chess_stk) {
     else return false;
 }
 
-int ChessStackPush(struct ChessStack *chess_stk, struct Chess *chess) {
+int chessStackPush(struct ChessStack *chess_stk, struct Chess *chess) {
     if (chess_stk->top < chess_stk->maxSize) {
         chess_stk->stack[++chess_stk->top] = chess;
         return true;
@@ -32,12 +32,12 @@ int ChessStackPush(struct ChessStack *chess_stk, struct Chess *chess) {
     else return false;
 }
 
-struct Chess *ChessStackTop(struct ChessStack *chess_stk) {
+struct Chess *chessStackTop(struct ChessStack *chess_stk) {
     if (isChessStackEmpty(chess_stk) == true) return NULL;
     else return chess_stk->stack[chess_stk->top];
 }
 
-void ChessStackPop(struct ChessStack *chess_stk) {
+void chessStackPop(struct ChessStack *chess_stk) {
     if (isChessStackEmpty(chess_stk) == false) {
         chess_stk->top--;
     }

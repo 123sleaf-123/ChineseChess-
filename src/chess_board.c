@@ -115,7 +115,7 @@ int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val
 
 bool placeChess(struct ChessBoard *board, int row, int col, struct Chess *chess) {
     if (chess != NULL) {
-        ChessStackPush(board->objects, chess);
+        chessStackPush(board->objects, chess);
     }
     return setChessBoardBlock(board, row, col, chess);
 }
