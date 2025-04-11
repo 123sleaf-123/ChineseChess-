@@ -1,32 +1,13 @@
 #include "chess_board.h"
 #include "global.h"
 
-int half_board[5][9] = {
-    {CHARIOT, HORSE, ELEPHANT, WARRIOR, GENERAL, WARRIOR, ELEPHANT, HORSE, CHARIOT}, // 0
-    {
-        EMPTY,
-        EMPTY,
-        EMPTY,
-        EMPTY,
-        EMPTY,
-        EMPTY,
-        EMPTY,
-        EMPTY,
-        EMPTY,
-    },                                                                         // 1
-    {EMPTY, ARTILLERY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, ARTILLERY, EMPTY},   // 2
-    {SOLDIER, EMPTY, SOLDIER, EMPTY, SOLDIER, EMPTY, SOLDIER, EMPTY, SOLDIER}, // 3
-    {
-        EMPTY,
-        EMPTY,
-        EMPTY,
-        EMPTY,
-        EMPTY,
-        EMPTY,
-        EMPTY,
-        EMPTY,
-        EMPTY,
-    }, // 4
+int half_board[5][9] = 
+{
+    {CHARIOT, HORSE, ELEPHANT, WARRIOR, GENERAL, WARRIOR, ELEPHANT, HORSE, CHARIOT},    // 0
+    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,},                   // 1
+    {EMPTY, ARTILLERY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, ARTILLERY, EMPTY},     // 2
+    {SOLDIER, EMPTY, SOLDIER, EMPTY, SOLDIER, EMPTY, SOLDIER, EMPTY, SOLDIER},          // 3
+    {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,},                   // 4
 };
 
 char **initMatrix() {
