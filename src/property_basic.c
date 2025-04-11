@@ -22,7 +22,7 @@ BasicProperty *createBasicPropertyDeault() {
         fprintf(stderr, "Memory allocation failed\n");
         exit(EXIT_FAILURE);
     }
-    initBasicProperty(new_property, 10, 10, 10, 10, 10, 10, 10, 10, 10, 100, 1, 0, 0);
+    initBasicProperty(new_property, 13, 6, 9, 8, 8, 6, 6, 7, 4, 27, 0, 0, 0);
     
     return new_property;
 }
