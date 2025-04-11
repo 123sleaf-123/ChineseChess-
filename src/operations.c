@@ -76,9 +76,11 @@ bool withdraw(struct ChessBoard *board) {
             // 撤销死亡：复活棋子
             int damage = (int)(intptr_t)record->data;
             recoverChess(record->chess, damage);
+            // 将棋子放回原位置
+            resetDeadChessPos(board, record->chess);
             
             // 从死亡栈中移除
-            chessStackPop(board->dead_chess[record->chess->owner]);
+            popDeadChessfromStack(board);
             break;
         }
         // 其他操作类型的处理...
@@ -125,6 +127,11 @@ int fight(struct ChessBoard* board, struct Chess *attacker, struct Chess *defend
         // 创建死亡记录
         OperationRecord *deathRecord = initOperationRecord(OP_DEATH, 0, 0, 0, 0, defender, (void *)(intptr_t)damage);
         pushRecord(getRecordStack(board), deathRecord);
+        // 将棋子从棋盘上移除
+        removeChessfromBoard(board, defender);
+
+        // 将死亡棋子放入死亡栈
+        pushDeadChess2Stack(board, defender);
     }
     return true;
 }
