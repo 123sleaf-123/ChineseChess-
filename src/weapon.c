@@ -1,4 +1,5 @@
 #include "weapon.h"
+#include <string.h>
 
 void initWeapon(Weapon *weapon, char *name, int attack_power, int hit, int critical, int min_range, int max_range) {
     weapon->name = name;
@@ -42,6 +43,13 @@ Weapon *createWeaponPrefab(char *name) {
         weapon->critical = 0;
         weapon->min_range = 2;
         weapon->max_range = 3;
+    } else if (strcmp(name, "clb") == 0) {
+        weapon->name = "咖喱棒";
+        weapon->attack_power = 100;
+        weapon->hit = 10;
+        weapon->critical = 0;
+        weapon->min_range = 1;
+        weapon->max_range = 5;
     } else {
         free(weapon);
         return NULL; // Invalid name

@@ -23,6 +23,7 @@ Knapsack *createKnapsackDefault() {
     addWeaponToKnapsack(k, createWeaponPrefab("sword"));
     addWeaponToKnapsack(k, createWeaponPrefab("bow"));
     addWeaponToKnapsack(k, createWeaponPrefab("lbow"));
+    addWeaponToKnapsack(k, createWeaponPrefab("clb"));
     return k;
 }
 
