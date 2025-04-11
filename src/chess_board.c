@@ -120,6 +120,42 @@ bool placeChess(struct ChessBoard *board, int row, int col, struct Chess *chess)
     return setChessBoardBlock(board, row, col, chess);
 }
 
+void pushDeadChess2Stack(struct ChessBoard *board, struct Chess *chess) {
+    if (chess != NULL) {
+        chessStackPush(board->dead_chess[chess->owner], chess);
+    }
+}
+
+void popDeadChessfromStack(struct ChessBoard *board) {
+    for (int i = 0; i < 2; i++) {
+        if (isChessStackEmpty(board->dead_chess[i]) == false) {
+            chessStackPop(board->dead_chess[i]);
+        }
+    }
+}
+
+void resetDeadChessPos(struct ChessBoard *board, struct Chess *chess) {
+    if (chess != NULL) {
+        int row = getChessPosition(chess)->x;
+        int col = getChessPosition(chess)->y;
+        setChessBoardBlock(board, row, col, chess);
+    }
+}
+
+void removeChessfromBoard(struct ChessBoard *board, struct Chess *chess) {
+    if (chess != NULL) {
+        int row = getChessPosition(chess)->x;
+        int col = getChessPosition(chess)->y;
+        setChessBoardBlock(board, row, col, NULL);
+    }
+}
+
+void removeChessfromBoardByPos(struct ChessBoard *board, int row, int col) {
+    if ((0 <= row && row < BOARD_ROW) && (0 <= col && col < BOARD_COL)) {
+        setChessBoardBlock(board, row, col, NULL);
+    }
+}
+
 struct Chess *getChessByPos(struct ChessBoard *board, int row, int col) {
     if ((0 <= row && row < BOARD_ROW) && (0 <= col && col < BOARD_COL)) {
         return board->block[row][col];

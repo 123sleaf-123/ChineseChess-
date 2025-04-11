@@ -31,17 +31,27 @@ char **initMatrix();
 void freeMatrix(char **matrix);
 struct ChessBoard *initChessBoard();
 bool setChessBoardBlock(struct ChessBoard *board, int row, int col, struct Chess *chess);
+// bool setChessBoardBlockByPos(struct ChessBoard *board, struct Position *position, struct Chess *chess);
 void resetMoveablePos(struct ChessBoard *board);
 void resetAttackablePos(struct ChessBoard *board);
 int setChessBoardMoveablePos(struct ChessBoard *board, int row, int col, int val);
+
 bool placeChess(struct ChessBoard *board, int row, int col, struct Chess *chess);
+void pushDeadChess2Stack(struct ChessBoard *board, struct Chess *chess);
+void popDeadChessfromStack(struct ChessBoard *board);
+void resetDeadChessPos(struct ChessBoard *board, struct Chess *chess);
+void removeChessfromBoard(struct ChessBoard *board, struct Chess *chess);
+void removeChessfromBoardByPos(struct ChessBoard *board, int row, int col);
+
 struct Chess *getChessByPos(struct ChessBoard *board, int row, int col);
 RecordStack *getRecordStack(struct ChessBoard *board);
 struct Chess *getChessChoose(struct ChessBoard *board);
 void setChessChoose(struct ChessBoard *board, struct Chess *chess);
 struct Chess *getChessTobeOperated(struct ChessBoard *board);
 void setChessTobeOperated(struct ChessBoard *board, struct Chess *chess);
+
 int getBlockMovementCost(struct ChessBoard *board, int row, int col);
+
 void aiLogic(struct ChessBoard *board, int *dest_row, int *dest_col);
 
 #endif
