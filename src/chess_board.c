@@ -120,12 +120,14 @@ bool placeChess(struct ChessBoard *board, int row, int col, struct Chess *chess)
     return setChessBoardBlock(board, row, col, chess);
 }
 
+// 将死亡棋子放入对应玩家的死亡棋子堆栈
 void pushDeadChess2Stack(struct ChessBoard *board, struct Chess *chess) {
     if (chess != NULL) {
         chessStackPush(board->dead_chess[chess->owner], chess);
     }
 }
 
+// 将死亡棋子从对应玩家的死亡棋子堆栈中弹出
 void popDeadChessfromStack(struct ChessBoard *board) {
     for (int i = 0; i < 2; i++) {
         if (isChessStackEmpty(board->dead_chess[i]) == false) {
@@ -134,6 +136,7 @@ void popDeadChessfromStack(struct ChessBoard *board) {
     }
 }
 
+// 将死亡棋子复活到棋盘上
 void resetDeadChessPos(struct ChessBoard *board, struct Chess *chess) {
     if (chess != NULL) {
         int row = getChessPosition(chess)->x;
@@ -142,6 +145,7 @@ void resetDeadChessPos(struct ChessBoard *board, struct Chess *chess) {
     }
 }
 
+// 将指定棋子从棋盘上移除
 void removeChessfromBoard(struct ChessBoard *board, struct Chess *chess) {
     if (chess != NULL) {
         int row = getChessPosition(chess)->x;
@@ -150,6 +154,7 @@ void removeChessfromBoard(struct ChessBoard *board, struct Chess *chess) {
     }
 }
 
+// 将对应位置的棋子从棋盘上移除
 void removeChessfromBoardByPos(struct ChessBoard *board, int row, int col) {
     if ((0 <= row && row < BOARD_ROW) && (0 <= col && col < BOARD_COL)) {
         setChessBoardBlock(board, row, col, NULL);
