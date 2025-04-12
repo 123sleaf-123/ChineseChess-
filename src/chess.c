@@ -32,6 +32,14 @@ Character *getChessCharacter(struct Chess *chess) {
     return chess->character;
 }
 
+int getChessHealth(struct Chess *chess) {
+    return getHealth(getCharacterBattleProperty(chess->character));
+}
+
+void setChessHealth(struct Chess *chess, int health) {
+    setHealth(getCharacterBattleProperty(chess->character), health);
+}
+
 int getChessMovement(struct Chess *chess) {
     return getMovement(getCharacterBattleProperty(chess->character));
 }
