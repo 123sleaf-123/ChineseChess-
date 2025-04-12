@@ -6,6 +6,7 @@
 typedef enum {
     MOVE,
     ATTACK,
+    HEAL,
     SUMMON,
     APPLY_BUFF
 } ActionType;
