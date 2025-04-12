@@ -1,7 +1,7 @@
 #include "attack_command.h"
 
 // 攻击执行函数
-void AttackCommand_execute(Command* cmd) {
+void attackCommandExecute(Command* cmd) {
     AttackCommand* ac = (AttackCommand*)cmd;
     ac->target_prev_health = getChessHealth(ac->target);
     takeDamageChess(ac->target, ac->damage);
@@ -16,17 +16,17 @@ void AttackCommand_execute(Command* cmd) {
 }
 
 // 攻击撤销函数
-void AttackCommand_undo(Command* cmd) {
+void attackCommandUndo(Command* cmd) {
     AttackCommand* ac = (AttackCommand*)cmd;
     recoverChess(ac->target, ac->target_prev_health);
 }
 
 // 创建攻击命令
-Command* create_attack_command(struct Chess * attacker, struct Chess * target, int damage) {
+Command* createAttackCommand(struct Chess * attacker, struct Chess * target, int damage) {
     AttackCommand* cmd = malloc(sizeof(AttackCommand));
     cmd->base.type = ATTACK;
-    cmd->base.execute = AttackCommand_execute;
-    cmd->base.undo = AttackCommand_undo;
+    cmd->base.execute = attackCommandExecute;
+    cmd->base.undo = attackCommandUndo;
     cmd->base.next = NULL;
     cmd->attacker = attacker;
     cmd->target = target;

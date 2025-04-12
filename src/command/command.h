@@ -1,8 +1,9 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-// 游戏操作类型（枚举）
 #include "chess_board.h"
+
+// 游戏操作类型（枚举）
 typedef enum {
     MOVE,
     ATTACK,
