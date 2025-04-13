@@ -2,6 +2,7 @@
 #define GAME_MANAGER_H
 
 #include "chess_board.h"
+#include "operations.h"
 #include "command.h"
 
 
@@ -18,7 +19,13 @@ Command *getGameManagerCommandHistory(GameManager *manager);                   /
 void setGameManagerCommandHistory(GameManager *manager, Command *command_history); // 设置操作记录链表头指针
 
 void addCommandToHistory(GameManager *manager, Command *command);
-void removeLastCommandFromHistory(GameManager *manager); 
+void removeLastCommandFromHistory(GameManager *manager);
 void clearCommandHistory(GameManager *manager); // 清空操作记录链表
+
+int gameManagerSelectChess(GameManager *manager, int src_row, int src_col);
+int gameManageRmoveChess(GameManager *manager, int src_row, int src_col, int dest_row, int dest_col);
+bool gameManagerWithdrawCommand(struct ChessBoard *board);
+int gameManagerFight(GameManager *manager, ChessPtr attacker, ChessPtr defender);
+int gameManagerFightByPos(GameManager *manager, int src_row, int src_col, int dest_row, int dest_col);
 
 #endif // GAME_MANAGER_H

@@ -1,5 +1,6 @@
 #include "game_manager.h"
 #include "chess_board.h"
+#include "operations.h"
 
 GameManager *createGameManager() {
     GameManager *manager = (GameManager *)malloc(sizeof(GameManager));
@@ -50,4 +51,68 @@ void removeLastCommandFromHistory(GameManager *manager) {
     Command *temp = manager->command_history;
     manager->command_history = manager->command_history->next; // 更新链表头指针
     free(temp); // 释放内存
+}
+
+/* ======================================== 覆写operations.h ==========================================*/
+int gameManagerSelectChess(GameManager *manager, int src_row, int src_col) {
+    return choose(manager->board, src_row, src_col); // 选择棋子
+}
+
+int gameManageRmoveChess(GameManager *manager, int src_row, int src_col, int dest_row, int dest_col) {
+    return moveChess(manager->board, src_row, src_col, dest_row, dest_col); // 移动棋子
+}
+
+bool gameManagerWithdrawCommand(struct ChessBoard *board) {
+    return withdraw(board); // 撤回操作
+}
+
+int gameManagerFight(GameManager *manager, ChessPtr attacker, ChessPtr defender) {
+    struct ChessBoard *board = manager->board;
+    
+    if (attacker == NULL || defender == NULL) {
+        sprintf(board->tip->strs[++board->tip->top], "攻击者或防御者不存在");
+        return false;
+    }
+    if (!isInsideAttackRangeByChess(attacker, defender)) {
+        sprintf(board->tip->strs[++board->tip->top], "目标不在攻击范围内");
+        return false;
+    }
+
+    int attack = getAttack(getChessBattleProperty(attacker));
+    int defense = getDefense(getChessBattleProperty(defender));
+    int damage = attack - defense;
+    if (damage < 0) damage = 0;
+    
+    // 打印攻击信息
+    sprintf(board->tip->strs[++board->tip->top],
+            "Attack: %s(ATK:%d) -> %s(DEF:%d), Damage:%d\n", 
+           chessName(attacker),
+           attack,
+           chessName(defender),
+           defense,
+           damage);
+    
+    // 创建攻击记录
+    OperationRecord *attackRecord = initOperationRecord(OP_ATTACK, 0, 0, 0, 0, attacker, (void *)(intptr_t)damage);
+    pushRecord(getRecordStack(board), attackRecord);
+    
+    takeDamageChess(defender, damage);
+    
+    if (getHealth(getChessBattleProperty(defender)) <= 0) {
+        defender->is_alive = false;
+        
+        // 创建死亡记录
+        OperationRecord *deathRecord = initOperationRecord(OP_DEATH, 0, 0, 0, 0, defender, (void *)(intptr_t)damage);
+        pushRecord(getRecordStack(board), deathRecord);
+        // 将棋子从棋盘上移除
+        removeChessfromBoard(board, defender);
+
+        // 将死亡棋子放入死亡栈
+        pushDeadChess2Stack(board, defender);
+    }
+    return true;
+}
+
+int gameManagerFightByPos(GameManager *manager, int src_row, int src_col, int dest_row, int dest_col) {
+    return fightByPos(manager->board, src_row, src_col, dest_row, dest_col); // 进行战斗
 }

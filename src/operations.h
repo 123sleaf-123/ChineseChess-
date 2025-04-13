@@ -2,6 +2,8 @@
 #define OPERATIONS_H
 
 #include "chess_board.h"
+#include "chess_logic.h"
+#include "tools.h"
 
 int choose(struct ChessBoard* board, int src_row, int src_col);
 int moveChess(struct ChessBoard* board, int src_row, int src_col, int dest_row, int dest_col);
