@@ -66,7 +66,7 @@ struct ChessBoard *initChessBoard() {
     board->attackablePos = initMatrix();
 
     board->user = PLAYER_1; // 开局玩家初始化
-    board->chessChoose = NULL;
+    board->chess_choose = NULL;
     board->dead_chess = (struct ChessStack **)malloc(sizeof(struct ChessStack *) * 2);
     board->dead_chess[PLAYER_1] = initChessStack_default();
     board->dead_chess[PLAYER_2] = initChessStack_default();
@@ -173,11 +173,11 @@ RecordStack *getRecordStack(struct ChessBoard *board) {
 }
 
 struct Chess *getChessChoose(struct ChessBoard *board) {
-    return board->chessChoose;
+    return board->chess_choose;
 }
 
 void setChessChoose(struct ChessBoard *board, struct Chess *chess) {
-    board->chessChoose = chess;
+    board->chess_choose = chess;
 }
 
 struct Chess *getChessTobeOperated(struct ChessBoard *board) {

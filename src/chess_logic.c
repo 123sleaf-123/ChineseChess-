@@ -237,7 +237,7 @@ void actionFinished(struct ChessBoard *board) {
             board->attackablePos[i][j] = false;
         }
     }
-    board->chessChoose = NULL;
+    board->chess_choose = NULL;
 }
 
 void aiLogic(struct ChessBoard *board, int *dest_row, int *dest_col) {

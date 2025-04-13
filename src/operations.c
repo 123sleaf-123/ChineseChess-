@@ -26,7 +26,7 @@ int choose(struct ChessBoard *board, int src_row, int src_col)
         return false;
     else
     {
-        board->chessChoose = board->block[src_row][src_col];
+        board->chess_choose = board->block[src_row][src_col];
         moveablePosition(board, src_row, src_col);
         return true;
     }

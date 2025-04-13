@@ -20,7 +20,7 @@ typedef struct ChessBoard {
     char **moveablePos;
     char **attackablePos;
     PLAYER user;
-    struct Chess *chessChoose;
+    struct Chess *chess_choose;
     struct Chess *chessTobeOperated;
     struct ChessStack **dead_chess;
     struct Tips *tip;
