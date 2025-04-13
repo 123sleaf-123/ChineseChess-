@@ -17,6 +17,7 @@ typedef struct Command {
     ActionType type;
     void (*execute)(struct Command*);  // 执行函数指针
     void (*undo)(struct Command*);     // 撤销函数指针
+    void (*free)(struct Command*);     // 释放函数指针
     struct Command *next;              // 链表指针
     struct ChessBoard *board; // 棋盘指针
 } Command;

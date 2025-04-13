@@ -17,11 +17,17 @@ void moveCommandUndo(Command *cmd) {
     moveChess(board, move_cmd->dest_row, move_cmd->dest_col, move_cmd->src_row, move_cmd->src_col);
 }
 
+void moveCommandFree(Command *cmd) {
+    MoveCommand *move_cmd = (MoveCommand *)cmd;
+    free(move_cmd); // 释放内存
+}
+
 Command *createMoveCommand(struct Chess *chess, int src_row, int src_col, int dest_row, int dest_col) {
     MoveCommand *cmd = (MoveCommand *)malloc(sizeof(MoveCommand));
     cmd->base.type = MOVE;
     cmd->base.execute = moveCommandExecute;
     cmd->base.undo = moveCommandUndo;
+    cmd->base.free = moveCommandFree;
     cmd->chess = chess;
     cmd->src_row = src_row;
     cmd->src_col = src_col;

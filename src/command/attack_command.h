@@ -17,6 +17,7 @@ typedef struct {
 
 void attackCommandExecute(Command* cmd);
 void attackCommandUndo(Command *cmd);
+void attackCommandFree(Command *cmd);
 Command* createAttackCommand(struct Chess * attacker, struct Chess * target, int damage);
 
 #endif // ATTACKCommand_H

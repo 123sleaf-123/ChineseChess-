@@ -13,6 +13,7 @@ typedef struct {
 
 void healCommandExecute(Command *cmd);
 void healCommandUndo(Command *cmd);
+void healCommandFree(Command *cmd);
 Command *createHealCommand(struct Chess *healer, struct Chess *target, int heal_amount);
 
 #endif // HEAL_COMMAND_H

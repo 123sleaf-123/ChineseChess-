@@ -15,6 +15,14 @@ void compositeCommandUndo(Command* cmd) {
     }
 }
 
+void compositeCommandFree(Command* cmd) {
+    CompositeCommand* cc = (CompositeCommand*)cmd;
+    for (int i = 0; i < cc->count; i++) {
+        cc->sub_commands[i]->free(cc->sub_commands[i]); // 释放子命令
+    }
+    free(cc); // 释放复合命令
+}
+
 void* createCompositeCommand(CompositeCommand* composite_cmd, Command** sub_commands, int count) {
     composite_cmd->base.execute = compositeCommandExecute;
     composite_cmd->base.undo = compositeCommandUndo;

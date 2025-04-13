@@ -14,6 +14,12 @@ void healCommandUndo(Command* cmd) {
     setChessHealth(hc->target, hc->target_prev_health);
 }
 
+// 治疗指令释放函数
+void healCommandFree(Command* cmd) {
+    HealCommand *hc = (HealCommand *)cmd;
+    free(hc); // 释放内存
+}
+
 
 // 创建治疗命令
 Command* createHealCommand(struct Chess * healer, struct Chess * target, int heal_amount) {

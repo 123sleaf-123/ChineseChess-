@@ -21,6 +21,11 @@ void attackCommandUndo(Command* cmd) {
     recoverChess(ac->target, ac->target_prev_health);
 }
 
+void attackCommandFree(Command* cmd) {
+    AttackCommand* ac = (AttackCommand*)cmd;
+    free(ac); // 释放内存
+}
+
 // 创建攻击命令
 Command* createAttackCommand(struct Chess * attacker, struct Chess * target, int damage) {
     AttackCommand* cmd = malloc(sizeof(AttackCommand));

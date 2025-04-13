@@ -14,6 +14,7 @@ typedef struct {
 
 void moveCommandExecute(Command *cmd);
 void moveCommandUndo(Command *cmd);
+void moveCommandFree(Command *cmd);
 Command *createMoveCommand(struct Chess *chess, int src_row, int src_col, int dest_row, int dest_col);
 
 #endif

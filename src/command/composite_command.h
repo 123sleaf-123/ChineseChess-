@@ -12,6 +12,7 @@ typedef struct {
 
 void compositeCommandExecute(Command *cmd);
 void compositeCommandUndo(Command *cmd);
+void compositeCommandFree(Command *cmd);
 void* createCompositeCommand(CompositeCommand* composite_cmd, Command** sub_commands, int count);
 
 #endif // COMPOSITE_COMMAND_H
