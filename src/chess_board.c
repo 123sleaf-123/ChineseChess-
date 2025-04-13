@@ -28,7 +28,7 @@ void freeMatrix(char **matrix) {
     free(matrix);
 }
 
-struct ChessBoard *initChessBoard() {
+struct ChessBoard *createChessBoard() {
     struct ChessBoard *board = (struct ChessBoard *)malloc(sizeof(struct ChessBoard));
     board->block = (struct Chess ***)malloc(sizeof(struct Chess **) * BOARD_ROW);
     for (int i = 0; i < 10; i++) {

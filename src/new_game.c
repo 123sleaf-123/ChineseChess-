@@ -145,7 +145,7 @@ int aiControl(struct ChessBoard *board, bool *res) {
 void initChessGame() {
     // 初始化棋盘
     Board board;
-    board = initChessBoard();
+    board = createChessBoard();
     while (true) {
         // 待选择阶段
         printChessBoard(board);

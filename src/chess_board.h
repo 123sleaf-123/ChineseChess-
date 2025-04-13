@@ -29,7 +29,7 @@ typedef struct ChessBoard {
 
 char **initMatrix();
 void freeMatrix(char **matrix);
-struct ChessBoard *initChessBoard();
+struct ChessBoard *createChessBoard();
 bool setChessBoardBlock(struct ChessBoard *board, int row, int col, struct Chess *chess);
 // bool setChessBoardBlockByPos(struct ChessBoard *board, struct Position *position, struct Chess *chess);
 void resetMoveablePos(struct ChessBoard *board);
