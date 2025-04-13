@@ -1,6 +1,4 @@
 #include "chess.h"
-#include "character.h"
-#include "property_fight.h"
 
 int count = 0;
 
